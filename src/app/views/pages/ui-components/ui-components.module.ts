@@ -93,10 +93,6 @@ const routes: Routes = [
         component: DatepickerComponent
       },
       {
-        path: 'dropdowns',
-        component: DropdownsComponent
-      },
-      {
         path: 'list-group',
         component: ListGroupComponent
       },
@@ -157,7 +153,7 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [UiComponentsComponent, AccordionComponent, AlertsComponent, BadgesComponent, BreadcrumbsComponent, ButtonsComponent, ButtonGroupComponent, CardsComponent, CarouselComponent, CollapseComponent, DropdownsComponent, ListGroupComponent, MediaObjectComponent, ModalComponent, NavsComponent, NavbarComponent, PaginationComponent, PopoversComponent, ProgressComponent, ScrollbarComponent, SpinnersComponent, TooltipsComponent, RatingComponent, TimepickerComponent, DatepickerComponent, TypeaheadComponent],
+  declarations: [UiComponentsComponent, AccordionComponent, AlertsComponent, BadgesComponent, BreadcrumbsComponent, ButtonsComponent, ButtonGroupComponent, CardsComponent, CarouselComponent, CollapseComponent, ListGroupComponent, MediaObjectComponent, ModalComponent, NavsComponent, NavbarComponent, PaginationComponent, PopoversComponent, ProgressComponent, ScrollbarComponent, SpinnersComponent, TooltipsComponent, RatingComponent, TimepickerComponent, DatepickerComponent, TypeaheadComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

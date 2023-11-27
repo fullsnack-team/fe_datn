@@ -14,12 +14,20 @@ import { HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 import { HttpClientModule } from '@angular/common/http';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-
-
+import { SortablejsModule } from 'ngx-sortablejs';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { ListTenantComponent } from './views/pages/auth/login/by-enterprise/list-tenant/list-tenant.component';
+import {PaginatorModule} from "primeng/paginator";
+import {ReactiveFormsModule} from "@angular/forms";
+import { LoginByDomainNameComponent } from './views/pages/auth/login/by-staff/login-by-domain-name/login-by-domain-name.component';
+import { CreateComponent } from './views/pages/tenant/create/create.component';
 @NgModule({
   declarations: [
     AppComponent,
     ErrorPageComponent,
+    ListTenantComponent,
+    LoginByDomainNameComponent,
+    CreateComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,7 +36,11 @@ import { CommonModule } from '@angular/common';
     LayoutModule,
     HttpClientModule,
     NgbModule,
-    CommonModule
+    CommonModule,
+    SortablejsModule.forRoot({animation: 150}),
+    NgSelectModule,
+    PaginatorModule,
+    ReactiveFormsModule
   ],
   providers: [
     AuthGuard,

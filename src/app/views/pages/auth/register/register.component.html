@@ -1,47 +1,73 @@
-<div class="row w-100 mx-0 auth-page">
-  <div class="col-md-8 col-xl-6 mx-auto">
-    <div class="card">
-      <div class="row">
-        <div class="col-md-4 pe-md-0">
-          <div class="auth-side-wrapper" [ngStyle]="{ 'background-image': 'url(https://via.placeholder.com/219x452)' }">
-
-          </div>
-        </div>
-        <div class="col-md-8 ps-md-0">
-          <div class="auth-form-wrapper px-4 py-5">
-            <a routerLink="." class="nobleui-logo d-block mb-2">Noble<span>UI</span></a>
-            <h5 class="text-muted fw-normal mb-4">Create a free account.</h5>
-            <form class="forms-sample">
-              <div class="mb-3">
-                <label for="exampleInputUsername1" class="form-label">Username</label>
-                <input type="text" class="form-control" id="exampleInputUsername1" autocomplete="Username" placeholder="Username">
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Email address</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" autocomplete="current-password" placeholder="Password">
-              </div>
-              <div class="form-check mb-3">
-                <input type="checkbox" class="form-check-input" id="authCheck">
-                <label class="form-check-label" for="authCheck">
-                  Remember me
-                </label>
-              </div>
-              <div>
-                <button type="submit" class="btn btn-primary me-2 mb-2 mb-md-0" (click)="onRegister($event)">Sign up</button>
-                <button type="button" class="btn btn-outline-primary btn-icon-text mb-2 mb-md-0">
-                  <i class="feather icon-twitter btn-icon-prepend"></i>
-                  Sign up with twitter
-                </button>
-              </div>
-              <a routerLink="/auth/login" class="d-block mt-3 text-muted">Already a user? Sign in</a>
-            </form>
-          </div>
-        </div>
-      </div>
+<h2 class="content-inner__body-title mb-4 text-center">Đăng ký</h2>
+<form class="forms-sample" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <label for="exampleInputName" class="form-label">Họ tên</label>
+    <input type="email" class="form-control" id="exampleInputName" placeholder="Họ tên"
+           value="" formControlName="name">
+    <div *ngIf="form.controls.name.invalid && form.controls.name.touched"
+         class="alert alert-danger mt-2">
+      Không để trống họ tên
+    </div>
+    <div *ngIf="errorMessages.name" class="alert alert-danger mt-2">
+      {{ errorMessages.name }}
     </div>
   </div>
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Email</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email"
+           value="" formControlName="email">
+    <div *ngIf="form.controls.email.invalid && form.controls.email.touched"
+         class="alert alert-danger mt-2">
+      Không để trống email
+    </div>
+    <div *ngIf="errorMessages.email" class="alert alert-danger mt-2">
+      {{ errorMessages.email }}
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Mật khẩu</label>
+    <input type="text" class="form-control"
+           formControlName="password"
+           placeholder="Mật khẩu" value="">
+    <div *ngIf="form.controls.password.invalid && form.controls.password.touched"
+         class="alert alert-danger mt-2">
+      Không để trống mật khẩu
+    </div>
+    <div *ngIf="errorMessages.password" class="alert alert-danger mt-2">
+      {{ errorMessages.password }}
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Nhập lại mật khẩu</label>
+    <input type="text" class="form-control"
+           formControlName="confirm_password"
+           placeholder="Nhập lại mật khẩu" value="">
+    <div *ngIf="form.controls.confirm_password.invalid && form.controls.confirm_password.touched"
+         class="alert alert-danger mt-2">
+      Không để trống nhập lại mật khẩu
+    </div>
+    <div *ngIf="errorMessages.confirm_password" class="alert alert-danger mt-2">
+      {{ errorMessages.confirm_password }}
+    </div>
+  </div>
+  <div>
+    <button type="submit" class="btn btn-primary me-2 mb-2 mb-md-0"
+            [disabled]="form.invalid">
+      Đăng ký
+    </button>
+  </div>
+</form>
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+  <hr class="w-100">
+
+  <span>hoặc</span>
+
+  <hr class="w-100">
 </div>
+
+<p class="content-inner__body-start f14 mt-4 mbHiden">
+  Đã có tài khoản?
+  <a routerLink="/auth/login" class="link-primary-color">
+    Đăng nhập ngay
+  </a>
+</p>

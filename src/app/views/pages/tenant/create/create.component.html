@@ -1,0 +1,64 @@
+<h2 class="content-inner__body-title mb-4 text-center">Tạo doanh nghiệp</h2>
+<form class="forms-sample" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Tên doanh nghiệp</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Tên doanh nghiệp"
+           value="" formControlName="business_name">
+    <div *ngIf="form.controls.business_name.invalid && form.controls.business_name.touched"
+         class="alert alert-danger mt-2">
+      Không để trống tên doanh nghiệp
+    </div>
+    <div *ngIf="errorMessages.business_name" class="alert alert-danger mt-2">
+      {{ errorMessages.business_name }}
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Địa chỉ đăng nhập</label>
+    <input type="text" class="form-control"
+           formControlName="name_tenant"
+           placeholder="Địa chỉ đăng nhập" value="">
+    <div *ngIf="form.controls.name_tenant.invalid && form.controls.name_tenant.touched"
+         class="alert alert-danger mt-2">
+      Không để trống địa chỉ đăng nhập
+    </div>
+    <div *ngIf="errorMessages.name_tenant" class="alert alert-danger mt-2">
+      {{ errorMessages.name_tenant }}
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Địa chỉ</label>
+    <input type="text" class="form-control"
+           formControlName="address"
+           placeholder="Địa chỉ" value="">
+    <div *ngIf="form.controls.address.invalid && form.controls.address.touched"
+         class="alert alert-danger mt-2">
+      Không để trống địa chỉ
+    </div>
+    <div *ngIf="errorMessages.address" class="alert alert-danger mt-2">
+      {{ errorMessages.address }}
+    </div>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Lĩnh vực kinh doanh</label>
+    <ng-select
+      [searchable]="true"
+      formControlName="business_code"
+      placeholder="Chọn lĩnh vực kinh doanh"
+    >
+      <ng-option *ngFor="let item of businessFields" [value]="item.code">{{item.name}}</ng-option>
+    </ng-select>
+    <div *ngIf="form.controls.business_code.invalid && form.controls.business_code.touched"
+         class="alert alert-danger mt-2">
+      Vui lòng chọn lĩnh vực kinh doanh
+    </div>
+    <div *ngIf="errorMessages.business_code" class="alert alert-danger mt-2">
+      {{ errorMessages.business_code }}
+    </div>
+  </div>
+  <div>
+    <button type="submit" class="btn btn-primary me-2 mb-2 mb-md-0"
+            [disabled]="form.invalid">
+      Tiếp tục
+    </button>
+  </div>
+</form>

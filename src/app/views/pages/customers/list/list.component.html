@@ -1,0 +1,51 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink=".">Khách hàng</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Danh mục khách hàng</li>
+    </ol>
+</nav>
+<div class="row">
+    <div class="col-md-12 stretch-card">
+    <div class="card">
+        <div class="card-body">
+        <h6 class="card-title">Quản lí Khách hàng</h6>
+        <button routerLink="/customers/create"  type="button" class="btn btn-primary">Thêm mới</button>
+        <div class="table-responsive">
+            <table id="dataTableExample" class="table">
+            <thead>
+                <tr>
+                <th>ID</th>
+                <th>TÊN KHÁCH HÀNG</th>
+                <th>THUỘC LOẠI</th>
+                <th>SỐ ĐIỆN THOẠI</th>
+                <th>HÀNH ĐỘNG</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let cate of Customers | async">
+                <td>{{ cate.id }}</td>
+                <td>{{ cate.name }}</td>
+                <td>{{ cate.type == 0 ? "Cá nhân" : "Doanh nghiệp" }}</td>
+                <td>{{ cate.tel }}</td>
+                <td>
+                    <a [routerLink]="['../edit', cate.id]" class="btn btn-success mx-2">Sửa</a>
+                   <button  data-id="{{cate.id}}" class="btn btn-danger">Xóa</button>  
+                </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                </tr>
+            </tfoot>
+            </table>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>

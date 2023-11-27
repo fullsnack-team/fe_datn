@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { DataTable } from 'simple-datatables';
-import { CategoriesService } from 'src/app/service/categories.service';
+import { CategoriesService } from 'src/app/service/categories/categories.service';
 import { Categories } from 'src/app/interface/categories/categories';
 import { Observable,of } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 })
 export class CategoriesListComponent implements OnInit, AfterViewInit {
   ListsCategories: Observable<Categories[]>;
-  
+
   constructor(private categoriesService: CategoriesService) {
     this.ListsCategories = new Observable();
   }
@@ -56,9 +56,9 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
     }).then((result) => {
       if (result.isConfirmed) {
         // If confirmed, delete the category
-        this.categoriesService.deleteCategory(id).subscribe(
+        this.categoriesService.delete(id).subscribe(
           (response) => {
-           
+
             Swal.fire('Đã xóa!', 'Danh mục của bạn đã được xóa.', 'success');
             // Navigate to the list after successful deletion
             this.refreshCategories();
@@ -77,7 +77,8 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
    this.categoriesService.GetData().subscribe(
       (response : any) => {
         if(response.status == true){
-          this.ListsCategories =of(response.payload);
+          this.ListsCategories =of(response.payload.data);
+          // console.log(this.ListsCategories);
           this.ListsCategories.subscribe((categories) => {
             setTimeout(() => {
                 const dataTable = new DataTable('#dataTableExample');
@@ -96,6 +97,6 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
         Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
       }
     );
-    
+
   }
 }

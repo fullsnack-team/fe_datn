@@ -1,0 +1,50 @@
+<h2 class="content-inner__body-title mb-4 text-center">Đăng nhập</h2>
+<form class="forms-sample" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Email</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email"
+           value="" formControlName="email">
+    <div *ngIf="loginForm.controls.email.invalid && loginForm.controls.email.touched"
+         class="alert alert-danger mt-2">
+      Không để trống email
+    </div>
+    <div *ngIf="errorMessages.email" class="alert alert-danger mt-2">
+      {{ errorMessages.email }}
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Mật khẩu</label>
+    <input type="password" class="form-control" id="exampleInputPassword1"
+           autocomplete="current-password"
+           formControlName="password"
+           placeholder="Mật khẩu" value="">
+    <div *ngIf="loginForm.controls.password.invalid && loginForm.controls.password.touched"
+         class="alert alert-danger mt-2">
+      Không để trống mật khẩu
+    </div>
+    <div *ngIf="errorMessages.password" class="alert alert-danger mt-2">
+      {{ errorMessages.password }}
+    </div>
+  </div>
+  <div>
+    <button type="submit" class="btn btn-primary me-2 mb-2 mb-md-0"
+            [disabled]="loginForm.invalid">
+      Tiếp tục
+    </button>
+  </div>
+</form>
+
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+  <hr class="w-100">
+
+  <span>hoặc</span>
+
+  <hr class="w-100">
+</div>
+
+<p class="content-inner__body-start f14 mt-4 mbHiden">
+  Chưa có tài khoản?
+  <a routerLink="/auth/register" class="link-primary-color">
+    Bắt đầu ngay
+  </a>
+</p>

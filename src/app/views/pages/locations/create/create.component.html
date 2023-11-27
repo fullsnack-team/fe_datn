@@ -1,0 +1,156 @@
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a routerLink=".">Danh mục</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      Thêm mới chi nhánh
+    </li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-title">Thêm mới Chi nhánh</h6>
+
+        <form class="forms-sample" [formGroup]="locationsForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label class="form-label" for="formFile">Ảnh đại diện chi nhánh</label>
+            <input class="form-control" type="file" id="formFile" formControlName="image"
+              (change)="onFileChange($event)" />
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">
+              Tên Chi Nhánh
+              <span class="text-danger">(*)</span>
+            </label>
+            <input type="text" class="form-control" id="exampleInputUsername1" formControlName="name" autocomplete="off"
+              placeholder="Nhập tên chi nhánh" />
+            <div *ngIf="locationsForm.controls.name.invalid && locationsForm.controls.name.touched"
+              class="alert alert-danger mt-2">
+              Không để trống tên chi nhánh
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">
+              Email
+            </label>
+            <input type="email" class="form-control" id="exampleInputUsername1" formControlName="email"
+              autocomplete="off" placeholder="Nhập email" />
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">
+              Số điện thoại
+              <span class="text-danger">(*)</span>
+            </label>
+            <input type="text" class="form-control" id="exampleInputUsername1" formControlName="tel" autocomplete="off"
+              placeholder="Nhập số điện thoại" />
+            <div *ngIf="locationsForm.controls.tel.invalid && locationsForm.controls.tel.touched"
+              class="alert alert-danger mt-2">
+              Không để trống Số điện thoại
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">
+              Tỉnh thành phố
+            </label>
+            <ng-select [searchable]="true" (change)="onProvinceChange()" [(ngModel)]="codeProvince" formControlName="province_code"
+              placeholder="Chọn Tỉnh">
+              <ng-option *ngFor="let item of provinces" [value]="item.id">
+                {{item.name}}
+              </ng-option>
+            </ng-select>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">
+              Chọn Huyện
+            </label>
+            <ng-select [searchable]="true" (change)="onDistrictChange()" [(ngModel)]="codeDistrict" formControlName="district_code"
+              placeholder="Chọn Tỉnh">
+              <ng-option *ngFor="let item of districts" [value]="item.id">
+                {{item.name}}
+              </ng-option>
+            </ng-select>
+          </div>
+
+          <div *ngIf="isWardDataLoaded">
+            <div class="mb-3">
+              <label for="exampleInputUsername1" class="form-label">
+                Chọn Xã
+              </label>
+              <ng-select [searchable]="true" formControlName="ward_code" [(ngModel)]="codeWard" placeholder="Chọn Xã">
+                <ng-option *ngFor="let item of wards" [value]="item.id">
+                  {{item.name}}
+                </ng-option>
+              </ng-select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">
+              Địa chỉ chi tiết
+            </label>
+            <span class="text-danger">(*)</span>
+            <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Nhập địa chỉ"
+              formControlName="address_detail" rows="5"></textarea>
+            <div *ngIf="locationsForm.controls.address_detail.invalid && locationsForm.controls.address_detail.touched"
+              class="alert alert-danger mt-2">
+              Không để trống tên địa chỉ chi tiết
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">
+              Mô tả ngắn
+            </label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Nhập mô tả"
+              formControlName="description" rows="5"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">
+              Loại chi nhánh
+            </label>
+            <span class="text-danger">(*)</span>
+            <ng-select [searchable]="true" formControlName="is_main" placeholder="Chọn chi nhánh">
+              <ng-option *ngFor="let item of is_main" [value]="+item.id">
+                {{item.name}}
+              </ng-option>
+            </ng-select>
+            <div *ngIf="locationsForm.controls.is_main.invalid && locationsForm.controls.is_main.touched"
+              class="alert alert-danger mt-2">
+              Không để trống loại chi nhánh
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">
+              Trạng thái
+            </label>
+            <span class="text-danger">(*)</span>
+            <ng-select [searchable]="true" formControlName="status" placeholder="Chọn Trạng thái">
+              <ng-option *ngFor="let item of status" [value]="+item.id">
+                {{item.name}}
+              </ng-option>
+            </ng-select>
+            <div *ngIf="locationsForm.controls.status.invalid && locationsForm.controls.status.touched"
+              class="alert alert-danger mt-2">
+              Không để trống trạng thái chi nhánh
+            </div>
+          </div>
+
+          <button type="submit" [disabled]="locationsForm.invalid" class="btn btn-primary me-2">
+            Tạo mới
+          </button>
+          <button class="btn btn-secondary" routerLink="/locations/list">
+            Trở về
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

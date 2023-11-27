@@ -1,0 +1,42 @@
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink=".">Tables</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Basic tables</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-title">{{ title }}</h6>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th *ngFor="let key of getKeys(data[0])">{{ key }}</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of data">
+                <td *ngFor="let key of getKeys(data[0])">
+                  {{ row[key] }}
+                </td>
+                <td>
+                	<div ngbDropdown>
+                    <button class="btn" id="dropdownBasic1" ngbDropdownToggle>...</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                      <button ngbDropdownItem >Chỉnh Sửa</button>
+                      <button ngbDropdownItem data-id="{{row.id}}" class="btnDelete">Xóa</button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

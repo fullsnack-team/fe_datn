@@ -1,0 +1,526 @@
+<div class="row">
+    <div class="col-lg-8 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">DANH SÁCH SẢN PHẨM</h4>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Sản Phẩm</th>
+                                <th>Đơn Vị</th>
+                                <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th>Thành tiền</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of listProductCart[tabDefault]; index as i">
+                                <td class="d-flex">
+                                    <div class="py-1">
+                                        <img src="http://via.placeholder.com/36x36" alt="image">
+                                    </div>
+                                    <div class="ms-2">
+                                        <h6>{{ item.display_name }}</h6>
+                                        <p>{{ item.sku }}</p>
+                                    </div>
+                                </td>
+                                <td class="align-middle">{{ item.product.item_unit == null ? "Chưa có đơn vị" :  item.product.item_unit.name  }}</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <button type="button" (click)="decreaseQuantity(item.id)"
+                                            class="btn btn-lg text-black-50">-</button>
+                                        <input type="number" name="quanity" id="{{ 'quantity-' + item.id }}"
+                                            data-id="{{ item.id }}" value="{{ item.quanity }}"
+                                            (input)="resultTotal($event)" class="form-control">
+                                        <button type="button" (click)="increaseQuantity(item.id)"
+                                            class="btn btn-lg text-black-50">+</button>
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    <div class="d-flex">
+                                        <input type="text" class="form-control" data-id="{{ item.id }}" name="price"
+                                            value="{{ item.price_export }}" (input)="resultTotal($event)"
+                                            (click)="openBasicModalPrice(basicModal,item.id,i)">
+                                    </div>
+                                </td>
+                                <td class="text-primary align-middle">{{ item.result | currency:'VND' }}</td>
+
+
+                                <ng-container *ngIf="item.batchs.length > 0; else otherIff">
+                                    <td class="align-middle" style="cursor: pointer;" (click)="openLgModalBatches(batches,item.id)">
+                                      <i class="feather icon-archive"></i>
+                                    </td>
+                                  </ng-container>
+                                  <ng-template #otherIff>
+                                    <td class="align-middle"></td>
+                                  </ng-template>
+                                <td class="align-middle" style="cursor: pointer;" >
+                                    <i class="feather text-danger icon-x icon-md " (click)="removeItemCart(i)"></i>
+                                </td>
+
+
+
+                            </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div class="card-footer">
+                <ngb-accordion [closeOthers]="true" activeIds="static-1">
+                    <ngb-panel id="static-1" title="Danh sách sản phẩm">
+                        <ng-template ngbPanelContent>
+                            <div class="row">
+                                <div class="col-4" *ngFor="let items of ListProducts">
+
+                                    <div class="card d-block" *ngIf="items.length > 1; else showFirstItem">
+                                        <div class="card-body p-2 d-flex align-items-center justify-content-evenly">
+                                            <div class="d-flex align-items-center">
+                                                <div class="img-products">
+                                                    <img width="100%"
+                                                        src="https://prod-core-images.s3.ap-southeast-1.amazonaws.com/nextshop/1697731423873.jpg"
+                                                        alt="">
+                                                </div>
+                                                <div>
+                                                    <h1 class="item-name">{{ items[0].product.name }}</h1>
+                                                    <div>
+                                                        <span class="price-name fs-6">{{ items[0].price_export }}₫</span>
+                                                        <span class="price-name ms-2">
+                                                            <ng-container
+                                                                *ngIf="items[0].quantity === 0; else quantityAvailable">
+                                                                <span style="color: red;">Hết hàng</span>
+                                                            </ng-container>
+                                                            <ng-template #quantityAvailable>
+                                                                <span style="font-size: 10px;color: #808890;">  SL: {{ items[0].quantity }}</span>
+                                                            </ng-template>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="cursor: pointer;">
+                                                <i (click)="openBasicModalVerison(typeProducts,items)"
+                                                    class="feather text-primary icon-plus icon-md "></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Không biến thể -->
+                                    <ng-template #showFirstItem>
+                                        <div class="card d-block mt-2">
+                                            <div class="card-body p-2 d-flex align-items-center justify-content-evenly">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="img-products">
+                                                        <img width="100%"
+                                                            src="https://prod-core-images.s3.ap-southeast-1.amazonaws.com/nextshop/1697731423873.jpg"
+                                                            alt="">
+                                                    </div>
+                                                    <div>
+                                                        <h1 class="item-name fs-6">{{ items[0].product.name }}</h1>
+                                                        <div>
+                                                            <span class="price-name">{{ items[0].price_export }}₫</span>
+                                                            <span class="price-name ms-2">
+                                                                <ng-container
+                                                                    *ngIf="items[0].quantity === 0; else quantityAvailable">
+                                                                    <span style="color: red;">Hết hàng</span>
+                                                                </ng-container>
+                                                                <ng-template #quantityAvailable>
+                                                                    <span style="font-size: 10px;color: #808890;">  SL: {{ items[0].quantity }}</span>
+                                                                </ng-template>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style="cursor: pointer;">
+                                                    <i (click)="items[0].quantity > 0 ? addProduct(items[0]) : addProductQuality(items[0])"
+                                                        class="feather text-primary icon-plus icon-md "></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </div>
+                            </div>
+
+                        </ng-template>
+                    </ngb-panel>
+                </ngb-accordion>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="mb-3 position-relative">
+                    <div class="d-flex justify-content-between">
+                        <h6 class="card-title">Thêm khách hàng vào đơn</h6>
+                        <i style="cursor: pointer;" class="feather text-primary icon-plus-circle icon-md"
+                            (click)="openBasicModal(basicModalAddUser)"></i>
+                    </div>
+                    <ng-select [items]="people" bindLabel="displayName" bindValue="id" placeholder="TÌM KIẾM KHÁCH HÀNG"
+                        [(ngModel)]="selectedSearchPersonId" (change)="peopleEvent()">
+                    </ng-select>
+
+                    <!-- <input type="text" class="form-control" id="exampleInputUsername1" autocomplete="off"
+                        placeholder="Thêm khách hàng vào đơn"> -->
+
+                </div>
+                <b class="title-bill">THÔNG TIN ĐƠN HÀNG</b>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>Tổng tiền ({{ listProductCart[tabDefault].length }} sản phầm)</td>
+                                <td class="text-end">{{ totalMoney | currency:'VND' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="align-middle">Thuế tổng đơn (%)</td>
+                                <td class="text-end"><input type="number"
+                                        class="form-control  text-end border-0 border-bottom " value="{{ singleTax }}"
+                                        [(ngModel)]="singleTax" (input)="resultBill(tabDefault)"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-bold-800 align-middle">Chiết khấu ({{ modelRadioBill == 1 ? '%' : 'đ'
+                                    }})</td>
+                                <td class="text-bold-800 text-end"><input type="number"
+                                        (click)="openBasicModal(basicModaldiscount)" value="{{ DiscountBill }}"
+                                        class="form-control  text-end   border-0 border-bottom"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-bold-800 align-middle">Phí dịch vụ</td>
+                                <td class="text-bold-800 text-end"><input type="number" value="{{ taxBill }}"
+                                        class="form-control  text-end  border-0 border-bottom" [(ngModel)]="taxBill"
+                                        (input)="resultBill(tabDefault)"></td>
+                            </tr>
+                            <tr class="bg-light">
+                                <td class="text-bold-800 fw-bold align-middle">Khách phải trả</td>
+                                <td class="text-bold-800 text-end text-primary fw-bold">{{ priceBill | currency:'VND' }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <hr>
+                <b class="title-bill">KHÁCH TRẢ</b>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td class="text-primary fw-bold align-middle">Tiền mặt</td>
+                                <td class="text-end"><input type="number" value="{{ cashPrice  }}"
+                                        class="form-control  text-end border-0 border-bottom " [(ngModel)]="cashPrice"
+                                        (input)="changeCash($event)"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-bold-800 align-middle">Còn lại cần thanh toán</td>
+                                <td class="text-end"><input type="text" value="{{ paymentPrice  }}"
+                                        class="form-control bg-white border-0 text-end" disabled></td>
+                            </tr>
+                            <tr>
+                                <td class="text-bold-800 fw-bold fs-5 align-middle">Tiền thừa</td>
+                                <td class="text-end"><input type="text" value="{{ changeBill  }}"
+                                        class="form-control bg-white border-0 fs-3 text-end fw-bold" disabled></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex align-items-center form-control border-0 border-bottom  mb-2 ">
+                    <i class="feather icon-edit-3 title-bill icon-md "></i>
+                    <input type="text" class="border-0 ms-2 btn-icon-edit w-100 fw-bold" value="{{ noteBill }}"
+                        [(ngModel)]="noteBill" (input)="noteBillEvent()" placeholder="Thêm ghi chú cho đơn hàng">
+                </div>
+                <button type="button" [disabled]="listProductCart[tabDefault].length == 0" class="btn btn-primary w-100 p-4 fs-4 fw-bold"
+                    (click)="openLgModal(basicPay)">Thanh Toán</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #batches let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Chọn lô HSD</h5>
+        <button type="button" class="btn-close" (click)="modal.close(false)" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <ng-select
+        [items]="batchesData"
+        [multiple]=true
+        [closeOnSelect]="false"
+        [searchable]="false"
+        bindLabel="code"
+        placeholder="Chọn Lô,HSD..."
+        (change)="updateBatches(idbatches)"
+        [(ngModel)]="selectedPeopleBatches">
+      </ng-select>
+                                  <table class="table mt-2">
+                                    <thead>
+                                      <tr>
+                                        <th>Mã lô</th>
+                                        <th>Hạn sử dụng</th>
+                                        <th>Tồn kho</th>
+                                        <th>Số lượng bán</th>
+                                        <th></th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let item of selectedPeopleBatches">
+                                        <th class="align-middle">{{ item.code }}</th>
+                                        <td class="align-middle">{{ item.expiration_date }}</td>
+                                        <td class="align-middle">{{ item.quality }}</td>
+                                        <td> <div class="d-flex">
+                                            <button type="button" (click)="decreaseQuantityBatches(item.id)"
+                                                class="btn btn-lg text-black-50">-</button>
+                                            <input type="number" name="quanity" [id]="'quantityBatches-' + item.id"
+                                                data-id="{{ item.id }}" value="{{ item.payQuality }}"
+                                                (input)="resultTotalBatches($event)" class="form-control">
+                                            <button type="button" (click)="increaseQuantityBatches(item.id)"
+                                                class="btn btn-lg text-black-50">+</button>
+                                        </div></td>
+                                        <td class="align-middle">
+                                            <i class="feather icon-x-circle text-danger" (click)="removeBatches(item.id)"></i>
+                                        </td>
+                                      </tr>
+
+                                    </tbody>
+                                  </table>
+
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close(false)">Thoát</button>
+        <button type="button" class="btn btn-primary" (click)="modal.close(true)">Áp dụng</button>
+    </div>
+</ng-template>
+<ng-template #basicModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Điều chỉnh giá sản phẩm</h5>
+        <button type="button" class="btn-close" (click)="modal.close(false)" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="mb-3">
+            <label for="unit_price" class="form-label">Đơn giá</label>
+            <input type="number" class="form-control" [(ngModel)]="priceFormModal" id="unit_price" autocomplete="off"
+                value="{{ currentPrice }}" name="price">
+        </div>
+        <div class="mb-3 ">
+            <label for="Discount" class="form-label">Chiết khấu</label>
+            <div class="position-relative">
+                <input type="number" class="form-control p-3" id="Discount" (input)="limitInput($event)"
+                    [(ngModel)]="discount" placeholder="Chiết khấu" >
+                <div class="btn-group position-absolute top-50 end-0 translate-middle-y" role="group"
+                    aria-label="Basic radio toggle button group">
+                    <input type="radio" class="btn-check" [(ngModel)]="modelRadio" (change)="statusTotal()" [value]="0"
+                        name="btnradio" id="btnradio2" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="btnradio2">đ</label>
+
+                    <input type="radio" class="btn-check" checked [(ngModel)]="modelRadio" (change)="statusTotal()"
+                        [value]="1" name="btnradio" id="btnradio3" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="btnradio3">%</label>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="Tax" class="form-label">Thuế(%)</label>
+            <input type="number" class="form-control" [(ngModel)]="tax" id="Tax" (input)="limitInputTax($event)" autocomplete="off" value="0">
+        </div>
+
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close(false)">Thoát</button>
+        <button type="button" class="btn btn-primary" (click)="modal.close(true)">Áp dụng</button>
+    </div>
+</ng-template>
+<!-- Close result -->
+<p *ngIf="basicModalCloseResult != ''" class="mt-2">{{basicModalCloseResult}}</p>
+
+<ng-template #basicModalAddUser let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thêm mới khách hàng</h5>
+        <button type="button" class="btn-close" (click)="modal.close(false)" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="mb-3">
+            <label for="fulName" class="form-label">Họ và tên <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="fulName" [(ngModel)]="dataAdd.name">
+        </div>
+        <div class="mb-3">
+            <label for="phoneNumber" class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="phoneNumber" [(ngModel)]="dataAdd.tel">
+        </div>
+
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close(false)">Hủy</button>
+        <button type="button" class="btn btn-primary" (click)="modal.close(true)">Hoàn Tất</button>
+    </div>
+</ng-template>
+
+<ng-template #typeProducts let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Chọn biến thể sản phẩm</h5>
+        <button type="button" class="btn-close" (click)="modal.close(false)" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tbody>
+
+
+                    <tr *ngFor="let item of versionProduct,index as i"
+                        class="d-flex justify-content-between border-bottom border-dark" style="background: #e9ecef;">
+                        <td class="d-flex align-items-center border-0">
+                            <div class="py-1">
+                                <img src="http://via.placeholder.com/36x36" alt="image">
+                            </div>
+                            <div class="ms-2">
+                                <h6>{{ item.display_name }}</h6>
+                            </div>
+                        </td>
+                        <div class="d-flex align-items-center">
+                            <td class=" d-flex flex-column">
+
+
+                                <ng-container *ngIf="item.quantity === 0; else quantityAvailable">
+                                    <div class="ms-2">
+                                        <span style="color: red;">Hết hàng</span>
+                                    </div>
+                                </ng-container>
+                                <ng-template #quantityAvailable>
+                                    <div class="text-primary align-middle text-center">
+                                        {{ item.price_export | currency:'VND' }}
+                                    </div>
+                                    <div class="ms-2">
+                                        <span style="font-size: 12px;color: #808890;">SL: {{ item.quantity }}</span>
+                                    </div>
+                                </ng-template>
+
+
+                            </td>
+                            <td class="align-middle ms-2" style="cursor: pointer;">
+                                <i class="feather text-primary icon-plus icon-md " (click)="item.quantity === 0 ?  addProductQuality(item) : addProduct(item)"></i>
+                            </td>
+                        </div>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</ng-template>
+
+<ng-template #basicModaldiscount let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Chiết khấu đơn hàng</h5>
+        <button type="button" class="btn-close" (click)="modal.close(false)" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="mb-3 ">
+            <label for="Discount" class="form-label">Chiết khấu</label>
+            <div class="position-relative">
+                <input type="number" class="form-control p-3" id="Discount" [(ngModel)]="DiscountBill"
+                    (change)="resultBill(tabDefault)" placeholder="Email" value="0">
+                <div class="btn-group position-absolute top-50 end-0 translate-middle-y" role="group"
+                    aria-label="Basic radio toggle button group">
+                    <input type="radio" class="btn-check" [(ngModel)]="modelRadioBill" [value]="0" name="btnradio"
+                        id="btnradio2" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="btnradio2">đ</label>
+
+                    <input type="radio" class="btn-check" checked [(ngModel)]="modelRadioBill" [value]="1"
+                        name="btnradio" id="btnradio3" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="btnradio3">%</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close(false)">Thoát</button>
+        <button type="button" class="btn btn-primary" (click)="modal.close(true)">Hoàn Tất</button>
+    </div>
+</ng-template>
+
+<ng-template #basicPay let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thanh toán đa phương thức</h5>
+        <button type="button" class="btn-close" (click)="modal.close(false)" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="mb-3 fs-5 fw-bold d-flex justify-content-between align-items-center">
+            <label for="Discount" class="form-label">Số tiền cần trả</label>
+            <h5 class="text-primary fs-4">{{ priceBill | currency:'VND' }}</h5>
+        </div>
+        <hr>
+        <h6 class="fs-5 fw-normal">Thêm phương thức thanh toán</h6>
+        <div class="d-flex justify-content-evenly mt-4" role="group" aria-label="Basic radio toggle button group ">
+            <div class="border rounded  btn-outline-secondary">
+                <input type="radio" class="btn-check" [(ngModel)]="modelTypePay" [value]="0" (change)="changePayment(0)" name="btnradio"
+                    id="btnradio1" autocomplete="off">
+                <label class="btn title-bill px-4 py-2 d-block" for="btnradio1"> <img src="../../../../../assets/images/others/Payment_Cash.svg" alt=""> Tiền mặt</label>
+            </div>
+
+            <div class="border rounded  btn-outline-secondary">
+                <input type="radio" id="btnradio2" class="btn-check" [(ngModel)]="modelTypePay" (change)="changePayment(1)" [value]="1"
+                    name="btnradio" autocomplete="off">
+                <label class="btn title-bill px-4 py-2 d-block" for="btnradio2">
+                    <img src="../../../../../assets/images/others/Payment_Transfer.svg" alt=""> Chuyển khoản</label>
+            </div>
+
+
+            <div class="border rounded   btn-outline-secondary">
+                <input type="radio" class="btn-check" [(ngModel)]="modelTypePay" (change)="changePayment(2)" [value]="2" name="btnradio"
+                    id="btnradio4" autocomplete="off">
+                <label class="btn title-bill px-4 py-2 d-block" for="btnradio4"><img src="../../../../../assets/images/others/Debt.68ccc6d1.svg" alt="">Ghi nợ</label>
+            </div>
+        </div>
+        <h6 class="fs-5 fw-normal my-2">Khách trả:</h6>
+        <div class="row mt-2" *ngFor="let itemBtn of dataBtnPayment[tabDefault],index as i">
+            <div class="col-3">
+                <div class="border rounded">
+                    <p class="btn d-flex align-items-center fs-5"> <img src="{{ iconsData[itemBtn.payment_method].icon }}" alt=""> {{ iconsData[itemBtn.payment_method].name }}</p>
+                </div>
+            </div>
+            <div class="col-9 d-flex align-items-center">
+                <div class="position-relative h-100 " style="flex: 1;">
+                    <input type="text" [(ngModel)]="itemBtn.pricePayment" (input)="changePayment()" [disabled]="itemBtn.status == true || itemBtn.payment_method == 2" class="form-control text-start p-2 h-100" >
+                    <button class="btn btn-primary p-0 position-absolute top-50 start-80 translate-middle" style="width: 100px;" [style]="itemBtn.status == true || itemBtn.payment_method == 2 ? 'display:none' : '' " (click)="paymentOrder(modelTypePay)">Thanh toán</button>
+                </div>
+                <i class="feather icon-delete text-danger ms-2" style="cursor: pointer;" (click)="removePayment(i)"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer flex-column">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td class="text-primary p-0 fw-bold align-middle">Khách phải trả</td>
+                    <td class="text-end p-0 d-flex align-items-center" ><input type="text" value="{{ priceBill }}"
+                            class="form-control bg-white border-0 text-end" style="background-color: #e9ecef !important;" disabled>₫</td>
+                </tr>
+                <tr>
+                    <td class="text-bold-800  p-0  align-middle">Tổng khách đưa</td>
+                    <td class="text-end  p-0 text-danger d-flex align-items-center"><input type="text" value="{{ pricePayment }}"
+                            class="form-control bg-white text-danger border-0  text-end" style="background-color: #e9ecef  !important;" disabled>₫</td>
+                </tr>
+                <tr>
+                    <td class="text-bold-800  p-0  align-middle">{{ paymentPrice > 0 ? 'Còn lại cần thanh toán' : 'Tiền thừa' }}</td>
+                    <td class="text-end  p-0 text-danger d-flex align-items-center"><input type="text" value="{{ paymentPrice > 0 ? paymentPrice : changeBill   }}"
+                            class="form-control bg-white text-danger border-0  text-end" style="background-color: #e9ecef !important;" disabled>₫</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mt-4">
+            <button type="button" class="btn btn-secondary" (click)="modal.close(false)">Thoát</button>
+            <button type="button" class="btn btn-primary ms-2" (click)="modal.close(true)" [disabled]="!dataBtnPayment[tabDefault][0].status">Hoàn Tất Đơn Hàng</button>
+        </div>
+    </div>
+</ng-template>

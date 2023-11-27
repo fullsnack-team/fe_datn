@@ -1,0 +1,86 @@
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
+    <li class="breadcrumb-item active" aria-current="page">
+      Thêm mới khoản phải trả
+    </li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-title">Thêm mới khoản phải trả</h6>
+
+        <form class="forms-sample" [formGroup]="repayForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">Tên khoản phải trả<span
+                class="text-danger">(*)</span></label>
+            <input type="text" class="form-control" id="exampleInputUsername1" formControlName="name" autocomplete="off"
+              placeholder="Nhập tên khoản phải trả" />
+            <div *ngIf="
+                repayForm.controls.name.invalid &&
+                repayForm.controls.name.touched
+              " class="alert alert-danger mt-2">
+              Không để trống tên khoản phải trả
+            </div>
+          </div>
+          <div class="mb-3">
+            <ng-template #rt let-r="result" let-t="term">
+              <!-- <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/' + r['flag']" class="me-1" style="width: 16px"> -->
+              <ngb-highlight [result]="r.name_tel" [term]="t"></ngb-highlight>
+            </ng-template>
+            <label for="exampleInputUsername1" class="form-label">Giao dịch với<span
+                class="text-danger">(*)</span></label>
+            <input id="typeahead-template" type="text" class="form-control" [(ngModel)]="resultModel" [ngbTypeahead]="search"
+              [resultTemplate]="rt" [inputFormatter]="formatter" formControlName="partner" />
+              <!-- <p class="text-muted mt-2">Model: {{resultModel | json}}</p> -->
+            <!-- <div *ngIf="
+                recoveryForm.controls.name.invalid &&
+                recoveryForm.controls.name.touched
+              " class="alert alert-danger mt-2">
+              Không để trống tên khoản thu
+            </div> -->
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">Tổng phải trả<span
+                class="text-danger">(*)</span></label>
+            <input type="text" class="form-control" id="exampleInputUsername1" formControlName="principal"
+              autocomplete="off" placeholder="Nhập số tiền phải trả" mask="separator.2" thousandSeparator=","/>
+            <div *ngIf="
+                repayForm.controls.name.invalid &&
+                repayForm.controls.name.touched
+              " class="alert alert-danger mt-2">
+              Không để trống số tiền phải thu
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Ngày ghi nợ:</label>
+              <input type="date" class="form-control mb-4 mb-md-0" formControlName="debit_at"
+                placeholder="dd/mm/yyyy" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Hạn trả:</label>
+              <input type="date" class="form-control mb-4 mb-md-0" formControlName="due_at" placeholder="dd/mm/yyyy" />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">Ghi chú</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Nhập ghi chú"
+              formControlName="note" rows="5"></textarea>
+          </div>
+
+          <button type="submit" [disabled]="repayForm.invalid" class="btn btn-primary me-2">
+            Tạo mới
+          </button>
+          <button class="btn btn-secondary" routerLink="/debts/repay/list">
+            Trở về
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

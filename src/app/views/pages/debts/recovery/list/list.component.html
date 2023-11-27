@@ -1,0 +1,137 @@
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
+    <li class="breadcrumb-item active" aria-current="page">
+      Danh sách khoản phải thu
+    </li>
+  </ol>
+</nav>
+
+
+<div class="row">
+  <div class="col-12 col-xl-12 stretch-card">
+    <div class="row flex-grow-1">
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-baseline">
+              <h6 class="card-title mb-0">Tổng khoản thu</h6>
+            </div>
+            <div class="row">
+              <div class="col-6 col-md-12 col-xl-5">
+                <h3 class="mb-2">{{totalRevenue | currency:'VNĐ ':'symbol':'1.0-0'}}</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-baseline">
+              <h6 class="card-title mb-0">Còn lại chưa thu</h6>
+            </div>
+            <div class="row">
+              <div class="col-6 col-md-12 col-xl-5">
+                <h3 class="mb-2">{{uncollectedMoney | currency:'VNĐ ':'symbol':'1.0-0'}}</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12 stretch-card">
+
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-title">Quản lí công nợ (Phải thu)</h6>
+        <button routerLink="/debts/recovery/create" type="button" class="btn btn-primary">
+          Thêm khoản phải thu
+        </button>
+        <div class="table-responsive">
+          <div *ngIf="isLoading" class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          <table *ngIf="!isLoading" id="dataTableExample" class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>GIAO DỊCH VỚI</th>
+                <th>TỔNG PHẢI THU</th>
+                <th>THANH TOÁN</th>
+                <th>CÒN LẠI</th>
+                <th>TRẠNG THÁI</th>
+                <th>HẠN TRẢ</th>
+                <th>HÀNH ĐỘNG</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let value of listRecovery | async">
+                <td>{{ value.id }}</td>
+                <td>{{ value.partner_name }}</td>
+                <td>
+                  {{ value.amount_debt | currency:'VNĐ ':'symbol':'1.0-0' }}
+                </td>
+                <td>
+                  {{ value.name }}
+                </td>
+                <td>{{ value.amount_debt - value.amount_paid | currency:'VNĐ ':'symbol':'1.0-0' }}</td>
+                <td style="text-align: center">
+                  <span class="badge {{
+                      status(value.status)[1]
+                    }}">{{
+                    status(value.status)[0]
+                    }}</span>
+                </td>
+                <td>{{ value.due_at }}</td>
+                <td>
+                  <a [routerLink]="['../edit', value.id]" class="btn btn-success mx-2">Sửa</a>
+
+                </td>
+                <td>
+
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+            </tfoot>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <button type="button" class="btn btn-primary" (click)="openBasicModal(basicModal)">Thanh toán</button>
+Modal
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <p>Modal body</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="modal.close('by: save button')">Save
+      changes</button>
+  </div>
+</ng-template>
+Close result
+<p *ngIf="basicModalCloseResult != ''" class="mt-2">{{basicModalCloseResult}}</p> -->

@@ -1,0 +1,30 @@
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink=".">Thương hiệu</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Thêm mới thương hiệu</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+
+        <h6 class="card-title">Thêm mới thương hiệu</h6>
+
+        <form class="forms-sample" [formGroup]="brandForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">Tên thương hiệu</label>
+            <input type="text" class="form-control" id="exampleInputUsername1" formControlName="name" autocomplete="off"
+              placeholder="Nhập tên thương hiệu">
+
+            <p class="text-danger mt-1" *ngIf="brandForm.controls.name.invalid && brandForm.controls.name.touched">Không
+              để trống tên thương hiệu</p>
+          </div>
+          <button type="submit" [disabled]="brandForm.invalid" class="btn btn-primary me-2">Tạo mới</button>
+          <button class="btn btn-secondary" routerLink="/categories/list">Trở về</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

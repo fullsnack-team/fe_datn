@@ -1,0 +1,35 @@
+<h2 class="content-inner__body-title mb-2">Chọn doanh nghiệp</h2>
+<p class="f14 text-second mb-4">để hoàn tất đăng nhập NextGo</p>
+<a routerLink="/tenant/create" type="button" class="btn btn-primary mb-4"> TẠO DOANH NGHIỆP MỚI</a>
+<div class="content-inner__body-list mb-4">
+  <div
+    class="
+                content-inner__body-item
+                d-flex
+                justify-content-between
+                align-items-center
+                mb-3
+              "
+    *ngFor="let tenant of tenants"
+    (click)="setUser(tenant.name)"
+  >
+    <div>
+      <h6 class="f14 fw600">{{ tenant.business_name }}</h6>
+      <p class="f14 text-second-color">nextgo.vn/s/{{ tenant.name }}</p>
+    </div>
+  </div>
+</div>
+
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+  <hr class="w-100">
+
+  <span>hoặc</span>
+
+  <hr class="w-100">
+</div>
+
+<p class="content-inner__body-start f14 mt-4 mbHiden">
+  <a class="link-primary-color" (click)="redirectToLogin()">
+    Đăng nhập bằng tài khoản khác
+  </a>
+</p>

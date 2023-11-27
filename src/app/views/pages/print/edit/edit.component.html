@@ -1,0 +1,387 @@
+<!-- <div *ngIf="isLoading" class="d-flex justify-content-center">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div> -->
+<div class="main-wrapper">
+
+
+
+  <div class="page-wrapper">
+    <div class="page-content">
+      <!-- Spinner for lazyload modules -->
+      <div *ngIf="isLoading" class="spinner-wrapper">
+        <div class="spinner">Loading...</div>
+      </div>
+      <form (ngSubmit)="onSubmit()">
+        <nav class="navbar top-navbar">
+          <div class="container">
+            <div class="navbar-content">
+              <ul class=" d-flex justify-content-between align-items-center w-100 m-0" style="list-style: none;">
+                <li class="nav-item">
+                  <button type="button" class="btn btn-light" routerLink="/print">Thoát</button>
+                </li>
+                <li class="nav-item">
+                  <h1 class="fs-4">Tùy chỉnh mẫu in</h1>
+                </li>
+                <li class="nav-item">
+                  <button type="submit" class="btn btn-primary">Lưu</button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        <div contentAnimate *ngIf="!isLoading">
+          <!-- <form *ngIf="!isLoading" class="forms-sample"  (ngSubmit)="onSubmit()"> -->
+          <div class="row">
+
+          </div>
+          <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label class="form-label">Mẫu in</label>
+                      <ng-select [searchable]="true" placeholder="Chọn Đơn Bán hàng">
+                        <ng-option *ngFor="let item of salesUnit" [value]="item.id">{{
+                          item.name
+                          }}</ng-option>
+                      </ng-select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Khổ in</label>
+                      <ng-select [searchable]="true" placeholder="Chọn khổ in">
+                        <ng-option *ngFor="let item of printSize" [value]="item.id">{{
+                          item.name
+                          }}</ng-option>
+                      </ng-select>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputUsername1" class="form-label">
+                      Chi nhánh áp dụng
+                      <span class="text-danger">(*)</span>
+                    </label>
+                    <ng-select [searchable]="true" placeholder="Chọn chi nhánh">
+                      <ng-option *ngFor="let item of listLocation" [value]="item.id">{{
+                        item.name
+                        }}</ng-option>
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-header align-items-center">
+                  <div class="row align-items-center">
+                    <div class="col-md-6">
+                      <button type="button" (click)="toDefault()" class="btn btn-secondary">Về mặc định</button>
+                    </div>
+                    <div class="col-md-6">
+                      <button type="button" class="btn btn-primary" (click)="openXlModal(xlModal)">
+                        Thêm từ khóa
+                      </button>
+                    </div>
+                  </div>
+                  <!-- Modal -->
+                  <ng-template #xlModal let-modal>
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Danh sách từ khóa</h5>
+                      <button type="button" class="btn-close" (click)="modal.close('by: close icon')"
+                        aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                      <div class="row">
+                        <p>Thông tin cửa hàng</p>
+                        <div class="col-md-6">
+                          <div class="table-responsive">
+                            <table class="table table-hover">
+                              <tbody>
+                                <tr>
+                                  <th>Logo cửa hàng</th>
+                                  <td>{{ '{Logo_Cua_Hang}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tỉnh thành (cửa hàng)</th>
+                                  <td>{{ '{Tinh_Cua_hang}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>SĐT cửa hàng</th>
+                                  <td>{{ '{Dien_Thoai_Cua_hang}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tên chi nhánh</th>
+                                  <td>{{ '{Ten_Chi_Nhanh}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Địa chỉ chi nhánh</th>
+                                  <td>{{ '{Dia_Chi_Chi_Nhanh}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>SĐT chi nhánh</th>
+                                  <td>{{ '{Dien_Thoai_Chi_Nhanh}' }}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="table-responsive">
+                            <table class="table table-hover">
+                              <tbody>
+                                <tr>
+                                  <th>Tên cửa hàng</th>
+                                  <td>{{ '{Ten_Cua_hang}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Địa chỉ cửa hàng</th>
+                                  <td>{{ '{Dia_Chi_Cua_hang}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Email cửa hàng</th>
+                                  <td>{{ '{Email_Cua_hang}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tỉnh thành (chi nhánh)</th>
+                                  <td>{{ '{Tinh_Chi_Nhanh}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Email chi nhánh</th>
+                                  <td>{{ '{Email_Chi_Nhanh}' }}</td>
+                                </tr>
+
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <p class="my-3">Thông tin đơn hàng</p>
+                        <div class="col-md-6">
+                          <div class="table-responsive">
+                            <table class="table table-hover">
+                              <tbody>
+                                <tr>
+                                  <th>Mã đơn hàng</th>
+                                  <td>{{ '{Ma_Don_Hang}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Người phụ trách</th>
+                                  <td>{{ '{Nguoi_Phu_Trach}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Địa chỉ khách hàng</th>
+                                  <td>{{ '{Dia_Chi_Khach}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Email khách hàng</th>
+                                  <td>{{ '{Email_Khach}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tổng tiền (Đơn giá * SL)</th>
+                                  <td>{{ '{Tong_Tien_Hang}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Chiết khấu đơn hàng</th>
+                                  <td>{{ '{Chiet_Khau_Don_Hang}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tổng chiết khấu của sản phẩm và đơn hàng</th>
+                                  <td>{{ '{Tong_Chiet_Khau}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tiền tiền khách phải trả</th>
+                                  <td>{{ '{Tong_Can_Thanh_Toan}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tổng tiền khách đưa</th>
+                                  <td>{{ '{Khach_Thanh_Toan}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Ghi chú</th>
+                                  <td>{{ '{Ghi_Chu}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tiền nợ</th>
+                                  <td>{{ '{Tien_No}' }}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="table-responsive">
+                            <table class="table table-hover">
+                              <tbody>
+                                <tr>
+                                  <th>Ngày cập nhật</th>
+                                  <td>{{ '{Ngay_Cap_Nhat}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tên khách hàng</th>
+                                  <td>{{ '{Ten_Khach_Hang}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>SĐT khách hàng</th>
+                                  <td>{{ '{Dien_Thoai_Khach}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tổng số lượng</th>
+                                  <td>{{ '{Tong_So_Luong}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tổng tiền bằng chữ</th>
+                                  <td>{{ '{total_text}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tổng thuế</th>
+                                  <td>{{ '{Tong_Thue}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Phí khác</th>
+                                  <td>{{ '{Phi_Khac}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tiền tiền khách phải trả bằng chữ</th>
+                                  <td>{{ '{Tong_Can_Thanh_Toan_Chu}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tiền thừa</th>
+                                  <td>{{ '{Tien_Tra}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Ngày tạo</th>
+                                  <td>{{ '{Ngay_Tao}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tổng chiết khấu sản phẩm</th>
+                                  <td>{{ '{Tong_Chiet_Khau_San_Pham}' }}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <p class="my-3">Thông tin mua hàng</p>
+                        <div class="col-md-6">
+                          <div class="table-responsive">
+                            <table class="table table-hover">
+                              <tbody>
+                                <tr>
+                                  <th>STT</th>
+                                  <td>{{ '{Stt}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Đơn vị tính</th>
+                                  <td>{{ '{Don_Vi}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Thuế theo phiên bản sản phẩm</th>
+                                  <td>{{ '{Thue_Phien_Ban}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Số lượng</th>
+                                  <td>{{ '{So_Luong_Ban}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Mã lô sản phẩm</th>
+                                  <td>{{ '{Kieu_Lo_01}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tên sản phẩm</th>
+                                  <td>{{ '{Ten_San_Pham}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Tiền hàng (Giá * SL)</th>
+                                  <td>{{ '{Tien_Hang}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Serial</th>
+                                  <td>{{ '{Serials}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Thời hạn bảo hành</th>
+                                  <td>{{ '{Thoi_Han_Bao_Hanh}' }}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="table-responsive">
+                            <table class="table table-hover">
+                              <tbody>
+                                <tr>
+                                  <th>Tên phiên bản sản phẩm</th>
+                                  <td>{{ '{Ten_Phien_Ban}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Đơn giá</th>
+                                  <td>{{ '{Don_Gia}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Chiết khấu phiên bản sản phẩm</th>
+                                  <td>{{ '{Chiet_khau_Phien_Ban}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Thương hiệu sản phẩm</th>
+                                  <td>{{ '{Thuong Hieu_San_Pham}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Mã lô - NSX -NHH</th>
+                                  <td>{{ '{Kieu_lo_02}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Thành tiền</th>
+                                  <td>{{ '{Thanh_Tien}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Loại sản phẩm</th>
+                                  <td>{{ '{Loai_San_Pham}' }}</td>
+                                </tr>
+                                <tr>
+                                  <th>Chính sách bảo hành</th>
+                                  <td>{{ '{Ten_Bao_Hanh}' }}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">
+                        Đóng
+                      </button>
+                      <button type="button" class="btn btn-primary" (click)="modal.close('by: save button')">
+                        Hoàn tất
+                      </button>
+                    </div>
+                  </ng-template>
+                </div>
+                <ckeditor data="{{oldForm}}" [(ngModel)]="oldForm" [config]="config" (change)="onChange($event)"
+                  #myckeditor="ngModel" name="myckeditor" required debounce="500"></ckeditor>
+              </div>
+            </div>
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-header"></div>
+                <div class="card-body d-flex flex-column" [perfectScrollbar]>
+                  <div [innerHTML]="myContentPreview"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- </form> -->
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

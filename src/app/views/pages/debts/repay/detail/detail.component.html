@@ -1,0 +1,265 @@
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
+    <li class="breadcrumb-item active" aria-current="page">
+      Chỉnh sửa khoản phải trả
+    </li>
+  </ol>
+</nav>
+<div *ngIf="isLoading" class="loadingcustomcss">
+  <button class="btn btn-primary" type="button" disabled>
+    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+    Loading...
+  </button>
+</div>
+
+<div class="row" *ngIf="!isLoading">
+  <div class="col-12 col-xl-12 stretch-card">
+    <div class="row flex-grow-1">
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-baseline">
+              <h6 class="card-title mb-0">Tổng khoản trả</h6>
+            </div>
+            <div class="row">
+              <div class="col-6 col-md-12 col-xl-5">
+                <h3 class="mb-2" *ngIf="debt">{{debt.amount_debt | currency:'VNĐ ':'symbol':'1.0-0'}}</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-6 col-md-12">
+                <div class="d-flex justify-content-evenly">
+                  <div class="row ">
+                    <p>Đã thanh toán</p>
+                    <h3 class="mb-2" *ngIf="debt">{{totalPayment | currency:'VNĐ ':'symbol':'1.0-0'}}</h3>
+                  </div>
+                  <div class="row ">
+                    <p>Còn lại</p>
+                    <h3 class="mb-2" *ngIf="debt">{{debt.amount_debt - totalPayment |
+                      currency:'VNĐ ':'symbol':'1.0-0'}}</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="!isLoading">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-title">Thông tin khoản phải trả</h6>
+
+        <form class="forms-sample" [formGroup]="repayForm" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <div class="col-md-12 grid-margin">
+              <div class="card">
+                <div class="card-body">
+
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="name" class="form-label">Tên khoản thu: <span class="text-danger">(*)</span></label>
+                      <input type="text" id="name" formControlName="name" class="form-control mb-4 mb-md-0" />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="amount_debt" class="form-label">Tổng phải thu: <span
+                          class="text-danger">(*)</span></label>
+                      <input formControlName="amount_debt" type="text" id="amount_debt"
+                        class="form-control mb-4 mb-md-0" mask="separator.2" thousandSeparator="," />
+                    </div>
+                  </div>
+                  <!-- <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="id" class="form-label">Mã khoản thu:</label>
+                      <input formControlName="id" id="id" type="text" class="form-control mb-4 mb-md-0" [value]="123"
+                        readonly />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="created_by" class="form-label">Người tạo:</label>
+                        <input formControlName="partner_name" id="created_by" class="form-control" [value]="123"
+                          />
+                    </div>
+                  </div> -->
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="status" class="form-label">Trạng thái:</label>
+                      <input formControlName="status" *ngIf="debt" [ngModel]="status(debt.status)" type="text"
+                        id="status" class="form-control mb-4 mb-md-0" readonly />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="partner_name" class="form-label">Giao dịch với:</label>
+                      <input formControlName="partner_name" type="text" class="form-control mb-4 mb-md-0"
+                        id="partner_name" readonly />
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="debit_at" class="form-label">Ngày ghi nợ: <span class="text-danger">(*)</span></label>
+                      <input formControlName="debit_at" type="date" id="debit_at" class="form-control mb-4 mb-md-0" />
+                    </div>
+                    <div class="col-md-6">
+                      <label for="due_at" class="form-label">Hạn trả: <span class="text-danger">(*)</span></label>
+                      <input formControlName="due_at" type="date" id="due_at" class="form-control mb-4 mb-md-0" />
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-12">
+                      <label for="note" class="form-label">Ghi chú:</label>
+                      <input formControlName="note" type="text" id="note" class="form-control mb-4 mb-md-0" />
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" [disabled]="repayForm.invalid" class="btn btn-primary me-2">
+            Cập nhật
+          </button>
+          <button class="btn btn-secondary" routerLink="/debts/repay/list">
+            Trở về
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="!isLoading">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-7 my-2"> <!-- Add margin top and bottom -->
+            <h6 class="card-title">Lịch sử thanh toán</h6>
+          </div>
+          <div class="col-md-5 d-flex justify-content-end my-2"> <!-- Add margin top and bottom -->
+            <button *ngIf="debt.status != 3" type="button" class="btn btn-primary" (click)="openBasicModal(basicModal)">Thanh toán</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 grid-margin">
+            <div class="row mb-3">
+              <label for="abc" class="col-sm-3 col-form-label">Tổng phải thu</label>
+              <div class="col-sm-9">
+                <input *ngIf="debt" type="text" id="abc" class="form-control"
+                  [value]="debt.amount_debt | currency:'VNĐ ':'symbol':'1.0-0'" disabled>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="firstName1" class="col-sm-3 col-form-label">Còn lại</label>
+              <div class="col-sm-9">
+                <input *ngIf="debt" type="text" id="firstName1" class="form-control"
+                  [value]="debt.amount_debt - totalPayment | currency:'VNĐ ':'symbol':'1.0-0'" disabled>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 grid-margin">
+            <div class="row mb-3">
+              <label for="firstName1" class="col-sm-3 col-form-label">Đã thanh toán</label>
+              <div class="col-sm-9">
+                <input *ngIf="debt" type="text" id="firstName1" class="form-control"
+                  [value]="totalPayment | currency:'VNĐ ':'symbol':'1.0-0'" disabled>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <div class="table-responsive">
+            <table *ngIf="debt && debt.payments.length > 0" id="dataTableExample" class="table">
+              <thead>
+                <tr>
+                  <th>Phương thức trả</th>
+                  <th>Số tiền</th>
+                  <th>Thời gian</th>
+                  <th>Ghi chú</th>
+                  <th>Mã tham chiếu</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let value of oldPayment">
+                  <td>{{paymentMethod(value.payment_method)}}</td>
+                  <td>{{value.amount_in | currency:'VNĐ ':'symbol':'1.0-0'}}</td>
+                  <td>{{value.payment_at}}</td>
+                  <td>{{value.note}}</td>
+                  <td>{{value.reference_code}}</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </tfoot>
+            </table>
+            <h3 *ngIf="debt && debt.payments.length === 0" style="text-align: center;">Chưa có lịch sử thanh toán</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Thêm thanh toán</h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="status" class="form-label">Ngày trả nợ: <span class="text-danger">(*)</span></label>
+        <input type="date" id="status" [(ngModel)]="dataAdd.payment_at" class="form-control mb-4 mb-md-0" />
+      </div>
+      <div class="col-md-6">
+        <label for="partner_name" class="form-label">Hình thức trả: <span class="text-danger">(*)</span></label>
+        <ng-select [searchable]="true" [(ngModel)]="dataAdd.payment_method" placeholder="Phương thức thanh toán">
+          <ng-option *ngFor="let item of typePayment" [value]="item.id">{{item.name}}</ng-option>
+        </ng-select>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="status" class="form-label">Số tiền: <span class="text-danger">(*)</span></label>
+        <input type="number" id="status" [(ngModel)]="dataAdd.amount_in"
+          class="form-control mb-4 mb-md-0"
+          placeholder="{{debt.amount_debt - debt.amount_paid | currency:'VNĐ ':'symbol':'1.0-0'}}" />
+      </div>
+      <div class="col-md-6">
+        <label for="partner_name" class="form-label">Mã thanh chiếu:</label>
+        <input type="text" class="form-control mb-4 mb-md-0" id="partner_name" placeholder="Nhập mã tham chiếu"
+          [(ngModel)]="dataAdd.reference_code" />
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <label for="note" class="form-label">Ghi chú:</label>
+        <input type="text" id="note" [(ngModel)]="dataAdd.note" class="form-control mb-4 mb-md-0"
+          placeholder="Nhập thông tin ghi chú" />
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('by: close button')">Đóng</button>
+    <button type="button" class="btn btn-primary" (click)="modal.close('by: save button')">Hoàn tất</button>
+  </div>
+</ng-template>
+<!-- Close result -->
+<p *ngIf="basicModalCloseResult != ''" class="mt-2">{{basicModalCloseResult}}</p>
+

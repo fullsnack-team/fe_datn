@@ -1,0 +1,33 @@
+<h2 class="content-inner__body-title mb-4 text-center">Đăng nhập</h2>
+<form class="forms-sample" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Địa chỉ đăng nhập doanh nghiệp</label>
+    <input type="" class="form-control" id="exampleInputEmail1" placeholder="Địa chỉ đăng nhập doanh nghiệp"
+           value="" formControlName="domain_name">
+    <div *ngIf="loginForm.controls.domain_name.invalid && loginForm.controls.domain_name.touched"
+         class="alert alert-danger mt-2">
+      Không để trống địa chỉ đăng nhập
+    </div>
+  </div>
+  <div>
+    <button type="submit" class="btn btn-primary me-2 mb-2 mb-md-0"
+            [disabled]="loginForm.invalid">
+      Tiếp tục
+    </button>
+  </div>
+</form>
+
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+  <hr class="w-100">
+
+  <span>hoặc</span>
+
+  <hr class="w-100">
+</div>
+
+<p class="content-inner__body-start f14 mt-4 mbHiden">
+  Chưa có tài khoản?
+  <a routerLink="/auth/register" class="link-primary-color">
+    Bắt đầu ngay
+  </a>
+</p>

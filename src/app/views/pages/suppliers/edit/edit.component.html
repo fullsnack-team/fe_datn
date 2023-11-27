@@ -1,0 +1,110 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Cập nhật danh mục</li>
+    </ol>
+  </nav>
+  
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+  
+          <h6 class="card-title">Cập nhật danh mục</h6>
+         <div *ngIf="isLoading" class="loadingcustomcss">
+            <button  class="btn btn-primary" type="button" disabled>
+                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button>
+         </div>
+          <form class="forms-sample" [formGroup]="customersForm" (ngSubmit)="onSubmit()"  *ngIf="!isLoading">
+            <div class="mb-3">
+                <label for="exampleInputUsername1" class="form-label">Tên Khách hàng<span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="exampleInputUsername1" formControlName="name"
+                    autocomplete="off" placeholder="Nhập tên khách hàng">
+                <div *ngIf="customersForm.controls.name.invalid && customersForm.controls.name.touched"
+                    class="alert alert-danger mt-2">
+                    Không để trống tên khách hàng
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputUsername1" class="form-label">Email</label>
+                <input type="email" class="form-control" id="exampleInputUsername1" formControlName="email"
+                    autocomplete="off" placeholder="Nhập email">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputUsername1" class="form-label">Số điện thoại<span class="text-danger">(*)</span></label>
+                <input type="text" class="form-control" id="exampleInputUsername1" formControlName="tel"
+                    autocomplete="off" placeholder="Nhập số điện thoại">
+                <div *ngIf="customersForm.controls.tel.invalid && customersForm.controls.tel.touched"
+                    class="alert alert-danger mt-2">
+                    Không để trống Số điện thoại
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="exampleInputUsername1" class="form-label">Trạng thái</label>
+                <ng-select [searchable]="true" formControlName="status" placeholder="Chọn Trạng thái">
+                    <ng-option *ngFor="let item of status" [value]="item.id">{{item.name}}</ng-option>
+                </ng-select>
+       
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputUsername1" class="form-label">Loại Khách hàng</label>
+                <ng-select [searchable]="true" formControlName="type" placeholder="Chọn Kiểu bảo hành">
+                    <ng-option *ngFor="let item of types" [value]="item.id">{{item.name}}</ng-option>
+                </ng-select>
+            </div>
+
+            <div class="mb-3">
+                <label for="exampleInputUsername1" class="form-label">Nhóm khách hàng</label>
+                <ng-select [searchable]="true" formControlName="group_supplier_id" placeholder="Chọn Nhóm khách hàng">
+                    <ng-option *ngFor="let item of GroupsCustomers" [value]="item.id">{{item.name}}</ng-option>
+                </ng-select>
+            </div>
+
+            <div class="mb-3">
+                <label for="exampleInputUsername1" class="form-label">Tỉnh thành phố</label>
+                <ng-select [searchable]="true" (change)="onProvinceChange()" formControlName="province_code"
+                    placeholder="Chọn Tỉnh">
+                    <ng-option *ngFor="let item of provinces" [value]="item.id">{{item.name}}</ng-option>
+                </ng-select>
+            </div>
+
+            <div class="mb-3">
+                <label for="exampleInputUsername1" class="form-label">Chọn Huyện</label>
+                <ng-select [searchable]="true" (change)="onDistrictChange()" formControlName="district_code"
+                    placeholder="Chọn Tỉnh">
+                    <ng-option *ngFor="let item of districts" [value]="item.id">{{item.name}}</ng-option>
+                </ng-select>
+            </div>
+
+            <div *ngIf="isWardDataLoaded">
+                <div class="mb-3">
+                    <label for="exampleInputUsername1" class="form-label">Chọn Xã</label>
+                    <ng-select [searchable]="true" formControlName="ward_code" placeholder="Chọn Xã">
+                        <ng-option *ngFor="let item of wards" [value]="item.id">{{item.name}}</ng-option>
+                    </ng-select>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="exampleInputUsername1" class="form-label">Địa chỉ cụ thể</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Nhập địa chỉ"
+                    formControlName="address_detail" rows="5"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="exampleInputUsername1" class="form-label">Ghi chú</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Nhập ghi chú"
+                    formControlName="note" rows="5"></textarea>
+            </div>
+
+            <button type="submit" [disabled]="customersForm.invalid" class="btn btn-primary me-2">Tạo
+                mới</button>
+            <button class="btn btn-secondary" routerLink="/suppliers/list">Trở về</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>

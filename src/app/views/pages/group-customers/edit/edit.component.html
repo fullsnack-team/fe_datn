@@ -1,0 +1,32 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Cập nhât danh mục</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+  
+          <h6 class="card-title">Thêm mới Danh mục</h6>
+  
+          <form class="forms-sample" [formGroup]="groupsCustomersForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="exampleInputUsername1" class="form-label">Tên Nhóm khách hàng<span class="text-danger">(*)</span></label>
+              <input type="text" class="form-control" id="exampleInputUsername1" formControlName="name" autocomplete="off" placeholder="Nhập tên nhóm khách hàng">
+              <div *ngIf="groupsCustomersForm.controls.name.invalid && groupsCustomersForm.controls.name.touched" class="alert alert-danger mt-2">
+                Không để trống tên nhóm khách hàng
+              </div>
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Mô tả</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Nhập mô tả"  formControlName="description" rows="5"></textarea>
+              </div>
+            <button type="submit" [disabled]="groupsCustomersForm.invalid" class="btn btn-primary me-2">Cập nhật</button>
+            <button class="btn btn-secondary" routerLink="/group_customers/list">Trở về</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

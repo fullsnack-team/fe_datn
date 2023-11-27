@@ -1,6 +1,6 @@
 export interface Categories {
-    id : number;
+    id?: number;
     name : string;
-    created_date : Date;
-    update_date : Date;
+    created_at ?: Date | null;
+    updated_at ?: Date | null;
 }

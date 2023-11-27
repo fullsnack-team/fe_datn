@@ -1,0 +1,59 @@
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+  <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Danh mục chi nhánh</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-12 stretch-card">
+  <div class="card">
+      <div class="card-body">
+      <h6 class="card-title">Quản lí chi nhánh</h6>
+      <button routerLink="/locations/create"  type="button" class="btn btn-primary">Thêm mới</button>
+      <div class="table-responsive">
+        <div *ngIf="isLoading" class="d-flex justify-content-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+          <table *ngIf="!isLoading" id="dataTableExample" class="table">
+          <thead>
+              <tr>
+              <th>ID</th>
+              <th>TÊN CHI NHÁNH</th>
+              <th>SỐ ĐIỆN THOẠI</th>
+              <th>EMAIL</th>
+              <th>ĐỊA CHỈ</th>
+              <th>HÀNH ĐỘNG</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let location of listLocations | async">
+              <td>{{ location.id }}</td>
+              <td>{{ location.name }}</td>
+              <td>{{ location.tel }}</td>
+              <td>{{ location.email }}</td>
+              <td>{{ location.address_detail }}</td>
+              <td>
+                  <a [routerLink]="['../edit', location.id]" class="btn btn-success mx-2">Sửa</a>
+                 <button  data-id="{{location.id}}" class="btn btn-danger">Xóa</button>
+              </td>
+              </tr>
+          </tbody>
+          <tfoot>
+              <tr>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              </tr>
+          </tfoot>
+          </table>
+      </div>
+      </div>
+  </div>
+  </div>
+</div>

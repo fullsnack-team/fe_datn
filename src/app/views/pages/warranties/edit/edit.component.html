@@ -1,0 +1,53 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Thêm mới danh mục bảo hành</li>
+    </ol>
+  </nav>
+  
+  <div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+  
+          <h6 class="card-title">Thêm mới bảo hành</h6>
+  
+          <form class="forms-sample" [formGroup]="warrantiesForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="namewarrities" class="form-label">Tên Loại bảo hành</label>
+              <input type="text" class="form-control" id="namewarrities" formControlName="name" autocomplete="off" placeholder="Nhập tên danh mục">
+              <div *ngIf="warrantiesForm.controls.name.invalid && warrantiesForm.controls.name.touched" class="alert alert-danger mt-2">
+                Không để trống tên bảo hành
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="unittype" class="form-label">Chọn kiểu bảo hành</label>
+              <ng-select
+              [searchable]="true"
+              formControlName="unit"
+              placeholder="Chọn Kiểu bảo hành"
+              >
+                <ng-option *ngFor="let item of simpleItems" [value]="item.id">{{item.name}}</ng-option>
+             </ng-select>
+             <div *ngIf="warrantiesForm.controls.unit.invalid && warrantiesForm.controls.unit.touched" class="alert alert-danger mt-2">
+              Chọn kiểu bảo hành
+            </div>
+        </div>
+            <div class="mb-3">
+                <label for="exampleInputUsername1" class="form-label">Thời hạn bảo hành</label>
+                <input type="number" class="form-control" id="exampleInputUsername1" ngModel min="1" formControlName="period" autocomplete="off" placeholder="Thời hạn bảo hành">
+                <div *ngIf="warrantiesForm.controls.period.invalid && warrantiesForm.controls.period.touched" class="alert alert-danger mt-2">
+                  Không để trống thời hạn bảo hành
+                </div>
+
+                <div *ngIf="warrantiesForm.controls.period.errors?.min" class="alert alert-danger mt-2">
+                  Không để trống thời hạn vui lòng trên 0
+                </div>
+              </div>
+            <button type="submit" [disabled]="warrantiesForm.invalid" class="btn btn-primary me-2">Cập nhật</button>
+            <button class="btn btn-secondary" routerLink="/warranties/list">Trở về</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
