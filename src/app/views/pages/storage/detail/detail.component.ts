@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, TemplateRef } from '@angular/core';
 
 @Component({
   selector: 'app-detail',
@@ -11,5 +11,6 @@ export class DetailComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
 
 }

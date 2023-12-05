@@ -69,7 +69,7 @@ export class ListComponent implements OnInit, AfterViewInit {
               showConfirmButton: false,
               timer: 1000,
               title: "Đã xóa!",
-              text: "Đơn vị đã được xóa.",
+              text: "Chi nhánh đã được xóa.",
               icon: "success",
               timerProgressBar: true,
               didOpen: (toast) => {

@@ -12,11 +12,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { FormsModule } from '@angular/forms';
+import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { ImportComponent } from './import.component';
 import { CreateComponent } from './create/create.component';
 import { ListComponent } from './list/list.component';
-import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { DetailComponent } from './detail/detail.component';
 
 

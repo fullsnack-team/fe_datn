@@ -5,16 +5,16 @@ import { CRUDServiceService } from '../baseHandle/crudservice.service';
 import { Payment } from 'src/app/interface/payment/payment';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
-import {ConfigService} from "../config/config.service";
+import {SettingService} from "../setting/setting.service";
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService extends CRUDServiceService<any> {
   private readonly domain_name: String;
-  constructor(http: HttpClient, dataService: HandleDataService, private configService: ConfigService,) {
+  constructor(http: HttpClient, dataService: HandleDataService, private settingService: SettingService,) {
     super(http, dataService);
     this.apiUrl = this.dataService.getUrl('payment');
-    this.domain_name = this.configService.domain_name;
+    this.domain_name = this.settingService.tenant?.name;
   }
 
   createDebtPayment(data : any): Observable<any> {

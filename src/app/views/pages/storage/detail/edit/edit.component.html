@@ -1,0 +1,72 @@
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
+    <li class="breadcrumb-item active" aria-current="page">
+      Điều chỉnh tồn kho
+    </li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-title">Điều chỉnh tồn</h6>
+        <!-- <div *ngIf="isLoading" class="d-flex justify-content-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div> -->
+        <form class="forms-sample" [formGroup]="detailForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">Sản phẩm</label>
+            <input type="text" class="form-control" formControlName="product_name" id="exampleInputUsername1" autocomplete="off"
+               readonly/>
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">Tên phiên bản</label>
+            <input type="text" class="form-control" id="exampleInputUsername1"
+              autocomplete="off" formControlName="variation_name"  readonly/>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Tồn kho hiện tại:</label>
+              <input type="text" class="form-control" id="exampleInputUsername1" formControlName="quantity" [(ngModel)]="quantity"  autocomplete="off"
+               readonly/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Lý do <span class="text-danger">(*)</span></label>
+              <ng-select [searchable]="true" formControlName="reason" placeholder="Lựa chọn lý do">
+                <ng-option *ngFor="let item of reason" [value]="item.id">
+                  {{ item.name }}
+                </ng-option>
+              </ng-select>
+            </div>
+
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Điều chỉnh <span class="text-danger">(*)</span></label>
+              <input type="number" class="form-control" formControlName="adjust" id="exampleInputUsername1" [(ngModel)]="adjust" autocomplete="off"
+              placeholder="Nhập số lượng" min="0"/>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Tồn kho sau điều chỉnh:</label>
+              <input type="text" class="form-control" id="exampleInputUsername1" formControlName="result" [(ngModel)]="result" value="{{calculator(adjust,quantity)}}" autocomplete="off"
+              placeholder="Nhập tên khoản thu" readonly/>
+            </div>
+          </div>
+
+          <button type="submit" [disabled]="detailForm.invalid" class="btn btn-primary me-2">
+            Cập nhật
+          </button>
+          <button class="btn btn-secondary" routerLink="/storage/detail/list">
+            Trở về
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

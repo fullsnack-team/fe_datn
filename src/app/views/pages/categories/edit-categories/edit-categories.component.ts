@@ -38,9 +38,9 @@ export class EditCategoriesComponent implements OnInit {
     });
   }
 
-  isFormChanged() {
-    return this.categoryForm.value.name !== this.originalData.name;
-  }
+  // isFormChanged() {
+  //   return this.categoryForm.value.name !== this.originalData.name;
+  // }
   onSubmit() {
     if (this.categoryForm.valid) {
       const dataToSend = {

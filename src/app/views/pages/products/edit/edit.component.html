@@ -1,7 +1,7 @@
 <nav class="page-breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Thêm mới sản phẩm</li>
+      <li class="breadcrumb-item active" aria-current="page">Cập nhật sản phẩm</li>
     </ol>
   </nav>
   <div *ngIf="isLoading" class="loadingcustomcss">
@@ -11,13 +11,13 @@
     </button>
   </div>
   <form class="forms-sample" [formGroup]="productsForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
-  
+
     <div class="row">
       <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
           <div class="card-body">
-  
-            <h6 class="card-title">Thêm mới Danh mục</h6>
+
+            <h6 class="card-title">Cập nhật sản phẩm</h6>
             <div class="d-flex justify-content-between my-2">
               <button class="btn btn-secondary" routerLink="/products/list">Trở về</button>
               <button type="submit" [disabled]="productsForm.invalid" class="btn btn-primary me-2">Cập nhật</button>
@@ -25,7 +25,7 @@
             <div class="mb-3">
               <label for="nameProducts" class="form-label">Tên sản phẩm</label>
               <input type="text" class="form-control" id="nameProducts" formControlName="name" autocomplete="off"
-                placeholder="Nhập tên danh mục">
+                placeholder="Nhập tên sản phẩm">
               <div *ngIf="productsForm.controls.name.invalid && productsForm.controls.name.touched"
                 class="alert alert-danger mt-2">
                 Không để trống tên sản phẩm
@@ -45,29 +45,29 @@
                 <div class="col-sm-6">
                   <div class="mb-3">
                     <label class="form-label" for="weight">Khối lượng</label>
-                    <input type="text" id="weight"  formControlName="weight" class="form-control">
+                    <input type="number" id="weight"  formControlName="weight" class="form-control" placeholder="Nhập khối lượng sản phẩm" min="0">
                   </div>
                 </div><!-- Col -->
               </div><!-- Row -->
             </div>
-  
+
             <div class="mb-3">
               <label for="description" class="form-label">Mô tả</label>
               <textarea class="form-control" id="description" formControlName="description"  rows="5"></textarea>
             </div>
-           
+
           </div>
         </div>
       </div>
     </div>
-  
+
     <div class="row">
       <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
           <div class="card-body">
-  
+
             <h6 class="card-title">Phân loại</h6>
-  
+
             <div class="mb-3">
               <div class="row">
                 <div class="col-sm-6">
@@ -88,7 +88,7 @@
                     </ng-select>
                   </div>
                 </div><!-- Col -->
-  
+
                 <div class="col-sm-6">
                   <div class="mb-3">
                     <label class="form-label">Bảo hành</label>
@@ -106,25 +106,25 @@
                     </ng-select>
                   </div>
                 </div><!-- Col -->
-  
-  
-  
-  
+
+
+
+
               </div><!-- Row -->
             </div>
-  
-  
+
+
           </div>
         </div>
       </div>
     </div>
-  
-  
+
+
     <div class="row">
       <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
           <div class="card-body">
-  
+
             <h6 class="card-title">Thuộc tính</h6>
             <ngb-alert [dismissible]="false" [type]="'warning'">
               <h4 class="alert-heading mb-2">Lưu ý!</h4>
@@ -133,12 +133,12 @@
               <p class="mb-0"> <b>Giá trị của thuộc tính</b> có thể là S - M - L (Kích thước), Xanh - Đỏ - Hồng (Màu sắc),
                 Vải Cotton - Da lộn - Lụa (Chất liệu).</p>
             </ngb-alert>
-  
+
             <div class="row"  *ngIf="dataValueVariable && dataValueVariable.length > 0">
               <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-            
+
                     <div class="table-responsive">
                       <table class="table table-striped">
                         <thead>
@@ -159,7 +159,7 @@
                 </div>
               </div>
             </div>
-            
+
             <button type="button" [disabled]="!statusRequestvaribles" (click)="openBasicModal(addAttributes)"
               class="btn border text-primary border-primary btn-icon-text">
               <i class="feather icon-plus btn-icon-plus"></i>
@@ -169,12 +169,12 @@
         </div>
       </div>
     </div>
-  
+
     <div class="row">
       <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
           <div class="card-body">
-  
+
             <h6 class="card-title">Thiết lập phiên bản</h6>
             <ngb-alert [dismissible]="false" [type]="'warning'">
               <h4 class="alert-heading mb-2">Lưu ý!</h4>
@@ -185,7 +185,7 @@
               <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-            
+
                     <div class="table-responsive">
                       <table class="table table-striped">
                         <thead>
@@ -199,9 +199,9 @@
                             <th>Barcode/UPC</th>
                           </tr>
                         </thead>
-  
-                     
-                        
+
+
+
                           <tbody  *ngIf="originalArray && originalArray.length > 0">
                             <tr formArrayName="rows"  *ngFor="let item of rows.controls; let i = index" >
                               <ng-container [formGroupName]="i">
@@ -215,9 +215,9 @@
                               <td><input type="text" id="barcode" formControlName="barcode" placeholder="Nhập BARCODE/UPC"  class="form-control"></td>
                             </ng-container>
                             </tr>
-                   
+
                           </tbody>
-                       
+
                       </table>
                     </div>
                   </div>
@@ -240,8 +240,8 @@
       </div>
     </div>
   </form>
-  
-  
+
+
   <ng-template #addAttributes let-modal>
     <div class="modal-header">
       <h5 class="modal-title" id="exampleModalLabel">Thuộc tính sản phẩm</h5>
@@ -269,12 +269,12 @@
               </li>
           </ul>
           </div>
-  
+
           <!-- <ul class="list-group w-100" [sortablejs]="simpleItems">
               <li class="list-group-item" *ngFor="let item of simpleItems"> <i data-feather="move" appFeatherIcon class="icon-sm handle me-2"></i> {{ item }}</li>
             </ul> -->
         </div>
-  
+
       </div>
       <button type="button" disabled (click)="addAttributesForm()"
       class="btn border text-primary border-primary btn-icon-text w-100 mt-4">

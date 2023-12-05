@@ -1,0 +1,25 @@
+.navbar {
+  width: 100%;
+  left: 0;
+  background-color: #2a3042;
+}
+.navbar .search-form {
+  margin-left: 0;
+}
+.navbar .btnTab:hover {
+  transition: 0.2s ease-in-out;
+  background: #f1f2f4;
+}
+.navbar .activeBtn {
+  background: #f1f2f4;
+}
+
+.btnTab {
+  background: #2a3042;
+  color: #6a7187;
+  border: none;
+  padding: 0.5rem 1rem 0.8rem 1rem;
+  margin-top: 5px;
+  border-radius: 8px 8px 0 0;
+  display: block;
+}/*# sourceMappingURL=navbarsell.component.css.map */

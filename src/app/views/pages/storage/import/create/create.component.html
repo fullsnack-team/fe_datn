@@ -15,44 +15,27 @@
         <h6 class="card-title">Thông tin cơ bản</h6>
         <div *ngIf="isLoading" class="loadingcustomcss">
           <button class="btn btn-primary" type="button" disabled>
-            <span
-              class="spinner-grow spinner-grow-sm"
-              role="status"
-              aria-hidden="true"
-            ></span>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
             Loading...
           </button>
         </div>
-        <form
-          class="forms-sample"
-          [formGroup]="storageImportForm"
-          *ngIf="!isLoading"
-          (ngSubmit)="onSubmit()"
-        >
+        <form class="forms-sample" [formGroup]="storageImportForm" *ngIf="!isLoading" (ngSubmit)="onSubmit()">
           <div class="mb-3">
             <label for="exampleInputUsername1" class="form-label">
               Lý do nhập
               <span class="text-danger">(*)</span>
             </label>
-            <input
-              type="text"
-              class="form-control"
-              id="exampleInputUsername1"
-              formControlName="reason"
-              autocomplete="off"
-              placeholder="Nhập lý do nhập"
-            />
+            <input type="text" class="form-control" id="exampleInputUsername1" formControlName="reason"
+              autocomplete="off" placeholder="Nhập lý do nhập" />
+              <div *ngIf="storageImportForm.controls.reason.invalid && storageImportForm.controls.reason.touched" class="alert alert-danger mt-2">
+                Không được để trống lý do
+              </div>
           </div>
           <div class="mb-3">
             <label for="exampleFormControlTextarea1" class="form-label">
               Ghi chú
             </label>
-            <textarea
-              class="form-control"
-              id="exampleFormControlTextarea1"
-              formControlName="note"
-              rows="5"
-            ></textarea>
+            <textarea class="form-control" id="exampleFormControlTextarea1" formControlName="note" rows="5"></textarea>
           </div>
 
           <br />
@@ -62,82 +45,44 @@
               Chọn nhà cung cấp
               <span class="text-danger">(*)</span>
             </label>
-            <ng-select
-              [searchable]="true"
-              formControlName="partner_id"
-              placeholder="Chọn nhà cung cấp"
-            >
+            <ng-select [searchable]="true" formControlName="partner_id" placeholder="Chọn nhà cung cấp">
               <ng-option *ngFor="let item of listSupplier" [value]="item.id">
                 {{ item.name }}
               </ng-option>
             </ng-select>
+            <div *ngIf="storageImportForm.controls.partner_id.invalid && storageImportForm.controls.partner_id.touched" class="alert alert-danger mt-2">
+              Không được để trống nhà cung cấp
+            </div>
           </div>
 
           <br />
           <h6 class="card-title">Danh sách sản phẩm</h6>
           <div class="row">
-            <div class="col-sm-6">
-              <div class="mb-3">
-                <label for="exampleInputUsername1" class="form-label">
-                  Chi nhánh
-                  <span class="text-danger">(*)</span>
-                </label>
-                <ng-select [searchable]="true" placeholder="Chọn chi nhánh">
-                  <ng-option
-                    *ngFor="let item of listLocation"
-                    [value]="item.id"
-                  >
-                    {{ item.name }}
-                  </ng-option>
-                </ng-select>
+            <div class="mb-3">
+              <label for="exampleInputUsername1" class="form-label">
+                Kho
+                <span class="text-danger">(*)</span>
+              </label>
+              <ng-select [items]="listLocation" bindLabel="name" bindValue="id" formControlName="inventory_id"
+                placeholder="Chọn nhà kho" [searchable]="false">
+              </ng-select>
+              <div *ngIf="storageImportForm.controls.inventory_id.invalid && storageImportForm.controls.inventory_id.touched" class="alert alert-danger mt-2">
+                Không được để trống nhà kho
               </div>
             </div>
-            <!-- Col -->
-            <div class="col-sm-6">
-              <div class="mb-3">
-                <label for="exampleInputUsername1" class="form-label">
-                  Kho
-                  <span class="text-danger">(*)</span>
-                </label>
-                <ng-select
-                  [searchable]="true"
-                  formControlName="inventory_id"
-                  placeholder="Chọn nhà kho"
-                >
-                  <ng-option
-                    *ngFor="let item of listLocation"
-                    [value]="item.id"
-                  >
-                    {{ item.name }}
-                  </ng-option>
-                </ng-select>
-              </div>
-            </div>
+
             <!-- Col -->
           </div>
           <div class="mb-3">
             <form (ngSubmit)="searchProduct()" [formGroup]="inputSerach">
               <ng-template #rt let-r="result" let-t="term">
                 <!-- <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/' + r['flag']" class="me-1" style="width: 16px"> -->
-                <ngb-highlight
-                  [result]="r.product_name_variation"
-                  [term]="t"
-                ></ngb-highlight>
+                <ngb-highlight [result]="r.product_name_variation" [term]="t"></ngb-highlight>
               </ng-template>
 
-              <label for="typeahead-template" class="form-label"
-                >Tìm kiếm phiên bản sản phẩm:</label
-              >
-              <input
-                id="typeahead-template"
-                type="text"
-                class="form-control"
-                [(ngModel)]="input"
-                formControlName="input"
-                [ngbTypeahead]="search"
-                [resultTemplate]="rt"
-                [inputFormatter]="formatter"
-              />
+              <label for="typeahead-template" class="form-label">Tìm kiếm phiên bản sản phẩm:</label>
+              <input id="typeahead-template" type="text" class="form-control" [(ngModel)]="input"
+                formControlName="input" [ngbTypeahead]="search" [resultTemplate]="rt" [inputFormatter]="formatter" />
               <button type="submit" hidden>Tìm kiếm</button>
             </form>
           </div>
@@ -163,47 +108,29 @@
                           <th>{{ i + 1 }}</th>
                           <td (click)="Edit(i)">{{ value.name }}</td>
                           <td *ngIf="i === editRowID">
-                            <input
-                              type="number"
-                              formControlName="price"
-                              [ngModel]="products[i].price"
-                              data-id="{{value.id}}"
-                              (input)="resultTotal($event)"
-                              name="price"
-                              class="form-control"
-                              id="exampleInputText1"
-                              placeholder="Nhập giá"
-                            />
+                            <input type="text" mask="separator.2" thousandSeparator="," autocomplete="off"
+                              formControlName="price" [ngModel]="products[i].price" data-id="{{value.id}}"
+                              (input)="resultTotal($event)" name="price" class="form-control" id="exampleInputText1"
+                              placeholder="Nhập giá" />
                           </td>
                           <td *ngIf="i !== editRowID" (click)="Edit(i)">
                             {{ value.price }}
                           </td>
                           <td *ngIf="i === editRowID">
-                            <input
-                              type="number"
-                              formControlName="quantity"
-                              [ngModel]="products[i].quantity"
-                              data-id="{{value.id}}"
-                              (input)="resultTotal($event)"
-                              name="quantity"
-                              class="form-control"
-                              id="exampleInputText1"
-                              placeholder="Nhập số lượng"
-                            />
+                            <input type="number" formControlName="quantity" [ngModel]="products[i].quantity"
+                              data-id="{{value.id}}" (input)="resultTotal($event)" name="quantity" class="form-control"
+                              id="exampleInputText1" placeholder="Nhập số lượng" />
                           </td>
                           <td *ngIf="i !== editRowID" (click)="Edit(i)">
                             {{ value.quantity }}
                           </td>
                           <td>
                             {{
-                              value.result | currency : "VNĐ" : "symbol" : "1.0-0"
+                            value.result | currency : "VNĐ " : "symbol" : "1.0-0"
                             }}
                           </td>
                           <th>
-                            <button
-                              (click)="removeProduct(i)"
-                              class="btn btn-danger"
-                            >
+                            <button (click)="removeProduct(i)" class="btn btn-danger">
                               Xóa
                             </button>
                           </th>
@@ -212,8 +139,8 @@
                           <th style="color: red">TỔNG TIỀN</th>
                           <td colspan="5" style="text-align: right">
                             {{
-                              calculateTotalPrice()
-                                | currency : "VNĐ" : "symbol" : "1.0-0"
+                            calculateTotalPrice()
+                            | currency : "VNĐ " : "symbol" : "1.0-0"
                             }}
                           </td>
                         </tr>
@@ -224,11 +151,7 @@
               </div>
             </div>
           </div>
-          <button
-            type="submit"
-            [disabled]="storageImportForm.invalid"
-            class="btn btn-primary me-2"
-          >
+          <button type="submit" [disabled]="storageImportForm.invalid" class="btn btn-primary me-2">
             Tạo mới
           </button>
           <button class="btn btn-secondary" routerLink="/storage/import/list">

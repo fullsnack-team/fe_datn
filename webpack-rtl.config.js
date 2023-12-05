@@ -1,5 +1,5 @@
 /**
- * Main file of webpack config for RTL.
+ * Main file of webpack setting for RTL.
  */
 
 const path = require("path");

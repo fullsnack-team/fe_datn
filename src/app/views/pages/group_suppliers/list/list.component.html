@@ -1,14 +1,14 @@
 <nav class="page-breadcrumb">
     <ol class="breadcrumb">
     <li class="breadcrumb-item"><a routerLink=".">Bảo hành</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Danh mục bảo hành</li>
+    <li class="breadcrumb-item active" aria-current="page">Danh mục Nhóm nhà cung cấp</li>
     </ol>
 </nav>
 <div class="row">
     <div class="col-md-12 stretch-card">
     <div class="card">
         <div class="card-body">
-        <h6 class="card-title">Quản lí nhóm khách hàng</h6>
+        <h6 class="card-title">Quản lí Nhóm nhà cung cấp</h6>
         <button routerLink="/group_suppliers/create"  type="button" class="btn btn-primary">Thêm mới</button>
         <div class="table-responsive">
             <table id="dataTableExample" class="table">
@@ -31,7 +31,7 @@
                 <td>{{ item.updated_at  == null ? 'Chưa có thời gian tạo' : item.updated_at | date:'dd-MM-yyyy' }}</td>
                 <td>
                     <a [routerLink]="['../edit', item.id]" class="btn btn-success mx-2">Sửa</a>
-                   <button  data-id="{{item.id}}" class="btn btn-danger">Xóa</button>  
+                   <button  data-id="{{item.id}}" class="btn btn-danger">Xóa</button>
                 </td>
                 </tr>
             </tbody>

@@ -136,8 +136,8 @@ export class CreateComponent implements OnInit {
 
   onSubmit() {
     if (this.customersForm.valid) {
-      const nameDistrict = this.district.find(item => item.id == this.codeDistrict)?.name;
-      const nameWard = this.ward.find(item => item.id == this.codeWard)?.name;
+      // const nameDistrict = this.district.find(item => item.id == this.codeDistrict).name;
+      // const nameWard = this.ward.find(item => item.id == this.codeWard).name;
       const dataToSend = {
         name: String(this.customersForm.value.name),
         type: Number(this.customersForm.value.type) || 0,
@@ -149,12 +149,14 @@ export class CreateComponent implements OnInit {
         email: String(this.customersForm.value.email) || null,
         tel: String(this.customersForm.value.tel),
         status: Number(this.customersForm.value.status),
-        address_detail: String(this.customersForm.value.address_detail + ', ' + nameWard + ', ' + nameDistrict + ', ' +  this.provinces[this.codeProvince]?.name ) || null,
+        address_detail: String(this.customersForm.value.address_detail ) || null,
         note: String(this.customersForm.value.note) || null,
         ward_code: Number(this.customersForm.value.ward_code) || null,
         created_at: new Date(),
         updated_at: null,
       };
+      // + ', '  +  this.provinces[this.codeProvince].name 
+      // + nameWard + ', ' + nameDistrict + ', '
       // console.log(nameDistrict, nameWard);
 
       console.log(dataToSend);

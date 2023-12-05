@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import {ConfigService} from "../config/config.service";
+import {SettingService} from "../setting/setting.service";
 @Injectable({
   providedIn: 'root'
 })
 export class ListProductsService {
   private apiUrlProducts : string = environment.apiTennatv1;
-  constructor(private http: HttpClient, private configService: ConfigService) { }
+  constructor(private http: HttpClient, private settingService: SettingService) { }
   getProducts() {
-    return this.http.post(`${this.apiUrlProducts}get-product`,{ domain_name: this.configService.domain_name,
-    location: this.configService.location_id,});
+    return this.http.post(`${this.apiUrlProducts}get-product`,{ domain_name: this.settingService.tenant?.name,
+    location_id: this.settingService.location?.id, inventory_id: this.settingService.inventory?.id });
   }
 
 }

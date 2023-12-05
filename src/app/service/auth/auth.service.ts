@@ -9,13 +9,15 @@ import {LocalStorageService} from "../localStorage/localStorage.service";
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService extends CRUDServiceService<User> {
+export class AuthService {
+  apiUrl: string;
+  publicUrl: string;
+
   constructor(
-    http: HttpClient,
-    dataService: HandleDataService,
+    private http: HttpClient,
+    private dataService: HandleDataService,
     private localStorageService: LocalStorageService
   ) {
-    super(http, dataService);
     this.apiUrl = this.dataService.getUrl('auth');
     this.publicUrl = this.dataService.getPulicUrl('auth');
   }
@@ -47,7 +49,7 @@ export class AuthService extends CRUDServiceService<User> {
       const tenant_token: {
         token: string,
         token_type: string,
-        expires_at: string
+        expired_at: string
       } = this.localStorageService.get(key);
       return `${tenant_token.token_type} ${tenant_token.token}`;
     }
@@ -64,23 +66,19 @@ export class AuthService extends CRUDServiceService<User> {
 
   login(payload: any): { status: boolean, msg: string, type: "success" | "error" } {
     try {
-      const {token, token_type, expires_at} = payload.token;
+      const {token, token_type, expired_at} = payload.token;
 
-      // this.localStorageService.set('auth_token', token);
-      //
-      // this.localStorageService.set('token_type', token_type);
-      //
-      // this.localStorageService.set('expires_at', expires_at);
-
-      this.localStorageService.set('token', {token, token_type, expires_at});
+      this.localStorageService.set('token', {token, token_type, expired_at});
 
       this.localStorageService.set('user', payload.user);
 
-      this.localStorageService.set('location_id', payload.location_id);
+      this.localStorageService.set('location', payload.location);
 
-      this.localStorageService.set('inventory_id', payload.inventory_id);
+      this.localStorageService.set('inventory', payload.inventory);
 
-      this.localStorageService.set('domain_name', payload.domain_name);
+      this.localStorageService.set('tenant', payload.tenant);
+
+      this.localStorageService.set('menus', payload.menus);
 
       this.localStorageService.set('isLoggedin', 'true');
 
@@ -99,7 +97,36 @@ export class AuthService extends CRUDServiceService<User> {
         type: 'error'
       };
     }
+  }
 
+  logout() {
+    this.localStorageService.remove('isLoggedin');
+
+    this.localStorageService.remove('auth_token');
+
+    this.localStorageService.remove('token_type');
+
+    this.localStorageService.remove('token');
+
+    this.localStorageService.remove('expired_at');
+
+    this.localStorageService.remove('user');
+
+    this.localStorageService.remove('location');
+
+    this.localStorageService.remove('inventory');
+
+    this.localStorageService.remove('tenant');
+
+    this.localStorageService.remove('menus');
+  }
+
+  get role(): string {
+    return this.localStorageService.get('user').roles[0]?.name;
+  }
+
+  get user(): User {
+    return this.localStorageService.get('user');
   }
 
 

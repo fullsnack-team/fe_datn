@@ -1,0 +1,30 @@
+.wrapper-info {
+    margin-top: 20px;
+  }
+  
+  .setting-col {
+    max-width: 300px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  .item-info {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .item-info .s-content {
+    margin-left: 10px;
+    width: 100%;
+    display: block;
+  }
+  
+  .item-info .s-content .s-title {
+    font-weight: 700;
+    color: #3e69f6;
+    line-height: 20px;
+  }
+  

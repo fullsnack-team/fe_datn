@@ -1,21 +1,21 @@
 <nav class="page-breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Thêm mới danh mục bảo hành</li>
+      <li class="breadcrumb-item active" aria-current="page">Thêm mới bảo hành</li>
     </ol>
   </nav>
-  
+
   <div class="row">
     <div class="col-md-12 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
-  
+
           <h6 class="card-title">Thêm mới bảo hành</h6>
-  
+
           <form class="forms-sample" [formGroup]="warrantiesForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
-              <label for="namewarrities" class="form-label">Tên Loại bảo hành</label>
-              <input type="text" class="form-control" id="namewarrities" formControlName="name" autocomplete="off" placeholder="Nhập tên danh mục">
+              <label for="namewarrities" class="form-label">Tên loại bảo hành</label>
+              <input type="text" class="form-control" id="namewarrities" formControlName="name" autocomplete="off" placeholder="Nhập tên bảo hành">
               <div *ngIf="warrantiesForm.controls.name.invalid && warrantiesForm.controls.name.touched" class="alert alert-danger mt-2">
                 Không để trống tên bảo hành
               </div>

@@ -1,21 +1,21 @@
 <nav class="page-breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Thêm mới danh mục</li>
+      <li class="breadcrumb-item active" aria-current="page">Thêm mới Nhóm nhà cung cấp</li>
     </ol>
   </nav>
-  
+
   <div class="row">
     <div class="col-md-12 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
-  
-          <h6 class="card-title">Thêm Nhóm Nhà Cung Cấp</h6>
-  
+
+          <h6 class="card-title">Thêm Nhóm Nhà cung cấp</h6>
+
           <form class="forms-sample" [formGroup]="groupsSuppliersForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
-              <label for="exampleInputUsername1" class="form-label">Tên Nhóm Nhà Cung Cấp<span class="text-danger">(*)</span></label>
-              <input type="text" class="form-control" id="exampleInputUsername1" formControlName="name" autocomplete="off" placeholder="Nhập tên nhóm khách hàng">
+              <label for="exampleInputUsername1" class="form-label">Tên Nhóm nhà cung cấp<span class="text-danger">(*)</span></label>
+              <input type="text" class="form-control" id="exampleInputUsername1" formControlName="name" autocomplete="off" placeholder="Nhập tên nhóm nhà cung cấp">
               <div *ngIf="groupsSuppliersForm.controls.name.invalid && groupsSuppliersForm.controls.name.touched" class="alert alert-danger mt-2">
                 Không để trống tên Nhóm nhà cung cấp
               </div>

@@ -6,7 +6,11 @@ import {ErrorPageComponent} from './views/pages/error-page/error-page.component'
 import {NavbarSellComponent} from './views/layout/baseSell/navbar-sell.component';
 import {BaseSpecialComponent} from './views/layout/base-special/base-special.component';
 import {EditComponent} from './views/pages/print/edit/edit.component';
+import {DetailComponent} from './views/pages/lists-order/detail/detail.component';
 import {AuthComponent} from "./views/layout/auth/auth.component";
+import {SuperAdminGuard} from "./core/guard/super-admin.guard";
+import {AdminGuard} from "./core/guard/admin.guard";
+
 
 const routes: Routes = [
   {
@@ -27,110 +31,142 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'categories',
-        loadChildren: () =>
-          import('./views/pages/categories/categories.module').then(
-            (m) => m.CategoriesModule
-          ),
+        path: '',
+        canActivate: [SuperAdminGuard],
+        children: [
+          {
+            path: 'categories',
+            loadChildren: () =>
+              import('./views/pages/categories/categories.module').then(
+                (m) => m.CategoriesModule
+              ),
+          },
+          {
+            path: 'warranties',
+            loadChildren: () =>
+              import('./views/pages/warranties/warranties.module').then(
+                (m) => m.WarrantiesModule
+              ),
+          },
+          {
+            path: 'group_customers',
+            loadChildren: () =>
+              import('./views/pages/group-customers/group-customers.module').then(
+                (m) => m.GroupCustomersModule
+              ),
+          },
+          {
+            path: 'ListOrders',
+            loadChildren: () =>
+              import('./views/pages/lists-order/lists-order.module').then(
+                (m) => m.ListsOrderModule
+              ),
+          },
+          {
+            path: 'customers',
+            loadChildren: () =>
+              import('./views/pages/customers/customers.module').then(
+                (m) => m.CustomersModule
+              ),
+          },
+          {
+            path: 'group_suppliers',
+            loadChildren: () =>
+              import('./views/pages/group_suppliers/group-suppliers.module').then(
+                (m) => m.GroupSuppliersModule
+              ),
+          },
+          {
+            path: 'suppliers',
+            loadChildren: () =>
+              import('./views/pages/suppliers/suppliers.module').then(
+                (m) => m.SuppliersModule
+              ),
+          },
+          {
+            path: 'brands',
+            loadChildren: () =>
+              import('./views/pages/brands/brands.module').then(
+                (m) => m.BrandsModule
+              ),
+          },
+          {
+            path: 'item-units',
+            loadChildren: () =>
+              import('./views/pages/item-units/item-units.module').then(
+                (m) => m.ItemUnitsModule
+              ),
+          },
+          {
+            path: 'products',
+            loadChildren: () =>
+              import('./views/pages/products/products.module').then(
+                (m) => m.ProductsModule
+              ),
+          },
+          {
+            path: 'setting',
+            loadChildren: () =>
+              import('./views/pages/setting/setting.module').then(
+                (m) => m.SettingModule
+              ),
+          },
+        ]
       },
       {
-        path: 'warranties',
-        loadChildren: () =>
-          import('./views/pages/warranties/warranties.module').then(
-            (m) => m.WarrantiesModule
-          ),
+        path: '',
+        canActivate: [AdminGuard],
+        children: [
+          {
+            path: 'storage/import',
+            loadChildren: () =>
+              import('./views/pages/storage/import/import.module').then(
+                (m) => m.ImportModule
+              ),
+          },
+          {
+            path: 'storage/export',
+            loadChildren: () =>
+              import('./views/pages/storage/export/export.module').then(
+                (m) => m.ExportModule
+              ),
+          },
+          {
+            path: 'storage/detail',
+            loadChildren: () =>
+              import('./views/pages/storage/detail/detail.module').then(
+                (m) => m.DetailModule
+              ),
+          },
+          {
+            path: 'storage/trans',
+            loadChildren: () =>
+              import('./views/pages/storage/trans/trans.module').then(
+                (m) => m.TransModule
+              ),
+          },
+          {
+            path: 'debts',
+            loadChildren: () => import('./views/pages/debts/debts.module').then(m => m.DebtsModule)
+          },
+          {
+            path: 'users',
+            loadChildren: () => import('./views/pages/user/user.module').then(m => m.UserModule)
+          },
+          {
+            path: 'dashboard',
+            loadChildren: () =>
+              import('./views/pages/dashboard/dashboard.module').then(
+                (m) => m.DashboardModule
+              ),
+          },
+        ]
       },
       {
-        path: 'group_customers',
+        path: 'report-revenue',
         loadChildren: () =>
-          import('./views/pages/group-customers/group-customers.module').then(
-            (m) => m.GroupCustomersModule
-          ),
-      },
-      {
-        path: 'customers',
-        loadChildren: () =>
-          import('./views/pages/customers/customers.module').then(
-            (m) => m.CustomersModule
-          ),
-      },
-      {
-        path: 'group_suppliers',
-        loadChildren: () =>
-          import('./views/pages/group_suppliers/group-suppliers.module').then(
-            (m) => m.GroupSuppliersModule
-          ),
-      },
-      {
-        path: 'suppliers',
-        loadChildren: () =>
-          import('./views/pages/suppliers/suppliers.module').then(
-            (m) => m.SuppliersModule
-          ),
-      },
-      {
-        path: 'brands',
-        loadChildren: () =>
-          import('./views/pages/brands/brands.module').then(
-            (m) => m.BrandsModule
-          ),
-      },
-      {
-        path: 'item-units',
-        loadChildren: () =>
-          import('./views/pages/item-units/item-units.module').then(
-            (m) => m.ItemUnitsModule
-          ),
-      },
-      {
-        path: 'products',
-        loadChildren: () =>
-          import('./views/pages/products/products.module').then(
-            (m) => m.ProductsModule
-          ),
-      },
-      {
-        path: 'locations',
-        loadChildren: () =>
-          import('./views/pages/locations/locations.module').then(
-            (m) => m.LocationsModule
-          ),
-      },
-      {
-        path: 'print',
-        loadChildren: () =>
-          import('./views/pages/print/print.module').then((m) => m.PrintModule),
-      },
-      {
-        path: 'storage/import',
-        loadChildren: () =>
-          import('./views/pages/storage/import/import.module').then(
-            (m) => m.ImportModule
-          ),
-      },
-      {
-        path: 'storage/detail',
-        loadChildren: () =>
-          import('./views/pages/storage/detail/detail.module').then(
-            (m) => m.DetailModule
-          ),
-      },
-      {
-        path: 'storage/trans',
-        loadChildren: () =>
-          import('./views/pages/storage/trans/trans.module').then(
-            (m) => m.TransModule
-          ),
-      },
-      {
-        path: 'debts',
-        loadChildren: () => import('./views/pages/debts/debts.module').then(m => m.DebtsModule)
-      },
-      {
-        path: 'dashboard',
-        loadChildren: () =>
-          import('./views/pages/dashboard/dashboard.module').then(
-            (m) => m.DashboardModule
+          import('./views/pages/dashboard-all/dashboard-all.module').then(
+            (m) => m.DashboardAllModule
           ),
       },
       {
@@ -214,8 +250,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'print/edit',
-        component: EditComponent
+        path: 'ListOrders/detail/:id',
+        component: DetailComponent
       }
     ]
   },

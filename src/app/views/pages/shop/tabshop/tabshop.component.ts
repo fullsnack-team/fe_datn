@@ -10,7 +10,11 @@ import {OrderService} from 'src/app/service/order/order.service';
 import {PaymentService} from 'src/app/service/payment/payment.service';
 import {DebtsService} from 'src/app/service/debts/debts.service';
 import {environment} from "../../../../../environments/environment";
-import {ConfigService} from "../../../../service/config/config.service";
+import {ViewChild} from '@angular/core'
+import {PrintService} from 'src/app/service/print/print.service';
+import {TabwindowsService} from 'src/app/service/window/tabwindows.service';
+import {SettingService} from "../../../../service/setting/setting.service";
+import { ppid } from 'process';
 
 @Component({
   selector: 'app-tabshop',
@@ -83,6 +87,10 @@ export class TabshopComponent implements OnInit {
   productItemsBatches: any;
   idbatches: number;
 
+  modelRadioPrintf : number = 1;
+  formPrintf :  any;
+  dataObject: any = {}; 
+  tenant : any;
   constructor(
     private modalService: NgbModal,
     private DatalayoutService: DatalayoutService,
@@ -91,12 +99,26 @@ export class TabshopComponent implements OnInit {
     private OrderService: OrderService,
     private PaymentService: PaymentService,
     private DebtsService: DebtsService,
-    private configService: ConfigService
+    private PrintService: PrintService,
+    private TabwindowsService: TabwindowsService,
+    private settingService: SettingService,
   ) {
   }
 
+  @ViewChild('printf') myModal: any;
+
   ngOnInit(): void {
     console.log(this.ListProducts);
+    this.PrintService.GetOneRecord('1').subscribe((data: any) => {
+      this.formPrintf = data.payload;
+    })
+
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      this.tenant = JSON.parse(storedUser);
+    } else {
+      console.log('Không có dữ liệu người dùng trong LocalStorage');
+    }
     this.ListProductsService.getProducts().subscribe((data: any) => {
       this.ListProducts = Object.values(data.payload);
       console.log(data.payload);
@@ -405,9 +427,11 @@ export class TabshopComponent implements OnInit {
       }
     });
 
-    this.CustomersService.GetData().subscribe((response: any) => {
+    this.CustomersService.getCustomer().subscribe((response: any) => {
       // console.log(response.payload.data);
       this.people = response.payload;
+      console.log(response);
+
       console.log(response);
       if (response.payload.length > 0) {
         this.people.forEach((person: any) => {
@@ -515,6 +539,7 @@ export class TabshopComponent implements OnInit {
       },
       0
     );
+    this.priceBill = this.totalMoney;
     localStorage.setItem('tabOrder', JSON.stringify(this.dataCurrent));
   }
 
@@ -622,6 +647,12 @@ export class TabshopComponent implements OnInit {
       .catch((res) => {
       });
   }
+
+  // openBasicModalPrintf(content: TemplateRef<any>){
+  //   this.modalService.open(content, {}).result.then((result) => {
+  //     this.basicModalCloseResult = "Modal closed" + result
+  //   }).catch((res) => {});
+  // }
 
   // Xóa sản phẩm khỏi cart
   removeItemCart(id: number) {
@@ -1141,6 +1172,8 @@ export class TabshopComponent implements OnInit {
       (item: any) => item.batchs.length > 0
     );
 
+    console.log(this.tenant);
+    
     // console.log(this.listProductCart[this.tabDefault]);
 
     for (let index = 0; index < dataProductCurrent.length; index++) {
@@ -1202,40 +1235,91 @@ export class TabshopComponent implements OnInit {
     this.modalService
       .open(content, {size: 'lg'})
       .result.then((result) => {
-      if (result) {
-        const dataSend = {
-          customer_id: this.selectedSearchPersonId,
-          created_by: 1,
-          discount: this.DiscountBill,
-          discount_type: this.modelRadioBill,
-          tax: this.singleTax,
-          service_charge: this.taxBill,
-          total_product: this.listProductCart[this.tabDefault].length,
-          total_price: this.priceBill,
-          status: 2,
-          payment_status: 1,
-          order_details: this.listProductCart[this.tabDefault].map(
-            (item: any, index: number) => {
-              return {
-                ...item,
-                batches_focus: this.productItemsBatches[this.tabDefault].find(
-                  (itemBatches: any) => itemBatches.id == item.id
-                ),
-                priceModal: this.modalData[this.tabDefault].find(
-                  (itemmodal: any) => itemmodal.id == item.id
-                ),
-              };
-            }
-          ),
-        };
-        console.log(this.tabDefault);
-        console.log(this.selectedSearchPersonId != '');
+        if (result) {
+          const dataSend = {
+            customer_id: this.selectedSearchPersonId,
+            created_by: this.tenant.id,
+            discount: this.DiscountBill,
+            discount_type: this.modelRadioBill,
+            tax: this.singleTax,
+            service_charge: this.taxBill,
+            total_product: this.listProductCart[this.tabDefault].length,
+            total_price: this.priceBill,
+            status: 2,
+            payment_status: 2,
+            order_details: this.listProductCart[this.tabDefault].map(
+              (item: any, index: number) => {
+                return {
+                  ...item,
+                  batches_focus: this.productItemsBatches[this.tabDefault].find(
+                    (itemBatches: any) => itemBatches.id == item.id
+                  ),
+                  priceModal: this.modalData[this.tabDefault].find(
+                    (itemmodal: any) => itemmodal.id == item.id
+                  ),
+                };
+              }
+            ),
+          };
+          var currentDate = new Date(); 
+          let dataformBtn : any;
+          let dataformBatches : any;
+          let productCart : any;
+        var currentDateTime = currentDate.toLocaleString();  
+
+        const taxprice = this.listProductCart[this.tabDefault].reduce(
+          (index: number, item: any) => {
+           const priceFind = this.modalData[this.tabDefault].find(
+                (itemmodal: any) => itemmodal.id == item.id
+              );
+            return index + (priceFind.priceCurrent - priceFind.result)
+          },0
+        )
+        
+          console.log(this.settingService.tenant);
+          
+          let obj = {
+            Ten_Cua_hang : this.settingService.tenant.name,
+            Ten_Chi_Nhanh : this.settingService.tenant.business_name,
+            Dia_Chi_Chi_Nhanh : this.settingService.tenant.address,
+            Dien_Thoai_Chi_Nhanh : this.tenant.tel == null ? '---' : this.tenant.tel ,
+            Nguoi_Phu_Trach : this.tenant.name,
+
+            Ngay_Tao : currentDateTime,
+            Ma_Don_Hang : null,
+            Tong_Tien_Hang : this.priceBill,
+            Tong_Chiet_Khau_San_Pham : `-${taxprice}`,
+            Chiet_Khau_Don_Hang : this.DiscountBill,
+            Tong_Thue : this.singleTax,
+            Phi_Khac : 0,
+            Tong_Can_Thanh_Toan : this.priceBill,
+            Khach_Thanh_Toan : this.pricePayment,
+            Tien_No : this.paymentPrice,
+            Tien_Tra : this.changeBill,
+            Ten_Khach_Hang : 'Khách ngoại lai',
+            Dien_Thoai_Khach : '---',
+            Listproducts :  this.listProductCart[this.tabDefault].map(
+              (item: any, index: number) => {
+                return {
+                  ...item,
+                  batches_focus: this.productItemsBatches[this.tabDefault].find(
+                    (itemBatches: any) => itemBatches.id == item.id
+                  ),
+                  priceModal: this.modalData[this.tabDefault].find(
+                    (itemmodal: any) => itemmodal.id == item.id
+                  ),
+                };
+              }
+            )
+          };
+        console.log(obj);
 
         if (this.selectedSearchPersonId != '') {
           console.log('đã vào đây');
 
-          this.OrderService.create(dataSend, this.configService.location_id).subscribe((data: any) => {
+          this.OrderService.create(dataSend, this.settingService.location?.id).subscribe((data: any) => {
             // console.log(data.payload.id);
+            console.log(data);
 
             if (data.status) {
               // Lấy thời gian hiện tại
@@ -1249,59 +1333,66 @@ export class TabshopComponent implements OnInit {
               const nowDate = new Date(now);
               const nextYearDate = new Date(nextYear);
               const {id: idOrder} = data.payload;
-              const {id, type, name} = this.people.find(
+              const {id, customer_type, name, tel} = this.people.find(
                 (person: any) => person.id === this.selectedSearchPersonId
               );
-
+              console.log(this.people);
+              obj.Ma_Don_Hang = idOrder;
+              obj.Ten_Khach_Hang = name;
+              obj.Dien_Thoai_Khach = tel;
               const dataResult = this.dataBtnPayment[this.tabDefault].map(
                 (item: any) => {
-                  if (item.payment_method == 0 || item.payment_method == 1) {
-                    return {
-                      ...item,
-                      paymentable_id: idOrder,
-                      amount: this.priceBill,
-                      amount_in: this.pricePayment,
-                      amount_refund: this.changeBill,
-                      note:
-                        this.dataBill[this.tabDefault].note == undefined
-                          ? ''
-                          : this.dataBill[this.tabDefault].note,
-                      reference_code: null,
-                      statusMap: true,
-                    };
-                  } else {
-                    return {
-                      ...item,
-                      paymentable_id: idOrder,
-                      amount: this.priceBill,
-                      amount_in: this.pricePayment,
-                      amount_refund: this.changeBill,
-                      note:
-                        this.dataBill[this.tabDefault].note == undefined
-                          ? ''
-                          : this.dataBill[this.tabDefault].note,
-                      reference_code: null,
-                      statusMap: false,
-                    };
-                    //  {
-                    //   partner_id: id,
-                    //   partner_type: type,
-                    //   name,
-                    //   amount_debt: item.pricePayment,
-                    //   amount_paid: 0,
-                    //   debit_at: nowDate,
-                    //   due_at: nextYearDate,
-                    //   note:
-                    //     this.dataBill[this.tabDefault].note == undefined
-                    //       ? ''
-                    //       : this.dataBill[this.tabDefault].note,
-                    //   type: 0,
-                    //   status: 1,
-                    //   statusMap: false,
-                    // };
+                  if(this.changeBill > 0){
+                    if (item.payment_method == 0 || item.payment_method == 1) {
+                      return {
+                        ...item,
+                        paymentable_id: idOrder,
+                        amount: this.priceBill,
+                        amount_in: this.pricePayment,
+                        amount_refund: this.changeBill,
+                        note:
+                          this.dataBill[this.tabDefault].note == undefined
+                            ? ''
+                            : this.dataBill[this.tabDefault].note,
+                        reference_code: null,
+                        statusMap: true,
+                      };
+                    } else {
+                      return {
+                        ...item,
+                        paymentable_id: idOrder,
+                        amount: this.priceBill,
+                        amount_in: this.pricePayment,
+                        amount_refund: this.changeBill,
+                        note:
+                          this.dataBill[this.tabDefault].note == undefined
+                            ? ''
+                            : this.dataBill[this.tabDefault].note,
+                        reference_code: null,
+                        statusMap: false,
+                      };
+                    }
+                  }else {
+                    if (item.payment_method == 0 || item.payment_method == 1) {
+                      return {
+                        ...item,
+                        paymentable_id: idOrder,
+                        amount: this.priceBill,
+                        amount_in: this.pricePayment,
+                        amount_refund: this.changeBill,
+                        note:
+                          this.dataBill[this.tabDefault].note == undefined
+                            ? ''
+                            : this.dataBill[this.tabDefault].note,
+                        reference_code: null,
+                        statusMap: true,
+                      };
+                    } 
                   }
                 }
               );
+   
+
 
               const dataPayementApi = dataResult.filter(
                 (item: any) => item.statusMap == true
@@ -1309,9 +1400,13 @@ export class TabshopComponent implements OnInit {
               const dataDebtsApi = dataResult.find(
                 (item: any) => item.statusMap == false
               );
+
+              // console.log(dataPayementApi ,dataDebtsApi);
+              
+              // debugger
               const objDebts = {
                 partner_id: id,
-                partner_type: type,
+                partner_type: customer_type,
                 debit_at: nowDate,
                 due_at: nextYearDate,
                 name,
@@ -1325,10 +1420,12 @@ export class TabshopComponent implements OnInit {
                 status: 1,
               };
 
-              console.log(objDebts);
+              // console.log(objDebts);
+              // console.log(dataDebtsApi);
+              // console.log(this.changeBill);
+              
+       
               if (this.tabDefault == 0) {
-                console.log(dataDebtsApi);
-
                 if (dataPayementApi && dataDebtsApi) {
                   objDebts.amount_debt = dataDebtsApi.pricePayment;
                   this.DebtsService.createDebts(objDebts).subscribe(
@@ -1354,9 +1451,24 @@ export class TabshopComponent implements OnInit {
                             );
                           },
                         });
-                        setTimeout(() => {
+
+                        this.modalService.open(this.myModal).result.then((result) => {
+                          console.log(result);
+
+                          console.log(obj);
+
+                          this.replaceKeysWithData(obj);
+                          const newWindow = this.TabwindowsService.openWindow('about:blank', 'NewWindow', 800, 600);
+                          newWindow?.document.write(`<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`);
+                          newWindow?.document.close();
+                          newWindow?.print();
                           window.location.reload();
-                        }, 1000);
+
+                        }).catch((res) => {
+                        });
+                        // setTimeout(() => {
+                        //   window.location.reload();
+                        // }, 1000);
                       }
                     }
                   );
@@ -1366,55 +1478,88 @@ export class TabshopComponent implements OnInit {
                     }
                   );
                 } else {
-                  dataResult.push({
-                    payment_method: 2,
-                    pricePayment: this.paymentPrice,
-                    status: true,
-                    paymentable_id: idOrder,
-                    amount: this.priceBill,
-                    amount_in: this.pricePayment,
-                    amount_refund: this.changeBill,
-                    note: this.dataBill[this.tabDefault].note == undefined
-                      ? ''
-                      : this.dataBill[this.tabDefault].note,
-                    reference_code: null,
-                    statusMap: true
-                  })
-                  this.PaymentService.createPayment(
-                    dataResult
-                  ).subscribe((data: any) => {
-                    console.log(data);
-                  });
-                  this.DebtsService.createDebts(objDebts).subscribe(
-                    (data: any) => {
-                      if (data.status) {
-                        Swal.fire({
-                          toast: true,
-                          position: 'top-end',
-                          showConfirmButton: false,
-                          timer: 3000,
-                          title: 'Thành Công!',
-                          text: 'Đã đặt hàng thành công!!',
-                          icon: 'success',
-                          timerProgressBar: true,
-                          didOpen: (toast) => {
-                            toast.addEventListener(
-                              'mouseenter',
-                              Swal.stopTimer
-                            );
-                            toast.addEventListener(
-                              'mouseleave',
-                              Swal.resumeTimer
-                            );
-                          },
-                        });
-                        setTimeout(() => {
-                          window.location.reload();
-                        }, 1000);
+               
+                  if(this.changeBill > 0){
+                    dataResult.push({
+                      payment_method: 2,
+                      pricePayment: this.paymentPrice,
+                      status: true,
+                      paymentable_id: idOrder,
+                      amount: this.priceBill,
+                      amount_in: this.pricePayment,
+                      amount_refund: this.changeBill,
+                      note: this.dataBill[this.tabDefault].note == undefined
+                        ? ''
+                        : this.dataBill[this.tabDefault].note,
+                      reference_code: null,
+                      statusMap: true
+                    })
+                    this.PaymentService.createPayment(
+                      dataResult
+                    ).subscribe((data: any) => {
+                      console.log(data);
+                    });
+                    this.DebtsService.createDebts(objDebts).subscribe(
+                      (data: any) => {
+                        console.log(data);
+                        if (data.status) {
+                          Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            title: 'Thành Công!',
+                            text: 'Đã đặt hàng thành công!!',
+                            icon: 'success',
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                              toast.addEventListener(
+                                'mouseenter',
+                                Swal.stopTimer
+                              );
+                              toast.addEventListener(
+                                'mouseleave',
+                                Swal.resumeTimer
+                              );
+                            },
+                          });
+                          this.modalService.open(this.myModal).result.then((result) => {
+                            console.log(result);
+  
+                            console.log(obj);
+  
+                            this.replaceKeysWithData(obj);
+                            const newWindow = this.TabwindowsService.openWindow('about:blank', 'NewWindow', 800, 600);
+                            newWindow?.document.write(`<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`);
+                            newWindow?.document.close();
+                            newWindow?.print();
+  
+                          }).catch((res) => {
+                          });
+                          // setTimeout(() => {
+                          //   window.location.reload();
+                          // }, 1000);
+                        }
                       }
-                    }
-                  );
-                }
+                    );
+                  }else {
+                    this.PaymentService.createPayment(
+                      dataResult
+                    ).subscribe((data: any) => {
+                      console.log(data);
+                    });
+
+                    this.modalService.open(this.myModal).result.then((result) => {
+                      this.replaceKeysWithData(obj);
+                      const newWindow = this.TabwindowsService.openWindow('about:blank', 'NewWindow', 800, 600);
+                      newWindow?.document.write(`<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`);
+                      newWindow?.document.close();
+                      newWindow?.print();
+
+                    }).catch((res) => {
+                    });
+                  }
+             
                 this.dataCurrent[this.tabDefault].ListProductCart = [];
                 this.dataCurrent[this.tabDefault].infoOrder = [];
                 console.log(this.dataCurrent[this.tabDefault]);
@@ -1459,6 +1604,10 @@ export class TabshopComponent implements OnInit {
                 this.productItemsBatches[this.tabDefault] = [];
                 this.modalData[this.tabDefault] = [];
 
+                dataformBtn = this.dataBtnPayment;
+                dataformBatches = this.productItemsBatches;
+                productCart = this.listProductCart;
+
                 localStorage.setItem(
                   'tabOrder',
                   JSON.stringify(this.dataCurrent)
@@ -1479,7 +1628,12 @@ export class TabshopComponent implements OnInit {
                   'dataBatches',
                   JSON.stringify(this.productItemsBatches)
                 );
-              } else {
+                this.dataBtnPayment = dataformBtn;
+                this.productItemsBatches = dataformBatches;
+                this.listProductCart = productCart;
+              } 
+            }else {
+                console.log(this.modalData);
                 if (dataPayementApi && dataDebtsApi) {
                   objDebts.amount_debt = dataDebtsApi.pricePayment;
 
@@ -1508,61 +1662,131 @@ export class TabshopComponent implements OnInit {
                             toast.addEventListener('mouseleave', Swal.resumeTimer);
                           },
                         });
-                        setTimeout(() => {
-                          window.location.reload();
-                        }, 1000)
+
+                        this.modalService.open(this.myModal).result.then((result) => {
+                          console.log(result);
+
+                          console.log(obj);
+
+                          this.replaceKeysWithData(obj);
+                          const newWindow = this.TabwindowsService.openWindow('about:blank', 'NewWindow', 800, 600);
+                          newWindow?.document.write(`<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`);
+                          newWindow?.document.close();
+                          newWindow?.print();
+
+                        }).catch((res) => {
+                        });
+                        // setTimeout(() => {
+                        //   window.location.reload();
+                        // },1000)
                       }
                     }
                   );
                 } else {
-                  dataResult.push({
-                    payment_method: 2,
-                    pricePayment: this.paymentPrice,
-                    status: true,
-                    paymentable_id: idOrder,
-                    amount: this.priceBill,
-                    amount_in: this.pricePayment,
-                    amount_refund: this.changeBill,
-                    note: this.dataBill[this.tabDefault].note == undefined
-                      ? ''
-                      : this.dataBill[this.tabDefault].note,
-                    reference_code: null,
-                    statusMap: true
-                  })
-                  this.PaymentService.createPayment(
-                    dataResult
-                  ).subscribe((data: any) => {
-                    console.log(data);
-                  });
-                  this.DebtsService.createDebts(objDebts).subscribe(
-                    (data: any) => {
-                      if (data.status) {
-                        Swal.fire({
-                          toast: true,
-                          position: 'top-end',
-                          showConfirmButton: false,
-                          timer: 3000,
-                          title: 'Thành Công!',
-                          text: 'Đã đặt hàng thành công!!',
-                          icon: 'success',
-                          timerProgressBar: true,
-                          didOpen: (toast) => {
-                            toast.addEventListener(
-                              'mouseenter',
-                              Swal.stopTimer
-                            );
-                            toast.addEventListener(
-                              'mouseleave',
-                              Swal.resumeTimer
-                            );
-                          },
-                        });
-                        setTimeout(() => {
-                          window.location.reload();
-                        }, 1000);
+
+                  if(this.changeBill > 0){
+                    dataResult.push({
+                      payment_method: 2,
+                      pricePayment: this.paymentPrice,
+                      status: true,
+                      paymentable_id: idOrder,
+                      amount: this.priceBill,
+                      amount_in: this.pricePayment,
+                      amount_refund: this.changeBill,
+                      note: this.dataBill[this.tabDefault].note == undefined
+                        ? ''
+                        : this.dataBill[this.tabDefault].note,
+                      reference_code: null,
+                      statusMap: true
+                    })
+                    this.PaymentService.createPayment(
+                      dataResult
+                    ).subscribe((data: any) => {
+                      console.log(data);
+                    });
+                    this.DebtsService.createDebts(objDebts).subscribe(
+                      (data: any) => {
+                        if (data.status) {
+                          Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            title: 'Thành Công!',
+                            text: 'Đã đặt hàng thành công!!',
+                            icon: 'success',
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                              toast.addEventListener(
+                                'mouseenter',
+                                Swal.stopTimer
+                              );
+                              toast.addEventListener(
+                                'mouseleave',
+                                Swal.resumeTimer
+                              );
+                            },
+                          });
+  
+                          this.modalService.open(this.myModal).result.then((result) => {
+                            console.log(result);
+  
+                            console.log(obj);
+  
+                            this.replaceKeysWithData(obj);
+                            const newWindow = this.TabwindowsService.openWindow('about:blank', 'NewWindow', 800, 600);
+                            newWindow?.document.write(`<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`);
+                            newWindow?.document.close();
+                            newWindow?.print();
+  
+                          }).catch((res) => {
+                          });
+                          // setTimeout(() => {
+                          //   window.location.reload();
+                          // }, 1000);
+                        }
                       }
-                    }
-                  );
+                    );
+                  }else {
+                    this.PaymentService.createPayment(
+                      dataResult
+                    ).subscribe((data: any) => {
+                      console.log(data);
+                    });
+
+                    Swal.fire({
+                      toast: true,
+                      position: 'top-end',
+                      showConfirmButton: false,
+                      timer: 3000,
+                      title: 'Thành Công!',
+                      text: 'Đã đặt hàng thành công!!',
+                      icon: 'success',
+                      timerProgressBar: true,
+                      didOpen: (toast) => {
+                        toast.addEventListener(
+                          'mouseenter',
+                          Swal.stopTimer
+                        );
+                        toast.addEventListener(
+                          'mouseleave',
+                          Swal.resumeTimer
+                        );
+                      },
+                    });
+
+                    this.modalService.open(this.myModal).result.then((result) => {
+
+                      this.replaceKeysWithData(obj);
+                      const newWindow = this.TabwindowsService.openWindow('about:blank', 'NewWindow', 800, 600);
+                      newWindow?.document.write(`<html><head><title>Website quản lý bán hàng cho doanh nghiệp NextGo</title></head><body>${this.formPrintf.form}</body></html>`);
+                      newWindow?.document.close();
+                      newWindow?.print();
+
+                    }).catch((res) => {
+                    });
+                  }
+                
                 }
 
                 this.dataCurrent.splice(this.tabDefault, 1);
@@ -1576,6 +1800,7 @@ export class TabshopComponent implements OnInit {
                 this.taxBill = this.dataBill[this.tabDefault].service;
                 this.modelRadioBill = this.dataBill[this.tabDefault].radio;
                 this.priceBill = this.dataBill[this.tabDefault].totalPrice;
+
                 if (
                   Object.keys(this.dataCurrent[this.tabDefault].infoOrder)
                     .length > 0
@@ -1586,6 +1811,11 @@ export class TabshopComponent implements OnInit {
                   this.selectedSearchPersonId = '';
                 }
 
+                dataformBtn = this.dataBtnPayment;
+                dataformBatches = this.productItemsBatches;
+                productCart = this.listProductCart;
+
+                console.log(this.modalData);
                 localStorage.setItem(
                   'tabOrder',
                   JSON.stringify(this.dataCurrent)
@@ -1609,14 +1839,25 @@ export class TabshopComponent implements OnInit {
                 this.DatalayoutService.changeData({
                   tabCurrent: this.tabDefault,
                 });
+
                 localStorage.setItem(
                   'TabCurrentIndex',
                   JSON.stringify(this.tabDefault)
                 );
               }
-              console.log(this.dataBill);
+              // console.log(dataformBtn);
+
+              this.listProductCart = productCart;
+
+
+              this.dataBtnPayment = dataformBtn;
+              this.productItemsBatches = dataformBatches;
+              // console.log(this.dataBtnPayment);
             }
           });
+          console.log(this.dataBtnPayment);
+
+
         } else {
           Swal.fire({
             toast: true,
@@ -1637,6 +1878,36 @@ export class TabshopComponent implements OnInit {
     })
       .catch((res) => {
       });
+  }
+
+  replaceKeysWithData(objectData: any = {}) {
+    console.log(objectData.Listproducts);
+    for (const key in objectData) {
+      if (key === 'Listproducts' && objectData.hasOwnProperty(key)) {
+        const productListHtml = objectData.Listproducts.map((detail: any, index: number) => {
+          const placeholders = ['display_name', 'priceModal', 'quanity', 'result'];
+          const productHtml = placeholders.map(property => {
+            if (property === 'priceModal') {
+              return `<td>${detail[property].result}</td>`;
+            } else {
+              return `<td>${detail[property]}</td>`;
+            }
+
+          }).join('');
+          
+          const additionalRow = `<td>KM</td><td></td><td></td><td>${detail['priceModal'].priceCurrent - detail['priceModal'].result}</td>`;
+
+          return `<tr>${productHtml}</tr><tr>${additionalRow}</tr>`;
+        }).join('');
+        this.formPrintf.form = this.formPrintf.form.replace('{Listproducts}', productListHtml);
+      } else {
+        console.log(2);
+        const placeholder = `{${key}}`;
+        const value = objectData[key];
+        this.formPrintf.form = this.formPrintf.form.replace(new RegExp(placeholder, 'g'), value);
+      }
+    }
+
   }
 
   limitInputTax(event: any) {

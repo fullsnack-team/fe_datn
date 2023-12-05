@@ -56,6 +56,7 @@ export class CreateComponent implements OnInit {
         name_tenant: this.form.value.name_tenant,
         address: this.form.value.address,
         business_code: this.form.value.business_code,
+        pricing_id: 1,
       };
 
       this.tenantService.create(dataToSend).subscribe(

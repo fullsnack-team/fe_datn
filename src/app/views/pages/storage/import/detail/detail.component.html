@@ -20,34 +20,19 @@
         <h6 class="card-title">Thông tin cơ bản</h6>
         <div *ngIf="isLoading" class="loadingcustomcss">
           <button class="btn btn-primary" type="button" disabled>
-            <span
-              class="spinner-grow spinner-grow-sm"
-              role="status"
-              aria-hidden="true"
-            ></span>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
             Loading...
           </button>
         </div>
-        <form
-          class="forms-sample"
-          [formGroup]="storageConfirmForm"
-          *ngIf="!isLoading"
-          (ngSubmit)="onSubmit()"
-        >
+        <form class="forms-sample" [formGroup]="storageConfirmForm" *ngIf="!isLoading" (ngSubmit)="onSubmit()">
           <div class="mb-3">
             <label for="exampleInputUsername1" class="form-label">
               Mã đơn
               <span class="text-danger">(*)</span>
             </label>
-            <input
-              type="text"
-              class="form-control"
-              id="exampleInputUsername1"
-              formControlName="inventory_transaction_id"
-              autocomplete="off"
-              placeholder="Nhập mã đơn"
-              [readonly]="true"
-            />
+            <input type="text" class="form-control" id="exampleInputUsername1"
+              formControlName="inventory_transaction_id" autocomplete="off" placeholder="Nhập mã đơn"
+              [readonly]="true" />
             <!-- <div *ngIf="storageImport.controls.name.invalid && storageImport.controls.name.touched"
               class="alert alert-danger mt-2">
               Không để trống tên chi nhánh
@@ -58,15 +43,8 @@
               Lý do nhập
               <span class="text-danger">(*)</span>
             </label>
-            <input
-              type="text"
-              class="form-control"
-              id="exampleInputUsername1"
-              formControlName="reason"
-              autocomplete="off"
-              placeholder="Nhập lý do nhập"
-              [readonly]="true"
-            />
+            <input type="text" class="form-control" id="exampleInputUsername1" formControlName="reason"
+              autocomplete="off" placeholder="Nhập lý do nhập" [readonly]="true" />
             <!-- <div *ngIf="storageImport.controls.name.invalid && storageImport.controls.name.touched"
               class="alert alert-danger mt-2">
               Không để trống tên chi nhánh
@@ -76,13 +54,8 @@
             <label for="exampleFormControlTextarea1" class="form-label">
               Ghi chú
             </label>
-            <textarea
-              class="form-control"
-              id="exampleFormControlTextarea1"
-              formControlName="note"
-              rows="5"
-              [readonly]="true"
-            ></textarea>
+            <textarea class="form-control" id="exampleFormControlTextarea1" formControlName="note" rows="5"
+              [readonly]="true"></textarea>
           </div>
 
           <br />
@@ -91,49 +64,20 @@
             <label for="exampleInputUsername1" class="form-label">
               Chọn nhà cung cấp
             </label>
-            <input
-              type="text"
-              class="form-control"
-              id="exampleInputUsername1"
-              formControlName="partner_name"
-              autocomplete="off"
-              [readonly]="true"
-            />
+            <input type="text" class="form-control" id="exampleInputUsername1" formControlName="partner_name"
+              autocomplete="off" [readonly]="true" />
           </div>
 
           <br />
           <h6 class="card-title">Danh sách sản phẩm</h6>
           <div class="row">
-            <div class="col-sm-6">
-              <div class="mb-3">
-                <label for="exampleInputUsername1" class="form-label">
-                  Chi nhánh
-                </label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleInputUsername1"
-                  formControlName="inventory_name"
-                  autocomplete="off"
-                  [readonly]="true"
-                />
-              </div>
-            </div>
             <!-- Col -->
-            <div class="col-sm-6">
-              <div class="mb-3">
-                <label for="exampleInputUsername1" class="form-label">
-                  Kho
-                </label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleInputUsername1"
-                  formControlName="inventory_name"
-                  autocomplete="off"
-                  [readonly]="true"
-                />
-              </div>
+            <div class="mb-3">
+              <label for="exampleInputUsername1" class="form-label">
+                Kho
+              </label>
+              <input type="text" class="form-control" id="exampleInputUsername1" formControlName="inventory_name"
+                autocomplete="off" [readonly]="true" />
             </div>
             <!-- Col -->
           </div>
@@ -169,8 +113,8 @@
                             /> -->
                             <p>
                               {{
-                                listStorage[i].price
-                                  | currency : "VNĐ" : "symbol" : "1.0-0"
+                              listStorage[i].price
+                              | currency : "VNĐ" : "symbol" : "1.0-0"
                               }}
                             </p>
                           </td>
@@ -185,12 +129,12 @@
                             /> -->
                             <p>{{ listStorage[i].quantity }}</p>
                           </td>
-                          <td >
+                          <td>
                             {{
-                              calculateTotal(
-                                listStorage[i].price,
-                                listStorage[i].quantity
-                              ) | currency : "VNĐ" : "symbol" : "1.0-0"
+                            calculateTotal(
+                            listStorage[i].price,
+                            listStorage[i].quantity
+                            ) | currency : "VNĐ" : "symbol" : "1.0-0"
                             }}
                           </td>
                           <th>
@@ -206,8 +150,8 @@
                           <th style="color: red">TỔNG TIỀN</th>
                           <td colspan="5" style="text-align: right">
                             {{
-                              calculateTotalPrice()
-                                | currency : "VNĐ" : "symbol" : "1.0-0"
+                            calculateTotalPrice()
+                            | currency : "VNĐ" : "symbol" : "1.0-0"
                             }}
                           </td>
 
@@ -219,30 +163,17 @@
               </div>
             </div>
           </div>
-          <button
-            *ngIf="status === 1"
-            type="submit"
-            [disabled]="storageConfirmForm.invalid"
-            class="btn btn-primary me-2"
-          >
+          <button *ngIf="status === 1" type="submit" [disabled]="storageConfirmForm.invalid"
+            class="btn btn-primary me-2">
             Xác nhận
           </button>
-          <button
-            *ngIf="status === 1"
-            type="button"
-            (click)="cancel()"
-            [disabled]="storageConfirmForm.invalid"
-            class="btn btn-danger me-2"
-          >
+          <button *ngIf="status === 1" type="button" (click)="cancel()" [disabled]="storageConfirmForm.invalid"
+            class="btn btn-danger me-2">
             Hủy đơn
           </button>
 
-          <button
-            *ngIf="status === 2"
-            type="button"
-            [disabled]="storageConfirmForm.invalid"
-            class="btn btn-primary me-2"
-          >
+          <button *ngIf="status === 2" type="button" [disabled]="storageConfirmForm.invalid"
+            class="btn btn-primary me-2">
             In mã vạch
           </button>
           <button class="btn btn-secondary" routerLink="/storage/import/list">

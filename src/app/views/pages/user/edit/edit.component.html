@@ -1,0 +1,209 @@
+<form
+  [formGroup]="userForm"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="card">
+    <div class="card-body">
+      <div class="card-title">Thêm nhân viên mới</div>
+      <div class="row mb-3">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-md-6 col-12">
+              <div role="group" class="form-group">
+                <!---->
+                <div>
+                  <div>
+                    <label>Tên nhân viên <sup class="text-danger"> * </sup></label>
+                    <input
+                      type="text"
+                      placeholder="Nhập tên nhân viên"
+                      class="form-control"
+                      formControlName="name">
+                    <div
+                      *ngIf="userForm.controls.name.invalid && userForm.controls.name.touched"
+                      class="alert alert-danger mt-2"
+                    >
+                      Không để trống tên
+                    </div>
+                    <div *ngIf="errorMessages.name" class="alert alert-danger mt-2">
+                      {{ errorMessages.name }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-12">
+              <div class="form-group">
+                <div role="group" class="form-group">
+                  <!---->
+                  <div>
+                    <label>Địa chỉ email</label>
+                    <input
+                      type="text"
+                      placeholder="Email"
+                      class="form-control"
+                      formControlName="email"
+                    >
+                    <div
+                      *ngIf="userForm.controls.email.invalid && userForm.controls.email.touched"
+                      class="alert alert-danger mt-2"
+                    >
+                      Không để trống email
+                    </div>
+                    <div *ngIf="errorMessages.email" class="alert alert-danger mt-2">
+                      {{ errorMessages.email }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-md-6 col-12">
+              <div role="group" class="form-group">
+                <!---->
+                <div>
+                  <label>Số điện thoại</label>
+                  <input
+                    type="text"
+                    placeholder="Số điện thoại"
+                    class="form-control"
+                    formControlName="tel"
+                  >
+                  <div
+                    *ngIf="userForm.controls.tel.invalid && userForm.controls.tel.touched"
+                    class="alert alert-danger mt-2"
+                  >
+                    Không để trống số điện thoại
+                  </div>
+                  <div *ngIf="errorMessages.tel" class="alert alert-danger mt-2">
+                    {{ errorMessages.tel }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-12">
+              <div class="form-group">
+                <div role="group" class="form-group">
+                  <!---->
+                  <div>
+                    <label>Mật khẩu</label>
+                    <input
+                      type="text"
+                      placeholder="Mật khẩu"
+                      class="form-control"
+                      formControlName="password"
+                    >
+                    <div *ngIf="errorMessages.password" class="alert alert-danger mt-2">
+                      {{ errorMessages.password }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-md-4 col-12">
+              <div role="group" class="form-group">
+                <!---->
+                <div>
+                  <label>Trạng thái</label>
+                  <ng-select
+                    [searchable]="true"
+                    formControlName="status"
+                    placeholder="Chọn trạng thái hoạt động"
+                  >
+                    <ng-option *ngFor="let item of status" [value]="item.id">
+                      {{ item.name }}
+                    </ng-option>
+                  </ng-select>
+                  <div
+                    *ngIf="userForm.controls.status.invalid && userForm.controls.status.touched"
+                    class="alert alert-danger mt-2"
+                  >
+                    Không để trống trạng thái
+                  </div>
+                  <div *ngIf="errorMessages.status" class="alert alert-danger mt-2">
+                    {{ errorMessages.status }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <div role="group" class="form-group">
+                <!---->
+                <div>
+                  <label>Chi nhánh</label>
+                  <ng-select
+                    [searchable]="true"
+                    formControlName="location_id"
+                    placeholder="Chọn chi nhánh"
+                  >
+                    <ng-option *ngFor="let item of locations" [value]="item.id">
+                      {{ item.name }}
+                    </ng-option>
+                  </ng-select>
+                  <div
+                    *ngIf="userForm.controls.location_id.invalid && userForm.controls.location_id.touched"
+                    class="alert alert-danger mt-2"
+                  >
+                    Không để trống chi nhánh
+                  </div>
+                  <div *ngIf="errorMessages.location_id" class="alert alert-danger mt-2">
+                    {{ errorMessages.location_id }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <div role="group" class="form-group">
+                <!---->
+                <div>
+                  <label>Quyền</label>
+                  <ng-select
+                    [searchable]="true"
+                    formControlName="role_id"
+                    placeholder="Chọn chi nhánh"
+                  >
+                    <ng-option *ngFor="let item of roles" [value]="item.id">
+                      {{ item.name }}
+                    </ng-option>
+                  </ng-select>
+                  <div
+                    *ngIf="userForm.controls.role_id.invalid && userForm.controls.role_id.touched"
+                    class="alert alert-danger mt-2"
+                  >
+                    Không để trống quyền
+                  </div>
+                  <div *ngIf="errorMessages.role_id" class="alert alert-danger mt-2">
+                    {{ errorMessages.role_id }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-12">
+      <div class="footer-custom">
+        <div class="d-flex align-items-center justify-content-end px-1">
+          <button [disabled]="userForm.invalid" type="submit" class="btn btn-primary"> Thêm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

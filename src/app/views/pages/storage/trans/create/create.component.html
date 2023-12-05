@@ -1,0 +1,163 @@
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a routerLink=".">Danh mục</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Thêm mới đơn chuyển</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h2 style="text-align: center">Tạo đơn chuyển kho</h2>
+        <h6 class="card-title">Thông tin cơ bản</h6>
+        <div *ngIf="isLoading" class="loadingcustomcss">
+          <button class="btn btn-primary" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
+        </div>
+        <form class="forms-sample" [formGroup]="storageTransForm" *ngIf="!isLoading" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">
+              Lý do chuyển
+              <span class="text-danger">(*)</span>
+            </label>
+            <input type="text" class="form-control" id="exampleInputUsername1" formControlName="reason"
+              autocomplete="off" placeholder="Nhập lý do nhập" />
+              <div *ngIf="storageTransForm.controls.reason.invalid && storageTransForm.controls.reason.touched" class="alert alert-danger mt-2">
+                Không được để trống lý do
+              </div>
+          </div>
+          <!-- <div class="mb-3">
+            <label for="exampleInputUsername1" class="form-label">
+              Mã tham chiếu
+            </label>
+            <input type="text" class="form-control" id="exampleInputUsername1" formControlName="reason"
+              autocomplete="off" placeholder="Nhập mã tham chiếu" />
+          </div> -->
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">
+              Ghi chú
+            </label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" formControlName="note"
+              placeholder="Nhập ghi chú" rows="5"></textarea>
+          </div>
+
+          <br />
+          <h6 class="card-title">Thông tin chuyển kho</h6>
+          <div class="row">
+            <!-- Col -->
+
+              <div class="mb-3">
+                <label for="exampleInputUsername1" class="form-label">
+                  Kho xuất
+                  <span class="text-danger">(*)</span>
+                </label>
+                <ng-select *ngIf="!isLoading" formControlName="inventory_id_out" (change)="onInventoryOut()" [(ngModel)]="codeInventoryOut" [items]="inventory"
+                  bindLabel="name" bindValue="id" [searchable]="false" placeholder="Lựa chọn kho xuất">
+                </ng-select>
+                <div *ngIf="storageTransForm.controls.inventory_id_out.invalid && storageTransForm.controls.inventory_id_out.touched" class="alert alert-danger mt-2">
+                  Không được để trống kho xuất
+                </div>
+              </div>
+
+            <!-- Col -->
+          </div>
+          <div class="row">
+            <!-- Col -->
+              <div class="mb-3">
+                <label for="exampleInputUsername1" class="form-label">
+                  Kho nhập
+                  <span class="text-danger">(*)</span>
+                </label>
+                <ng-select *ngIf="!isLoading" formControlName="inventory_id" [(ngModel)]="codeInventoryIn" [items]="inventory"
+                  bindLabel="name" bindValue="id" [searchable]="false" placeholder="Lựa chọn kho nhập">
+                </ng-select>
+                <div *ngIf="storageTransForm.controls.inventory_id.invalid && storageTransForm.controls.inventory_id.touched" class="alert alert-danger mt-2">
+                  Không được để trống kho nhập
+                </div>
+              </div>
+            <!-- Col -->
+          </div>
+
+          <br />
+          <h6 class="card-title">Danh sách sản phẩm</h6>
+          <div class="mb-3">
+            <form (ngSubmit)="searchProduct()" [formGroup]="inputSerach">
+              <ng-template #rt let-r="result" let-t="term">
+                <ngb-highlight [result]="r.product_name_variation" [term]="t"></ngb-highlight>
+              </ng-template>
+
+              <label for="typeahead-template" class="form-label">Tìm kiếm phiên bản sản phẩm:</label>
+              <input id="typeahead-template" type="text" class="form-control" [(ngModel)]="input"
+                formControlName="input" [ngbTypeahead]="search" [resultTemplate]="rt" [inputFormatter]="formatter" />
+              <button type="submit" hidden>Tìm kiếm</button>
+            </form>
+          </div>
+          <div class="mb-3">
+            <div class="card">
+              <div class="card-body">
+                <!-- <h6 class="card-title">Hoverable Table</h6> -->
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>SKU</th>
+                        <th>Phiên bản sản phẩm</th>
+                        <th>Tồn kho</th>
+                        <th>Số lượng</th>
+                        <!-- <th>Đơn vị</th> -->
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngIf="products && products.length">
+                        <tr *ngFor="let value of products; let i = index">
+                          <th>{{ value.sku }}</th>
+                          <td (click)="Edit(i)">{{ value.name }}</td>
+                          <td (click)="Edit(i)">
+                            {{ value.inventory }}
+                          </td>
+                          <td *ngIf="i === editRowID">
+                            <input type="number" data-id="{{value.id}}" name="quantity" formControlName="quantity"
+                              [ngModel]="products[i].quantity" (input)="resultTotal($event)" class="form-control"
+                              id="exampleInputText1" placeholder="Nhập số lượng" min="0"/>
+                          </td>
+                          <td *ngIf="i !== editRowID" (click)="Edit(i)">
+                            {{ value.quantity }}
+                          </td>
+                          <!-- <td>Đơn vị</td> -->
+
+                          <th>
+                            <button (click)="removeProduct(i)" class="btn btn-danger">
+                              Xóa
+                            </button>
+                          </th>
+                        </tr>
+                        <tr>
+                          <th style="color: red">Số mặt hàng</th>
+                          <td colspan="5" style="text-align: right">
+                            {{products.length}}
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="submit" [disabled]="storageTransForm.invalid" class="btn btn-primary me-2">
+            Tạo mới
+          </button>
+          <button class="btn btn-secondary" routerLink="/storage/trans/list">
+            Trở về
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

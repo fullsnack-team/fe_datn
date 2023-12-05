@@ -1,0 +1,73 @@
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink=".">Kho & Tồn</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Chuyển kho</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-md-12 stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-title">Quản lí chuyển kho</h6>
+        <button routerLink="/storage/trans/create" type="button" class="btn btn-primary">
+          Thêm mới đơn chuyển
+        </button>
+        <div class="table-responsive">
+          <div *ngIf="isLoading" class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          <table *ngIf="!isLoading" id="dataTableExample" class="table">
+            <thead>
+              <tr>
+                <th>MÃ PHIẾU</th>
+                <th>KHO XUẤT</th>
+                <th>KHO NHẬP</th>
+                <th>TRẠNG THÁI ĐƠN</th>
+                <th>NGƯỜI TẠO</th>
+                <th>THỜI GIAN TẠO</th>
+                <th>THỜI GIAN CẬP NHẬT</th>
+                <th>HÀNH ĐỘNG</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let value of listStorageTrans | async">
+                <td><a [routerLink]="['../detail', value.inventory_transaction_id]">{{ value.inventory_transaction_id }}</a></td>
+                <td>{{ value.inventory_name_out }}</td>
+                <td>{{ value.inventory_name_in }}</td>
+                <td style="text-align: center">
+                  <span class="badge {{
+                      status(value.status)[1]
+                    }}">{{
+                      status(value.status)[0]
+                    }}</span>
+                </td>
+                <td style="text-align: center">{{ value.created_by }}</td>
+                <td>{{ value.created_at }}</td>
+                <td>{{ value.updated_at }}</td>
+                <td>
+                  <a *ngIf="value.status === 1" [routerLink]="['../detail', value.inventory_transaction_id]" class="btn btn-success mx-2">Chi tiết</a>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

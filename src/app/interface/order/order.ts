@@ -12,4 +12,6 @@ export interface Order {
     status : number | 1;
     payment_status : number | 0;
     order_details : any;
+    created_at :  Date;
+    customer_data : any;
 }

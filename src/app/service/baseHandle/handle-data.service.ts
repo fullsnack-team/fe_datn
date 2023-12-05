@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {environment} from 'src/environments/environment';
-import {ConfigService} from "../config/config.service";
+import {SettingService} from "../setting/setting.service";
 
 @Injectable({
   providedIn: 'root',
@@ -9,10 +9,10 @@ export class HandleDataService {
   private readonly domain_name: String;
 
   constructor(
-    private configService: ConfigService,
+    private settingService: SettingService,
   ) {
-    this.configService.updateValues();
-    this.domain_name = this.configService.domain_name;
+    this.settingService.updateValues();
+    this.domain_name = this.settingService.tenant?.name;
   }
 
   getUrl(serviceTennat: string): string {
@@ -23,13 +23,13 @@ export class HandleDataService {
     return environment.apiPublicv1 + serviceTennat;
   }
 
-  handleData(data: any = {}, location_id: null|number = null) {
+  handleData(data: any = {}, location_id: any = null) {
     if (typeof data !== 'object' || Array.isArray(data)) {
       data = {id: data};
     }
     return {
       domain_name: this.domain_name,
-      location_id: location_id,
+      location_id: location_id ?? null,
       ...data,
     };
   }
@@ -37,7 +37,7 @@ export class HandleDataService {
   handle(data: any) {
     return {
       domain_name: this.domain_name,
-      location: 1,
+      location_id: this.settingService.location?.id ?? null,
       ...data,
     };
   }

@@ -1,7 +1,7 @@
 <nav class="page-breadcrumb">
   <ol class="breadcrumb">
-  <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
-  <li class="breadcrumb-item active" aria-current="page">Danh mục chi nhánh</li>
+  <li class="breadcrumb-item"><a routerLink=".">Chi nhánh</a></li>
+  <li class="breadcrumb-item active" aria-current="page">Danh sách chi nhánh</li>
   </ol>
 </nav>
 
@@ -10,7 +10,7 @@
   <div class="card">
       <div class="card-body">
       <h6 class="card-title">Quản lí chi nhánh</h6>
-      <button routerLink="/locations/create"  type="button" class="btn btn-primary">Thêm mới</button>
+      <button routerLink="../create"  type="button" class="btn btn-primary">Thêm mới</button>
       <div class="table-responsive">
         <div *ngIf="isLoading" class="d-flex justify-content-center">
           <div class="spinner-border" role="status">

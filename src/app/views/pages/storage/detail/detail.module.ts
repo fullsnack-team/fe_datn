@@ -14,6 +14,8 @@ import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { FormsModule } from '@angular/forms';
 
 import { DetailComponent } from './detail.component';
+import { ListComponent } from './list/list.component';
+import { EditComponent } from './edit/edit.component';
 
 const routes: Routes = [
   {
@@ -27,7 +29,11 @@ const routes: Routes = [
       },
       {
         path: 'list',
-        component:  DetailComponent
+        component:  ListComponent
+      },
+      {
+        path: 'edit/:id',
+        component:  EditComponent
       },
     ]
   }
@@ -35,7 +41,9 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    DetailComponent
+    DetailComponent,
+    ListComponent,
+    EditComponent
   ],
   imports: [
     CommonModule,

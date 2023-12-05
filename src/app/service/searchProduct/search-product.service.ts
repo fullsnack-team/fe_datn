@@ -14,6 +14,6 @@ export class SearchProductService extends CRUDServiceService<any> {
     dataService: HandleDataService
  ) {
    super(http, dataService);
-   this.apiUrl = this.dataService.getUrl('get-variation');
+   this.apiUrl = this.dataService.getUrl('storage/get-variation');
  }
 }

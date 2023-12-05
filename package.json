@@ -53,6 +53,7 @@
     "ngx-chips": "^3.0.0",
     "ngx-clipboard": "^15.1.0",
     "ngx-color-picker": "^13.0.0",
+    "ngx-currency": "^4.0.0",
     "ngx-custom-validators": "^8.0.0",
     "ngx-dropzone-wrapper": "^13.0.0",
     "ngx-highlightjs": "^7.0.1",

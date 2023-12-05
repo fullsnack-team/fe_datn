@@ -7,6 +7,7 @@ export const environment = {
   apiTennatv1: `${urlRoot}/tenant/api/v1/`,
   apiPublicv1: `${urlRoot}/api/public/v1/`,
   apifake: 'https://651da02744e393af2d5a1b47.mockapi.io/categories/',
+  location_id : 1
 };
 
 /*

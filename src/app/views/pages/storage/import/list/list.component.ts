@@ -92,7 +92,10 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   refreshData(): void{
     this.isLoading = true;
-    this._storageService.getAll().subscribe({
+    const data ={
+      trans_type: 0,
+    }
+    this._storageService.getAll(data).subscribe({
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){

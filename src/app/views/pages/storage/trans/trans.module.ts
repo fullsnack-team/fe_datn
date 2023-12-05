@@ -12,8 +12,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { FormsModule } from '@angular/forms';
+import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { TransComponent } from './trans.component';
+import { ListComponent } from './list/list.component';
+import { CreateComponent } from './create/create.component';
+import { DetailComponent } from './detail/detail.component';
 
 const routes: Routes = [
   {
@@ -27,7 +31,15 @@ const routes: Routes = [
       },
       {
         path: 'list',
-        component:  TransComponent
+        component:  ListComponent
+      },
+      {
+        path: 'detail/:id',
+        component:  DetailComponent
+      },
+      {
+        path: 'create',
+        component:  CreateComponent
       },
     ]
   }
@@ -35,7 +47,10 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    TransComponent
+    TransComponent,
+    ListComponent,
+    CreateComponent,
+    DetailComponent
   ],
   imports: [
     CommonModule,
@@ -53,6 +68,7 @@ const routes: Routes = [
     NgSelectModule,
     FormsModule,
     NgxMaskModule.forRoot({ validation: true}),
+    NgbTypeaheadModule
   ]
 })
 export class TransModule { }

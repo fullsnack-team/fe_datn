@@ -1,10 +1,10 @@
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
         <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Danh mục khách hàng</li>
+        <li class="breadcrumb-item active" aria-current="page">Danh mục quản lý</li>
         </ol>
     </nav>
-    
+
     <div class="row">
         <div class="col-md-12 stretch-card">
         <div class="card">
@@ -29,7 +29,7 @@
                     </td>
                     <td>
                         <a [routerLink]="['../edit', cate.id]" class="btn btn-success mx-2">Sửa</a>
-                       <button  data-id="{{cate.id}}" class="btn btn-danger">Xóa</button>  
+                       <button  data-id="{{cate.id}}" class="btn btn-danger">Xóa</button>
                     </td>
                     </tr>
                 </tbody>

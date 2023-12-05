@@ -25,7 +25,7 @@ import { StorageImport } from 'src/app/interface/storage/storage-import';
 })
 export class CreateComponent implements OnInit {
   listSupplier: any = [];
-  listLocation: any = [];
+  listLocation: any[] = [];
   listProduct: any[] = [];
   products: any[] = [];
   input: any = {};
@@ -164,7 +164,7 @@ export class CreateComponent implements OnInit {
       const datasend = {
         reason: this.storageImportForm.value.reason,
         inventory_id: this.storageImportForm.value.inventory_id,
-        partner_id: 1,
+        partner_id: this.storageImportForm.value.partner_id,
         partner_type: 0,
         trans_type: 0,
         note: this.storageImportForm.value.note,

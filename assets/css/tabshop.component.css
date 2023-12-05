@@ -1,0 +1,35 @@
+.card-body .img-products {
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  margin-right: 20px;
+}
+.card-body .item-name {
+  font-size: 0.8rem;
+}
+.card-body .price-name {
+  font-size: 0.7rem;
+}
+
+.title-bill {
+  color: #ccc;
+}
+
+.btn-icon-edit {
+  outline: none;
+}
+
+.btn-icon-edit::-moz-placeholder {
+  color: #ccc;
+}
+
+.btn-icon-edit::placeholder {
+  color: #ccc;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}/*# sourceMappingURL=tabshop.component.css.map */

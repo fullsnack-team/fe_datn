@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 
 import { FeatherIconModule } from 'src/app/core/feather-icon/feather-icon.module';
 import { NgbDropdownModule, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
-
 // Ng-ApexCharts
 import { NgApexchartsModule } from "ng-apexcharts";
 

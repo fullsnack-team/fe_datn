@@ -149,21 +149,7 @@ export class EditComponent implements OnInit {
 			<h3><strong>Th&agrave;nh tiền</strong></h3>
 			</td>
 		</tr>
-		<tr>
-			<td colspan="4">{Listproducts}</td>
-		</tr>
-		<tr>
-			<td>KM</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>{Chiet_khau_Phien_Ban}</td>
-		</tr>
-		<tr>
-			<td>Thuế SP</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
-			<td>{Thue_Phien_Ban}</td>
-		</tr>
+		{Listproducts}
 		<tr>
 			<td>Cộng tiền h&agrave;ng</td>
 			<td>&nbsp;</td>
@@ -247,9 +233,8 @@ export class EditComponent implements OnInit {
 
 <h3 style="text-align:center"><strong>CẢM ƠN QU&Yacute; KH&Aacute;CH V&Agrave; HẸN GẶP LẠI</strong></h3>
 
-<h3 style="text-align:center"><strong>Powered by NextShop</strong></h3>
+<h3 style="text-align:center"><strong>Powered by NextGo</strong></h3>
 </div>
-
         <script type="text/javascript">
             function checkAndHideId(targetId, condition, containerIds) {
               var target = document.getElementById(targetId);
@@ -379,7 +364,7 @@ export class EditComponent implements OnInit {
               toast.addEventListener('mouseleave', Swal.resumeTimer);
             },
           });
-          this._router.navigate(['../print']);
+          this._router.navigate(['setting/print']);
         } else {
           console.log(response);
           const errorMessages = [];
@@ -441,6 +426,11 @@ export class EditComponent implements OnInit {
       confirmButtonText: 'Có, tiến hành!',
     }).then((result) => {
       if (result.isConfirmed) {
+        // this._printService.returnForm(1).subscribe(
+        //   (res) => {
+
+        //   }
+        // )
         this.oldForm = this.defaultForm;
         Swal.fire({
           toast: true,

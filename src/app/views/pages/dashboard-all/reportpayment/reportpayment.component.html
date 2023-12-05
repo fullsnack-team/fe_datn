@@ -1,0 +1,51 @@
+
+  
+  <div class="row">
+    <div class="col-12 col-xl-12 grid-margin stretch-card">
+      <div class="card overflow-hidden">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-baseline mb-4 mb-md-3">
+            <h6 class="card-title mb-0">DOANH THU PHƯƠNG THỨC THANH TOÁN</h6>
+          
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-8">
+                <div class="d-flex justify-content-between align-items-center">
+                    <input type="date" [(ngModel)]="start_time" class="form-control">
+                <input type="date" [(ngModel)]="end_time" class="form-control ms-2">
+                <button class="btn btn-danger ms-4" (click)="searchDate()">Tìm kiếm</button>
+                </div>
+            </div>
+          </div>
+          <div class="flot-wrapper">
+            <div class="table-responsive">
+              <canvas id="canvas">{{chart}}</canvas>
+            </div>
+          </div>
+          <div class="flot-wrapper mt-2">
+            <div class="table-responsive">
+                <table id="dataTableExample" class="table">
+                <thead>
+                    <tr>
+                    <th>Tên phương thức</th>
+                    <th>Số lượng</th>
+                    <th>Số tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of payments.title; let i=index">
+                    <td>{{ item }}</td>
+                    <td>{{ payments.count[i].total_count }}</td>
+                    <td>{{ payments.count[i].total_price }}</td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- row -->
+  

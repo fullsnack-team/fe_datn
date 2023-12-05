@@ -6,7 +6,7 @@ import {HttpClient} from "@angular/common/http";
   providedIn: 'root'
 })
 export class PricingService {
-  private pricingApiUrl: string = environment.apiPublicv1 + 'pricing';
+  private pricingApiUrl: string = environment.apiPublicv1 + 'pricings';
 
   constructor(
     private http: HttpClient

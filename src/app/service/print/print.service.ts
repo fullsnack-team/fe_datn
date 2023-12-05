@@ -5,22 +5,22 @@ import {CRUDServiceService} from '../baseHandle/crudservice.service';
 import {Print} from 'src/app/interface/print/print';
 import {environment} from 'src/environments/environment';
 import {Observable} from 'rxjs';
-import {ConfigService} from "../config/config.service";
+import {SettingService} from "../setting/setting.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PrintService extends CRUDServiceService<Print> {
   private readonly domain_name: String;
-
+  
   constructor(
     http: HttpClient,
     dataService: HandleDataService,
-    private configService: ConfigService,
+    private settingService: SettingService,
   ) {
     super(http, dataService);
     this.apiUrl = this.dataService.getUrl('printed_forms');
-    this.domain_name = this.configService.domain_name;
+    this.domain_name = this.settingService.tenant?.name;
   }
 
   createData(data: any): Observable<any> {
@@ -28,7 +28,11 @@ export class PrintService extends CRUDServiceService<Print> {
       `${this.apiUrl}/store`,
       this.dataService.handleData(data)
     );
-
   }
-
+  returnForm(id: number){
+    return this.http.post<any>(
+      `${this.apiUrl}/return`,
+      this.dataService.handleData(id)
+    );
+  }
 }

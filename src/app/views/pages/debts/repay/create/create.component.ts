@@ -76,7 +76,7 @@ export class RepayCreateComponent implements OnInit {
         status: Number(1),
       };
       console.log(dataSend);
-      this._debtService.createFormData(dataSend).subscribe(
+      this._debtService.createDebts(dataSend).subscribe(
         (response: any) => {
           if (response.status == true) {
             this.repayForm.reset();

@@ -1,37 +1,40 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PrintComponent } from './print.component';
-import { PrintfComponent } from './printf/printf.component';
-import { EditComponent } from './edit/edit.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {PrintComponent} from './print.component';
+import {PrintfComponent} from './printf/printf.component';
+import {EditComponent} from './edit/edit.component';
 
-import { Routes, RouterModule } from '@angular/router';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { FeatherIconModule } from 'src/app/core/feather-icon/feather-icon.module';
-import { AngularCropperjsModule } from 'angular-cropperjs';
-import { CarouselModule } from 'ngx-owl-carousel-o';
-import { SortablejsModule } from 'ngx-sortablejs';
-import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import { ReactiveFormsModule } from '@angular/forms';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { FormsModule } from '@angular/forms';
-import { CKEditorModule } from 'ckeditor4-angular';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {Routes, RouterModule} from '@angular/router';
+import {NgxDatatableModule} from '@swimlane/ngx-datatable';
+import {FeatherIconModule} from 'src/app/core/feather-icon/feather-icon.module';
+import {AngularCropperjsModule} from 'angular-cropperjs';
+import {CarouselModule} from 'ngx-owl-carousel-o';
+import {SortablejsModule} from 'ngx-sortablejs';
+import {SweetAlert2Module} from '@sweetalert2/ngx-sweetalert2';
+import {ReactiveFormsModule} from '@angular/forms';
+import {NgSelectModule} from '@ng-select/ng-select';
+import {FormsModule} from '@angular/forms';
+import {CKEditorModule} from 'ckeditor4-angular';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
-import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
+import {PERFECT_SCROLLBAR_CONFIG} from 'ngx-perfect-scrollbar';
+import {PerfectScrollbarConfigInterface} from 'ngx-perfect-scrollbar';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
 
 
-
 const routes: Routes = [
   {
     path: '',
-    component: PrintfComponent ,
-  }
+    component: PrintfComponent,
+  },
+  {
+    path: 'edit',
+    component: EditComponent
+  },
 ]
 
 @NgModule({
@@ -66,4 +69,5 @@ const routes: Routes = [
     }
   ]
 })
-export class PrintModule { }
+export class PrintModule {
+}

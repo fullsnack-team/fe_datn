@@ -50,6 +50,8 @@ export class DetailComponent implements OnInit {
         this.isLoading = true;
         this._storage.getOne(id).subscribe(
           (data) => {
+            console.log(data);
+            
             const storageData = data.payload[0];
             this.status = storageData.status;
             this.listStorage = data.payload[0].inventory_transaction_details;

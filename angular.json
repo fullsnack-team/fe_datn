@@ -23,7 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist",
+            "outputPath": "dist/datnFe",
             "allowedCommonJsDependencies": [
               "fast-deep-equal",
               "sweetalert2",

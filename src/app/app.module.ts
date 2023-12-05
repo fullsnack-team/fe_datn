@@ -16,11 +16,17 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { SortablejsModule } from 'ngx-sortablejs';
 import { NgSelectModule } from '@ng-select/ng-select';
+
 import { ListTenantComponent } from './views/pages/auth/login/by-enterprise/list-tenant/list-tenant.component';
 import {PaginatorModule} from "primeng/paginator";
 import {ReactiveFormsModule} from "@angular/forms";
 import { LoginByDomainNameComponent } from './views/pages/auth/login/by-staff/login-by-domain-name/login-by-domain-name.component';
 import { CreateComponent } from './views/pages/tenant/create/create.component';
+import { SettingComponent } from './views/pages/setting/setting.component';
+import { ConfigComponent } from './views/pages/config/config.component';
+import { DetailComponent } from './views/pages/lists-order/detail/detail.component';
+import { UserComponent } from './views/pages/user/user.component';
+import {NgxMaskModule} from "ngx-mask";
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,20 +34,24 @@ import { CreateComponent } from './views/pages/tenant/create/create.component';
     ListTenantComponent,
     LoginByDomainNameComponent,
     CreateComponent,
+    SettingComponent,
+    ConfigComponent,
+    DetailComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    LayoutModule,
-    HttpClientModule,
-    NgbModule,
-    CommonModule,
-    SortablejsModule.forRoot({animation: 150}),
-    NgSelectModule,
-    PaginatorModule,
-    ReactiveFormsModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        LayoutModule,
+        HttpClientModule,
+        NgbModule,
+        CommonModule,
+        SortablejsModule.forRoot({animation: 150}),
+        NgSelectModule,
+        PaginatorModule,
+        ReactiveFormsModule,
+        NgxMaskModule
+    ],
   providers: [
     AuthGuard,
     {

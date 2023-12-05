@@ -1,16 +1,16 @@
 <nav class="page-breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Cập nhật danh mục</li>
+      <li class="breadcrumb-item active" aria-current="page">Cập nhật khách hàng</li>
     </ol>
   </nav>
-  
+
   <div class="row">
     <div class="col-md-12 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
-  
-          <h6 class="card-title">Cập nhật danh mục</h6>
+
+          <h6 class="card-title">Cập nhật khách hàng</h6>
          <div *ngIf="isLoading" class="loadingcustomcss">
             <button  class="btn btn-primary" type="button" disabled>
                 <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
@@ -52,7 +52,7 @@
                 <ng-select [searchable]="true" formControlName="status" placeholder="Chọn Trạng thái">
                     <ng-option *ngFor="let item of status" [value]="item.id">{{item.name}}</ng-option>
                 </ng-select>
-       
+
             </div>
             <div class="mb-3">
                 <label for="exampleInputUsername1" class="form-label">Loại Khách hàng</label>

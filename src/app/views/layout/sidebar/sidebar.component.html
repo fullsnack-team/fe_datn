@@ -2,8 +2,9 @@
   <div class="sidebar-header">
 
     <!--- Logo -->
-    <a routerLink="/" class="sidebar-brand nobleui-logo">
-      Noble<span>UI</span>
+    <a routerLink="/" class="nobleui-logo">
+      <img src="assets/medias/logo-light.svg" alt="" class="" style="width: 150px;">
+<!--      Noble<span>UI</span>-->
     </a>
 
     <!-- <a routerLink="/" class="sidebar-brand nobleui-logo">
@@ -25,37 +26,37 @@
     <ul class="sidebar-nav metismenu" id="sidebar-menu" #sidebarMenu>
       <ng-container *ngFor="let item of menuItems">
         <li class="nav-item nav-category" *ngIf="item.isTitle">{{ item.label }}</li>
-    
-        <li class="nav-item" *ngIf="!item.isTitle" >
-    
+
+        <li class="nav-item" *ngIf="!item.isTitle && menus.includes(item.name)" >
+
           <a class="nav-link" *ngIf="hasItems(item)" href="javascript:void(0);">
             <i class="link-icon" [attr.data-feather]="item.icon" appFeatherIcon *ngIf="item.icon"></i>
             <span class="link-title"> {{ item.label }}</span>
             <span class="link-arrow" data-feather="chevron-down" appFeatherIcon></span>
           </a>
-    
+
           <a class="nav-link nav-link-ref" [routerLink]="item.link" *ngIf="!hasItems(item)"
             [attr.data-parent]="item.parentId">
             <i class="link-icon" [attr.data-feather]="item.icon" appFeatherIcon *ngIf="item.icon"></i>
             <span class="link-title"> {{ item.label }}</span>
             <span class="badge bg-{{item.badge.variant}}" *ngIf="item.badge">{{item.badge.text}}</span>
           </a>
-    
+
           <ul class="sidebar-nav sub-menu nav-second-level" *ngIf="hasItems(item)" aria-expanded="false">
-    
+
             <li class="nav-item" *ngFor="let subitem of item.subItems" [ngClass]="{'side-nav-item': hasItems(subitem)}">
               <a class="nav-link side-nav-link-a-ref" *ngIf="hasItems(subitem)" href="javascript:void(0);">
                 <i class="link-icon" [attr.data-feather]="subitem.icon" appFeatherIcon *ngIf="subitem.icon"></i>
                 <span class="link-title"> {{ subitem.label }}</span>
                 <span class="link-arrow" data-feather="chevron-down" appFeatherIcon></span>
               </a>
-    
+
               <a class="nav-link nav-link-ref" [routerLink]="subitem.link" *ngIf="!hasItems(subitem)"
                 [attr.data-parent]="subitem.parentId">
                 <i class="link-icon" [attr.data-feather]="subitem.icon" appFeatherIcon *ngIf="subitem.icon"></i>
                 {{ subitem.label }}
               </a>
-    
+
               <ul class="sidebar-nav sub-menu nav-third-level" *ngIf="hasItems(subitem)" aria-expanded="false">
                 <li class="nav-item" *ngFor="let subSubitem of subitem.subItems">
                   <a class="nav-link nav-link-ref" [routerLink]="subSubitem.link" [routerLinkActive]="['active']"
@@ -75,7 +76,7 @@
 
   </div>
 </nav>
-<nav class="settings-sidebar">
+<!-- <nav class="settings-sidebar">
   <div class="sidebar-body">
     <a href="" class="settings-sidebar-toggler" (click)="toggleSettingsSidebar($event)">
       <i class="icon feather icon-settings"></i>
@@ -108,4 +109,4 @@
       </a>
     </div>
   </div>
-</nav>
+</nav> -->

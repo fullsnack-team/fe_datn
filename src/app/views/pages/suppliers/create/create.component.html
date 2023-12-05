@@ -1,7 +1,7 @@
 <nav class="page-breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a routerLink=".">Danh mục</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Thêm mới danh mục</li>
+        <li class="breadcrumb-item active" aria-current="page">Thêm mới nhà cung cấp</li>
     </ol>
 </nav>
 
@@ -10,16 +10,16 @@
         <div class="card">
             <div class="card-body">
 
-                <h6 class="card-title">Thêm mới Danh mục</h6>
+                <h6 class="card-title">Thêm mới nhà cung cấp</h6>
 
                 <form class="forms-sample" [formGroup]="customersForm" (ngSubmit)="onSubmit()">
                     <div class="mb-3">
-                        <label for="exampleInputUsername1" class="form-label">Tên Khách hàng<span class="text-danger">(*)</span></label>
+                        <label for="exampleInputUsername1" class="form-label">Tên nhà cung cấp<span class="text-danger">(*)</span></label>
                         <input type="text" class="form-control" id="exampleInputUsername1" formControlName="name"
-                            autocomplete="off" placeholder="Nhập tên khách hàng">
+                            autocomplete="off" placeholder="Nhập tên nhà cung cấp">
                         <div *ngIf="customersForm.controls.name.invalid && customersForm.controls.name.touched"
                             class="alert alert-danger mt-2">
-                            Không để trống tên khách hàng
+                            Không để trống tên nhà cung cấp
                         </div>
                     </div>
                     <div class="mb-3">
@@ -44,15 +44,15 @@
                         </ng-select>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputUsername1" class="form-label">Loại Khách hàng</label>
-                        <ng-select [searchable]="true" formControlName="type" placeholder="Chọn loại khách hàng">
+                        <label for="exampleInputUsername1" class="form-label">Loại nhà cung cấp</label>
+                        <ng-select [searchable]="true" formControlName="type" placeholder="Chọn loại nhà cung cấp">
                             <ng-option *ngFor="let item of types" [value]="+item.id">{{item.name}}</ng-option>
                         </ng-select>
                     </div>
 
                     <div class="mb-3">
-                        <label for="exampleInputUsername1" class="form-label">Nhóm khách hàng</label>
-                        <ng-select [searchable]="true" formControlName="group_supplier_id" placeholder="Chọn Nhóm khách hàng">
+                        <label for="exampleInputUsername1" class="form-label">Nhóm nhà cung cấp</label>
+                        <ng-select [searchable]="true" formControlName="group_supplier_id" placeholder="Chọn Nhóm nhà cung cấp">
                             <ng-option *ngFor="let item of GroupsCustomers" [value]="item.id">{{item.name}}</ng-option>
                         </ng-select>
                     </div>

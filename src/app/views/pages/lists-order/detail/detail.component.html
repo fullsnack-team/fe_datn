@@ -1,0 +1,264 @@
+<div class="main-wrapper">
+    <div class="page-wrapper">
+      <div class="page-content">
+        <!-- Spinner for lazyload modules -->
+          <nav class="navbar top-navbar">
+            <div class="container">
+              <div class="navbar-content">
+                <ul class=" d-flex justify-content-between align-items-center w-100 m-0" style="list-style: none;">
+                  <li class="nav-item">
+                    <a href="/ListOrders" class="btn btn-light" routerLink="">Quay lại</a>
+                  </li>
+                  <li class="nav-item">
+                    <h1 class="fs-4" style="transform: translateX(-30%);">Chi tiết đơn hàng</h1>
+                  </li>
+                  <li class="nav-item">
+                    <!-- <button type="submit" class="btn btn-outline-danger">Hủy Đơn</button>
+                    <button type="submit" class="btn btn-primary ms-2">In Hóa Đơn</button> -->
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+  
+            <!-- <form *ngIf="!isLoading" class="forms-sample"  (ngSubmit)="onSubmit()"> -->
+                <div class="row">
+                    <div class="col">
+                        <div class="timeline-steps aos-init aos-animate" data-aos="fade-up">
+                            <div class="timeline-step">
+                                <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="And here's some amazing content. It's very engaging. Right?" data-original-title="2003">
+                                    <div class="inner-circle"></div>
+                                    <p class="h6 mt-3 mb-1">Đặt hàng</p>
+                                    <p class="h6 text-muted mb-0 mb-lg-0">{{ dataOneFake.created_at }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="timeline-step">
+                                <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="And here's some amazing content. It's very engaging. Right?" data-original-title="2004">
+                                    <div class="inner-circle"></div>
+                                    <p class="h6 mt-3 mb-1">Đang giao dịch</p>
+                                    <p class="h6 text-muted mb-0 mb-lg-0">{{ dataOneFake.created_at }}</p>
+                                </div>
+                            </div>
+                            <div class="timeline-step">
+                                <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="And here's some amazing content. It's very engaging. Right?" data-original-title="2005">
+                                    <div class="inner-circle"></div>
+                                    <p class="h6 mt-3 mb-1">Hoàn thành</p>
+                                    <p class="h6 text-muted mb-0 mb-lg-0">{{ dataOneFake.created_at }}</p>
+                                </div>
+                            </div>
+                         
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-md-12 grid-margin stretch-card">
+                      <div class="card">
+                        <div class="card-body">
+                  
+                          <h6 class="card-title fw-bolder mb-4 fs-4">Thông tin đơn hàng</h6>
+                            <div class="row">
+                                <div class="col-6">
+                                    <ul>
+                                        <li class="mb-4 fs-5">
+                                            <span class="text-secondary fw-bolder">Mã đơn hàng:</span>
+                                            {{  dataOneFake.id }}
+                                        </li>
+                                        <li class="mb-4 fs-5">
+                                            <span class="text-secondary fw-bolder">Thời gian tạo:</span>
+                                            {{  dataOneFake.created_at }}
+                                        </li>
+                                        <li class="mb-4 fs-5">
+                                            <span class="text-secondary fw-bolder">Chi nhánh:</span>
+                                            chưa có chi nhánh
+                                        </li>
+                                        <li class="fs-5">
+                                            <span class="text-secondary  fw-bolder">Ghi chú:</span>
+                                            {{  dataOneFake.note == null ? '- - -' : dataOneFake.note }}
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-6">
+                                    <ul>
+                                        <li class="mb-4 fs-5">
+                                            <span class="text-secondary fw-bolder">Thiết bị:</span>
+                                            NextGo Web
+                                        </li>
+                                        <li class="mb-4 fs-5">
+                                            <span class="text-secondary fw-bolder">Cập nhật lần cuối:</span>
+                                            {{  dataOneFake.updated_at }}
+                                        </li>
+                                        <li class="fs-5">
+                                            <span class="text-secondary fw-bolder">NV bán hàng:</span>
+                                            {{  dataOneFake.customer_data.name }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                  
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 grid-margin stretch-card mt-4">
+                        <div class="card">
+                          <div class="card-body">
+                    
+                            <h6 class="card-title fw-bolder mb-4 fs-4">Khách hàng</h6>
+                              <div class="row">
+                                  <div class="col-6">
+                                      <ul>
+                                          <li class="mb-4 fs-5">
+                                              <span class="text-secondary fw-bolder">Họ và tên:</span>
+                                              {{ dataOneFake.customer_data.name }}
+                                          </li>
+                                          <li class="mb-4 fs-5">
+                                              <span class="text-secondary fw-bolder">Điện thoại:</span>
+                                              {{ dataOneFake.customer_data.tel }}
+                                          </li>
+                                          <li class="mb-4 fs-5">
+                                              <span class="text-secondary fw-bolder">Địa chỉ:</span>
+                                              {{ dataOneFake.customer_data.address_detail  == null ? '- - - ' : dataOneFake.customer_data.address_detail}}
+                                          </li>
+                                      </ul>
+                                  </div>
+                                  <div class="col-6">
+                                      <ul>
+                                          <li class="mb-4 fs-5">
+                                              <span class="text-secondary fw-bolder">Email</span>
+                                              {{ dataOneFake.customer_data.email  == null ? '- - - ' : dataOneFake.customer_data.email}}
+                                          </li>
+                                      </ul>
+                                  </div>
+                              </div>
+                    
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-12 grid-margin stretch-card mt-4">
+                        <div class="card">
+                          <div class="card-body">
+                    
+                            <h6 class="card-title fw-bolder mb-4 fs-4">Thông tin mua hàng</h6>
+                              <div class="row">
+                                  <div class="col-12">
+                                    <table  id="dataTableExample" class="table">
+                                        <thead>
+                                            <tr>
+                                            <th>#</th>
+                                            <th>Mã SKU</th>
+                                            <th>Tên phiên bản sản phẩm</th>
+                                            <th>Số lượng</th>
+                                            <th>Đơn giá</th>
+                                            <th>Thành tiền</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let value of dataOneFake.oder_details">
+                                            <td>{{ value.id }}</td>
+                                            <td>{{ value.variation_data.sku }}</td>
+                                            <td>{{ value.variation_data.variation_name }}</td>
+                                            <td>{{ value.quantity }}</td>
+                                            <td>{{ value.discount }}</td>
+                                            <td>{{ value.discount * value.quantity }}</td>
+                                            </tr>
+
+                                            <tr>
+                                              <td></td>
+                                              <td></td>
+                                              <td></td>
+                                              <td></td>
+                                              <td>Tổng tiền ( {{ dataOneFake.oder_details.length }} sản phẩm)</td>
+                                              <td>{{ dataOneFake.total_price }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td></td>
+                                              <td></td>
+                                              <td></td>
+                                              <td></td>
+                                              <td>Thuế tổng đơn ({{ dataOneFake.tax }}%)</td>
+                                              <td>{{ dataOneFake.tax }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td></td>
+                                              <td></td>
+                                              <td></td>
+                                              <td></td>
+                                              <td>Chiết khấu ({{  dataOneFake.discount }}{{ dataOneFake.discount_type == 0 ? 'đ' : '%'  }})</td>
+                                              <td>{{  dataOneFake.discount }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td></td>
+                                              <td></td>
+                                              <td></td>
+                                              <td></td>
+                                              <td>Khách phải trả</td>
+                                              <td>{{ dataOneFake.total_price }}</td>
+
+                                              
+                                            </tr>
+                                            <tr>
+                                              <td></td>
+                                              <td></td>
+                                              <td></td>
+                                              <td></td>
+                                              <td>Khách trả</td>
+                                              <td>{{ dataOneFake.amount_in }}</td>
+                                            </tr>
+                                            <tr>
+                                              <td></td>
+                                              <td></td>
+                                              <td></td>
+                                              <td></td>
+                                              <td>Tiền thừa</td>
+                                              <td>{{ dataOneFake.change}}</td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <div class="col-md-12 grid-margin stretch-card mt-4">
+                        <div class="card">
+                          <div class="card-body">
+                    
+                            <h6 class="card-title fw-bolder mb-4 fs-4">Thanh toán</h6>
+                              <div class="row">
+                                  <div class="col-12">
+                                    <table  id="dataTableExample" class="table">
+                                        <thead>
+                                            <tr>
+                                            <th>#</th>
+                                            <th>Phương thức</th>
+                                            <th>Số tiền thanh toán</th>
+                                            <th>Thời gian</th>
+                                            <th>Mã tham chiếu</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let value of dataOneFake.payment">
+                                            <td>{{ value.paymentable_id }}</td>
+                                            <td>{{ value.payment_method == 0 ? 'Tiền mặt' : (value.payment_method == 1 ? 'Chuyển khoản' : 'Ghi nợ') }}</td>
+                                            <td>{{ value.amount }}</td>
+                                            <td>{{ value.payment_at }}</td>
+                                            <td>{{ value.reference_code == null ? '- - -' : value.reference_code }}</td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+
+                  </div>
+            
+            </div>
+     
+      </div>
+    </div>

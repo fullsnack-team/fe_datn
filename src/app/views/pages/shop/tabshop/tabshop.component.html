@@ -524,3 +524,41 @@
         </div>
     </div>
 </ng-template>
+
+<ng-template #printf let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">In hóa đơn</h5>
+  </div>
+  <div class="modal-body">
+    <h5>Chọn thông tin bạn muốn in</h5>
+    <div class="form-check mb-2 mt-3">
+        <input type="radio" class="form-check-input" name="bill" checked id="radioDefault">
+        <label class="form-check-label" for="radioDefault">
+          Hóa Đơn
+        </label>
+      </div>
+      <h5>Chọn mẫu in</h5>
+      <div class="form-check mt-3 mb-2">
+          <input type="radio" class="form-check-input" name="template" checked id="radioDefault">
+          <label class="form-check-label" for="radioDefault">
+            In đầy đủ
+          </label>
+        </div>
+        <!-- <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio"  class="btn-check" [(ngModel)]="modelRadioPrintf" [value]="1" name="btnradio" id="btnradio1" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btnradio1">Mẫu in A4</label>
+          
+            <input type="radio" class="btn-check" [(ngModel)]="modelRadioPrintf" [value]="2" name="btnradio" id="btnradio2" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btnradio2">Mẫu in A5</label>
+          
+            <input type="radio" class="btn-check" [(ngModel)]="modelRadioPrintf" [value]="3" name="btnradio" id="btnradio3" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btnradio3">Mẫu in K57</label>
+
+            <input type="radio" class="btn-check" [(ngModel)]="modelRadioPrintf" [value]="4" name="btnradio" id="btnradio3" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btnradio3">Mẫu in K80</label>
+          </div> -->
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="modal.close(true)">In ngay</button>
+  </div>
+</ng-template>
