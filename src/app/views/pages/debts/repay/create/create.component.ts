@@ -65,7 +65,7 @@ export class RepayCreateComponent implements OnInit {
     if (this.repayForm.valid) {
       const dataSend = {
         partner_id: Number(this.resultModel.id),
-        partner_type: Number(this.resultModel.customer_type),
+        partner_type: Number(this.resultModel.type),
         debit_at: String(this.repayForm.value.debit_at),
         due_at: String(this.repayForm.value.due_at),
         type: Number(1),

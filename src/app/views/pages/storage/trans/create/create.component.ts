@@ -59,13 +59,12 @@ export class CreateComponent implements OnInit {
         inventory_id: this.codeInventoryOut,
       };
       this._storage.getAllVariation(dataSend).subscribe((res: any) => {
-        this.listProduct = res.payload.data;
+        this.listProduct = res.payload;
         // console.log(this.listProduct);
       });
-
-    }else{
+    } else {
       this._storage.getAllVariation(null).subscribe((res: any) => {
-        this.listProduct = res.payload.data;
+        this.listProduct = res.payload;
       });
     }
   }
@@ -103,10 +102,7 @@ export class CreateComponent implements OnInit {
           sku: this.input.sku,
           name: this.input.product_name_variation,
           variation_id: this.input.variation_id,
-          inventory:
-            this.input.quantity != ''
-              ? this.input.quantity
-              : 0,
+          inventory: this.input.quantity != '' ? this.input.quantity : 0,
           batch_id: 1,
           price: this.input.price_import,
           price_type: 0,
@@ -149,6 +145,7 @@ export class CreateComponent implements OnInit {
   }
   onSubmit(): void {
     if (this.storageTransForm.valid && this.products.length > 0) {
+      let flag = true;
       const dataSend = {
         reason: this.storageTransForm.value.reason,
         inventory_id_in: this.storageTransForm.value.inventory_id,
@@ -163,51 +160,61 @@ export class CreateComponent implements OnInit {
           JSON.stringify(this.products)
         ),
       };
-      // console.log(dataSend);
-      this._storage.createTrans(dataSend).subscribe(
-        (response: any) => {
-          if (response.status == true) {
-            this.storageTransForm.reset();
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 3000,
-              title: 'Thành công!',
-              text: 'Thêm đơn chuyển thành công',
-              icon: 'success',
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-              },
-            });
-            this.router.navigate([
-              // `../storage/trans/detail/${response.payload}`,
-              `../storage/trans/list`,
-            ]);
-          } else {
-            // console.log(response);
-            const errorMessages = [];
-            if (response.meta && typeof response.meta === 'object') {
-              for (const key in response.meta.errors) {
-                // errorMessages.push(`${response.meta}`);
-                const messages = response.meta.errors[key];
-                for (const message of messages) {
-                  errorMessages.push(`${key}: ${message}`);
-                }
-              }
-            } else {
-              errorMessages.push(`${response.meta}`);
-            }
-            this.showNextMessage(errorMessages);
-          }
-        },
-        (error) => {
-          // console.log(error);
-          Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
+
+      this.products.forEach((value) => {
+        // console.log(value);
+        if (value.quantity == 0) {
+          flag = false;
+          this.showNextMessage(['Số lượng phải lớn hơn 0']);
         }
-      );
+      });
+      // console.log(dataSend);
+      if (flag == true) {
+        this._storage.createTrans(dataSend).subscribe(
+          (response: any) => {
+            if (response.status == true) {
+              this.storageTransForm.reset();
+              Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                title: 'Thành công!',
+                text: 'Thêm đơn chuyển thành công',
+                icon: 'success',
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer);
+                  toast.addEventListener('mouseleave', Swal.resumeTimer);
+                },
+              });
+              this.router.navigate([
+                // `../storage/trans/detail/${response.payload}`,
+                `../storage/trans/list`,
+              ]);
+            } else {
+              // console.log(response);
+              const errorMessages = [];
+              if (response.meta && typeof response.meta === 'object') {
+                for (const key in response.meta.errors) {
+                  // errorMessages.push(`${response.meta}`);
+                  const messages = response.meta.errors[key];
+                  for (const message of messages) {
+                    errorMessages.push(`${key}: ${message}`);
+                  }
+                }
+              } else {
+                errorMessages.push(`${response.meta}`);
+              }
+              this.showNextMessage(errorMessages);
+            }
+          },
+          (error) => {
+            // console.log(error);
+            Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
+          }
+        );
+      }
     } else {
       alert('Sản phẩm không được để trống');
     }

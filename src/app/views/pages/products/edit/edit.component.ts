@@ -109,19 +109,19 @@ export class EditComponent implements OnInit {
     // });
     this.isLoading = true;
     this.ItemUnitsService.GetData().subscribe((data: any) => {
-      this.item_units = data.payload.data;
+      this.item_units = data.payload;
     });
 
     this.CategoriesService.GetData().subscribe((data: any) => {
-      this.categories = data.payload.data;
+      this.categories = data.payload;
     });
 
     this.BrandsService.GetData().subscribe((data: any) => {
-      this.brands = data.payload.data;
+      this.brands = data.payload;
     });
 
     this.WarrantiesService.GetData().subscribe((data: any) => {
-      this.warranties = data.payload.data;
+      this.warranties = data.payload;
     });
 
     this.route.paramMap.subscribe((queryParams) => {
@@ -137,7 +137,7 @@ export class EditComponent implements OnInit {
             this.itemBoxTypeQualityArray = Array(this.itemBoxTypeQuality).fill(
               null
             );
-            // customerData.variations 
+            // customerData.variations
             this.varibles = customerData.variations;
             this.dataoldApi = JSON.parse(JSON.stringify(customerData.attributes));
             this.simpleItems = JSON.parse(JSON.stringify(customerData.attributes));
@@ -159,7 +159,7 @@ export class EditComponent implements OnInit {
     });
   }
 
-  
+
   createItemFormGroup(item: any): FormGroup {
     let formGroup =  this.fb.group({
       id : [item.id],
@@ -175,9 +175,9 @@ export class EditComponent implements OnInit {
     });
 
     formGroup.get('sku')!.disable();
-    
+
     console.log(this.statusRequestvaribles );
-    
+
     if(this.statusRequestvaribles == false){
       formGroup.get('display_name')!.disable();
     }
@@ -225,9 +225,9 @@ export class EditComponent implements OnInit {
       //         status: 1,
       //       })
       //     }
-          
+
       //   }
-        
+
       //   )
       // ).pipe(
       //   expand((acc, index) => {
@@ -252,7 +252,7 @@ export class EditComponent implements OnInit {
       //               status: 1,
       //             })
 
-                 
+
       //           }else {
       //             return  ({
       //               id: item.id,
@@ -266,7 +266,7 @@ export class EditComponent implements OnInit {
       //               status: 1,
       //             })
       //           }
-               
+
       //         })
       //       )
       //     );
@@ -286,7 +286,7 @@ export class EditComponent implements OnInit {
           price_export: 0,
           status: 1,
         })
-        
+
         )
       ).pipe(
         expand((acc, index) => {
@@ -320,23 +320,23 @@ export class EditComponent implements OnInit {
         rows: this.fb.array([]),
       });
       this.rows = this.form.get('rows') as FormArray;
-  
+
       this.combinedArray$.subscribe((combinedArray) => {
         // console.log(combinedArray); // Should print 4 arrays
-  
+
         this.originalArray = combinedArray;
         this.productsForm.get('variations')!.setValue(combinedArray);
         console.log(combinedArray);
-  
+
         // Clear the FormArray
         while (this.rows.length !== 0) {
           this.rows.removeAt(0);
         }
-  
+
         combinedArray.forEach((item: any) => {
           this.rows.push(this.createItemFormGroup(item));
         });
-  
+
         this.rows.valueChanges.subscribe((value) => {
           this.originalArray = value; // Should now also print 4 arrays
           this.productsForm.value.variations = value;
@@ -347,31 +347,31 @@ export class EditComponent implements OnInit {
           rows: this.fb.array([]),
         });
         this.rows = this.form.get('rows') as FormArray;
-    
+
         // this.combinedArray$.subscribe((combinedArray) => {
           // console.log(combinedArray); // Should print 4 arrays
-    
+
           this.originalArray = DataResult;
           this.productsForm.get('variations')!.setValue(DataResult);
           console.log(this.originalArray);
-    
+
           // Clear the FormArray
           while (this.rows.length !== 0) {
             this.rows.removeAt(0);
           }
-    
+
           DataResult.forEach((item: any) => {
             this.rows.push(this.createItemFormGroup(item));
           });
-    
+
           this.rows.valueChanges.subscribe((value) => {
             this.originalArray = value; // Should now also print 4 arrays
             this.productsForm.value.variations = value;
             console.log(value);
-            
+
           });
       }
-      
+
     } else {
       console.log('b');
       this.combinedArray$ = of(
@@ -415,23 +415,23 @@ export class EditComponent implements OnInit {
         rows: this.fb.array([]),
       });
       this.rows = this.form.get('rows') as FormArray;
-  
+
       this.combinedArray$.subscribe((combinedArray) => {
         // console.log(combinedArray); // Should print 4 arrays
-  
+
         this.originalArray = combinedArray;
         this.productsForm.get('variations')!.setValue(combinedArray);
         console.log(this.originalArray);
-  
+
         // Clear the FormArray
         while (this.rows.length !== 0) {
           this.rows.removeAt(0);
         }
-  
+
         combinedArray.forEach((item: any) => {
           this.rows.push(this.createItemFormGroup(item));
         });
-  
+
         this.rows.valueChanges.subscribe((value) => {
           this.originalArray = value; // Should now also print 4 arrays
           this.productsForm.value.variations = value;
@@ -439,7 +439,7 @@ export class EditComponent implements OnInit {
       });
     }
 
-    
+
 
 
   }
@@ -554,8 +554,8 @@ export class EditComponent implements OnInit {
   }
 
   renderValue(dataItem: any[] = [],variations : any[] = [],status : boolean = false) {
-   
-    
+
+
     if (dataItem.length > 0) {
       this.dataValueVariable = dataItem.map((value, index) => {
         return {
@@ -600,7 +600,7 @@ export class EditComponent implements OnInit {
             this.renderValue();
           }
         }
-       
+
 
         // this.dataAttributes = "Modal closed" + result
         // console.log('Modal closed with:', result);
@@ -616,7 +616,7 @@ export class EditComponent implements OnInit {
     if (this.productsForm.valid) {
       console.log(this.simpleItems);
       let statusCormfirm = this.statusCheckVaribles;
-      const status_attributes = statusCormfirm == true ? 0 : 1; 
+      const status_attributes = statusCormfirm == true ? 0 : 1;
       if(!statusCormfirm){
         this.combinedArray$.pipe(last()).subscribe((combinedArray) => {
           this.originalArray = combinedArray;
@@ -634,10 +634,10 @@ export class EditComponent implements OnInit {
             updated_at: null,
             id: this.id,
           };
-          
+
           console.log(this.simpleItems);
           console.log(dataToSend);
-          
+
           this.ProductsService.update(dataToSend).subscribe(
             (response: any) => {
               if (response.status == true) {
@@ -664,7 +664,7 @@ export class EditComponent implements OnInit {
                   errorMessages.push(...response.meta.errors[key]);
                 }
                 const message = errorMessages.join(' ');
-  
+
                 Swal.fire({
                   toast: true,
                   position: 'top-end',
@@ -701,9 +701,9 @@ export class EditComponent implements OnInit {
           updated_at: null,
           id: this.id,
         };
-        
+
         console.log(dataToSend);
-        
+
         this.ProductsService.update(dataToSend).subscribe(
           (response: any) => {
             if (response.status == true) {
@@ -753,7 +753,7 @@ export class EditComponent implements OnInit {
           }
         );
       }
-     
+
     } else {
       alert('Không để trống');
     }

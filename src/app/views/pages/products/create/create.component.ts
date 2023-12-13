@@ -103,23 +103,23 @@ export class CreateComponent implements OnInit {
     // });
 
     this.ItemUnitsService.GetData().subscribe((data: any) => {
-      this.item_units = data.payload.data;
+      this.item_units = data.payload;
     });
 
     this.CategoriesService.GetData().subscribe((data: any) => {
-      this.categories = data.payload.data;
+      this.categories = data.payload;
     });
 
     this.BrandsService.GetData().subscribe((data: any) => {
-      this.brands = data.payload.data;
+      this.brands = data.payload;
     });
 
     this.WarrantiesService.GetData().subscribe((data: any) => {
-      this.warranties = data.payload.data;
+      this.warranties = data.payload;
     });
 
     this.renderVersion({ status: false });
-   
+
     this.isLoading = false;
   }
   createItemFormGroup(item: any): FormGroup {
@@ -160,7 +160,7 @@ export class CreateComponent implements OnInit {
     status = true,
   } = {}) {
     console.log(dataDefalut);
-    
+
     if (status) {
       let combinedArray$ = of(
         this.simpleItems[0].attribute_values.map((item) => ({
@@ -406,7 +406,7 @@ export class CreateComponent implements OnInit {
       //     }
       //   }
       // });
-      
+
       const dataToSend = {
         ...this.productsForm.value,
         name: this.productsForm.value.name || '',

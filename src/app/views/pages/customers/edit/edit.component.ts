@@ -59,7 +59,7 @@ export class EditComponent implements OnInit {
       { id: 1, name: 'Không kích hoạt' },
     ];
     this.GroupCustomersService.GetData().subscribe((data: any) => {
-      this.GroupsCustomers = data.payload.data;
+      this.GroupsCustomers = data.payload;
       // console.log(data.payload);
 
     });
@@ -122,8 +122,11 @@ export class EditComponent implements OnInit {
             }else{
               customerData.status = 1;
             }
-
-            this.customersForm.patchValue(customerData);
+            // console.log(customerData);
+            customerData.type_customer = customerData.type;
+            this.customersForm.patchValue(
+              customerData
+              );
             this.onProvinceChange();
             this.onDistrictChange();
             this.isLoading = false; // Stop loading
