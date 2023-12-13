@@ -33,7 +33,7 @@ export class CategoriesListComponent implements OnInit {
 
   calculatePages() {
     this.pages = [];
-    const totalPages = 4;
+    const totalPages = this.lastPage;
     for (let i = 1; i <= totalPages; i++) {
       this.pages.push(i);
     }
