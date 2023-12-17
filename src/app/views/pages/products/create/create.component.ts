@@ -16,6 +16,7 @@ import { map, expand, take } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -45,7 +46,7 @@ export class CreateComponent implements OnInit {
   form: FormGroup;
   rows: FormArray;
 
-  statusVersionDefault : boolean = false;
+  statusVersionDefault: boolean = false;
   originalArray: any[] = [];
 
   dataValueVariable: any[];
@@ -103,25 +104,26 @@ export class CreateComponent implements OnInit {
     // });
 
     this.ItemUnitsService.GetData().subscribe((data: any) => {
-      this.item_units = data.payload.data;
+      this.item_units = data.payload;
     });
 
     this.CategoriesService.GetData().subscribe((data: any) => {
-      this.categories = data.payload.data;
+      this.categories = data.payload;
     });
 
     this.BrandsService.GetData().subscribe((data: any) => {
-      this.brands = data.payload.data;
+      this.brands = data.payload;
     });
 
     this.WarrantiesService.GetData().subscribe((data: any) => {
-      this.warranties = data.payload.data;
+      this.warranties = data.payload;
     });
 
     this.renderVersion({ status: false });
-   
+
     this.isLoading = false;
   }
+
   createItemFormGroup(item: any): FormGroup {
     return this.fb.group({
       sku: [item.sku],
@@ -134,6 +136,7 @@ export class CreateComponent implements OnInit {
       status: [item.status],
     });
   }
+
   addAttributesForm() {
     this.itemBoxTypeQuality++;
     this.itemBoxTypeQualityArray = Array(this.itemBoxTypeQuality).fill(null);
@@ -149,8 +152,8 @@ export class CreateComponent implements OnInit {
       {
         sku: null,
         barcode: null,
-        variation_name: "Mặc định",
-        display_name:  "Mặc định",
+        variation_name: 'Mặc định',
+        display_name: 'Mặc định',
         image: null,
         price_import: 0,
         price_export: 0,
@@ -160,7 +163,7 @@ export class CreateComponent implements OnInit {
     status = true,
   } = {}) {
     console.log(dataDefalut);
-    
+
     if (status) {
       let combinedArray$ = of(
         this.simpleItems[0].attribute_values.map((item) => ({
@@ -247,6 +250,7 @@ export class CreateComponent implements OnInit {
       });
     }
   }
+
   removeAttributesForm(index: number) {
     if (this.itemBoxTypeQuality > 1) {
       this.itemBoxTypeQuality--;
@@ -257,8 +261,9 @@ export class CreateComponent implements OnInit {
       console.log(this.simpleItems);
     }
   }
+
   addItem(index: number) {
-    // console.log(index);
+    // this.CheckStatusform();
     if (
       this.simpleItems[index].newItemText.trim() !== '' &&
       this.simpleItems[index].attribute_values
@@ -283,20 +288,76 @@ export class CreateComponent implements OnInit {
           },
         });
       } else {
+        this.CheckStatusform();
+        console.log(this.simpleItems[index].newItemText);
         this.simpleItems[index].attribute_values.push({
           value: this.simpleItems[index].newItemText,
         });
         this.simpleItems[index].newItemText = '';
-        console.log(this.simpleItems);
         this.statusVersionDefault = true;
-        this.CheckStatusform();
       }
+    } else {
+      console.log(this.simpleItems[index].newItemText.trim());
+      console.log(this.simpleItems[index].attribute_values);
+
+      this.checkValueProperty(
+        this.simpleItems[index].newItemText,
+        this.simpleItems[index].attribute_values
+      );
+      this.CheckStatusform();
     }
+  }
+
+  deleteRecordAttr(index : number){
+    const btnDelete = document.querySelector('.rowPropeties'+index);
+    btnDelete?.remove();
   }
 
   removeItem(index: number, indexValue: number) {
     // console.log(this.simpleItems);
     this.simpleItems[indexValue].attribute_values.splice(index, 1);
+  }
+
+  checkValueAttribite(e: any) {}
+
+  // checkDataModalTarget(e: any) {
+  //   console.log(e.target.value);
+  //   if (this.checkValueInput(e.target.value) == false) {
+  //     e.target.value = '';
+  //     Swal.fire({
+  //       toast: true,
+  //       position: 'top-end',
+  //       showConfirmButton: false,
+  //       timer: 3000,
+  //       title: 'Lỗi!',
+  //       text: 'Vui lòng không nhập kí tự đặc biệt!',
+  //       icon: 'error',
+  //       timerProgressBar: true,
+  //       didOpen: (toast) => {
+  //         toast.addEventListener('mouseenter', Swal.stopTimer);
+  //         toast.addEventListener('mouseleave', Swal.resumeTimer);
+  //       },
+  //     });
+  //   }
+  // }
+
+  checkValueProperty(valueProperties: string, attr: any) {
+    if (valueProperties.length == 0 || attr.length == 0) {
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        title: 'Thất bại!',
+        text: 'Giá trị không được để trống!',
+        icon: 'error',
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+      });
+    }
   }
 
   CheckStatusform() {
@@ -310,24 +371,7 @@ export class CreateComponent implements OnInit {
           showConfirmButton: false,
           timer: 3000,
           title: 'Thất bại!',
-          text: 'Thuộc tính không được để trống!',
-          icon: 'error',
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer);
-            toast.addEventListener('mouseleave', Swal.resumeTimer);
-          },
-        });
-        this.statusFormType = false;
-        return;
-      } else if (item.attribute_values.length === 0) {
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 3000,
-          title: 'Thất bại!',
-          text: 'Giá trị không được để trống!',
+          text: 'Tên Thuộc tính không được để trống!',
           icon: 'error',
           timerProgressBar: true,
           didOpen: (toast) => {
@@ -345,7 +389,7 @@ export class CreateComponent implements OnInit {
           showConfirmButton: false,
           timer: 3000,
           title: 'Thất bại!',
-          text: 'nameAttribute không được trùng!',
+          text: 'Tên thuộc tính không được trùng!',
           icon: 'error',
           timerProgressBar: true,
           didOpen: (toast) => {
@@ -373,6 +417,7 @@ export class CreateComponent implements OnInit {
     });
     this.renderVersion();
   }
+
   openBasicModal(content: TemplateRef<any>) {
     this.modalService
       .open(content, {})
@@ -383,14 +428,18 @@ export class CreateComponent implements OnInit {
         // console.log('abc:',this.simpleItems);
         if (result) {
           this.renderValue();
-          this.CheckStatusform();
+          // this.CheckStatusform();
         }
       })
       .catch((res) => {});
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.productsForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       // this.originalArray
       // value.forEach((item: any, index: number) => {
       //   if (item.sku) {
@@ -406,7 +455,7 @@ export class CreateComponent implements OnInit {
       //     }
       //   }
       // });
-      
+
       const dataToSend = {
         ...this.productsForm.value,
         name: this.productsForm.value.name || '',
@@ -418,7 +467,10 @@ export class CreateComponent implements OnInit {
             newItem.sku = this.generateRandomString(10);
           }
 
-          if(newItem.variation_name == "Mặc định" || newItem.display_name == "Mặc định" ){
+          if (
+            newItem.variation_name == 'Mặc định' ||
+            newItem.display_name == 'Mặc định'
+          ) {
             newItem.variation_name = this.productsForm.value.name;
             newItem.display_name = this.productsForm.value.name;
           }
@@ -449,6 +501,9 @@ export class CreateComponent implements OnInit {
             });
             this.router.navigate(['../products/list']);
           } else {
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             console.log(response);
             const errorMessages = [];
             for (const key in response.meta.errors) {
@@ -473,6 +528,9 @@ export class CreateComponent implements OnInit {
           }
         },
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
@@ -482,12 +540,19 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  checkAtribute(){
-    if (this.simpleItems.every(item => item.name === '' && item.attribute_values.length === 0 && item.newItemText === '')) {
+  checkAtribute() {
+    if (
+      this.simpleItems.every(
+        (item) =>
+          item.name === '' &&
+          item.attribute_values.length === 0 &&
+          item.newItemText === ''
+      )
+    ) {
       return null;
-  } else {
+    } else {
       return this.simpleItems;
-  }
+    }
   }
 
   generateRandomString(length: number): string {

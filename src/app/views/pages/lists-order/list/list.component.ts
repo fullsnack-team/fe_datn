@@ -12,95 +12,6 @@ import { Order } from 'src/app/interface/order/order';
 })
 export class ListComponent implements OnInit {
   fakeData: Observable<Order[]>;
-//    : any = [{
-//     id : 1,
-//     location_id : 1,
-//     customer_id : 1,
-//     created_by : 1,
-//     discount : 0,
-//     discount_type : 1,
-//     tax : 0,
-//     service_charge : 0,
-//     total_product : 2,
-//     total_price : 800000,
-//     status : 1,
-//     payment_status : 2,
-//     created_at : "2023-11-16 13:07:48",
-//     updated_at :  "2023-11-16 13:07:48" ,
-//     customer_data: {
-//       id : 1,
-//       group_customer_id : 1,
-//       type : 0,
-//       name : "Mrs. Guadalupe Howe V",
-//       gender : '1',
-//       dob : "2023-10-10",
-//       email : 'qruecker@gmail.com',
-//       tel :'+13522029219',
-//       status : 1,
-//       province_code : 100000,
-//       district_code : 29,
-//       ward_code : 10222,
-//       address_detail : 'Nhà cách mặt đất 1m, xung quanh toàn đất là đất và...',
-//       note : 'Đang tuyển vợ',
-//       created_at : '2023-11-16 13:01:17',
-//       updated_at : '2023-11-16 13:01:17',
-//       customer_type : 0
-//     },
-//     order_detail: [{
-//         id : 1,
-//         order_id : 1,
-//         variation_id : 3,
-//         batch_id : null,
-//         discount : 0,
-//         discount_type : 1,
-//         tax : 0,
-//         quantity : 1,
-//         total_price : 0
-//       },
-//       {
-//         id : 1,
-//         order_id : 1,
-//         variation_id : 3,
-//         batch_id : null,
-//         discount : 0,
-//         discount_type : 1,
-//         tax : 0,
-//         quantity : 1,
-//         total_price : 0
-//       }
-//     ],
-//     payment: [
-//       {
-//         id : 1,
-//         paymentable_id : 1,
-//         amount : 200000,
-//         amount_in : 200000,
-//         amount_refund : 0,
-//         payment_method : 0,
-//         payment_at : '2023-11-16 13:07:48',
-//         reference_code : null,
-//         note : null,
-//         created_by : 1,
-//         created_at : '2023-11-16 13:07:48',
-//         updated_at : '2023-11-16 13:07:48'
-//       },
-//       {
-//         id : 2,
-//         paymentable_id : 2,
-//         amount : 600000,
-//         amount_in : 600000,
-//         amount_refund : 0,
-//         payment_method : 2,
-//         payment_at : '2023-11-16 13:07:48',
-//         reference_code : null,
-//         note : null,
-//         created_by : 1,
-//         created_at : '2023-11-16 13:07:48',
-//         updated_at : '2023-11-16 13:07:48'
-//       }
-//     ]
-//   }
-// ];
   isLoading = false;
   constructor(
     private _unitsService: ItemUnitsService,
@@ -188,7 +99,7 @@ export class ListComponent implements OnInit {
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
-          this.fakeData = of(res.payload.data) ;
+          this.fakeData = of(res.payload) ;
           this.isLoading = false;
           this.fakeData.subscribe(
             (res)=> {
@@ -196,6 +107,10 @@ export class ListComponent implements OnInit {
                 const db = new DataTable('#dataTableExample');
                 db.on('datatable.init', () => {
                   this.addDeleteEventHandlers();
+              });
+
+              db.on('datatable.page', () => {
+                this.addDeleteEventHandlers();
               });
               }, 0)
             })

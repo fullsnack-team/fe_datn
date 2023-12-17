@@ -12,7 +12,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { FormsModule } from '@angular/forms';
-
+import { CustomFormsModule } from 'ng2-validation'
 
 import { CreateComponent } from './create/create.component';
 import { EditComponent } from './edit/edit.component';
@@ -67,7 +67,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     NgSelectModule,
     FormsModule,
-    NgxMaskModule.forRoot({ validation: true})
+    NgxMaskModule.forRoot({ validation: true}),
+    CustomFormsModule
   ]
 })
 export class LocationsModule { }

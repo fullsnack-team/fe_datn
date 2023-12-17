@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import {User} from "../../../../interface/user/user";
 import {AuthService} from "../../../../service/auth/auth.service";
 import {LocalStorageService} from "../../../../service/localStorage/localStorage.service";
+import { SettingService } from 'src/app/service/setting/setting.service';
 
 @Component({
   selector: 'navbar-sell',
@@ -23,18 +24,20 @@ export class NavbarsellComponent implements OnInit {
   user: User;
   isFullScreen: boolean = false;
   role: string = '';
-
+  nameLocation: string;
   constructor(
     private router: Router,
     private DatalayoutService: DatalayoutService,
     private localStorageService: LocalStorageService,
     private authService: AuthService,
+    private SettingService : SettingService
   ) {
     this.user = this.localStorageService.get('user');
     this.role = this.authService.role;
   }
 
   ngOnInit(): void {
+    this.nameLocation =  this.SettingService.location.name;
     this.docElement = document.documentElement;
     let tabOrder = localStorage.getItem('tabOrder');
     let tabCurrentJson = localStorage.getItem('TabCurrentIndex')!;

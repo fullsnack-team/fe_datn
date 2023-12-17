@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -6,16 +6,17 @@ import {
   Validators,
   FormArray,
 } from '@angular/forms';
-import { ProductsService } from 'src/app/service/products/products.service';
-import { CategoriesService } from 'src/app/service/categories/categories.service';
-import { WarrantiesService } from 'src/app/service/warranties/warranties.service';
-import { ItemUnitsService } from 'src/app/service/item_units/item-units.service';
-import { BrandsService } from 'src/app/service/brands/brands.service';
-import { of, Observable } from 'rxjs';
-import { map, expand, take,last  } from 'rxjs/operators';
+import {ProductsService} from 'src/app/service/products/products.service';
+import {CategoriesService} from 'src/app/service/categories/categories.service';
+import {WarrantiesService} from 'src/app/service/warranties/warranties.service';
+import {ItemUnitsService} from 'src/app/service/item_units/item-units.service';
+import {BrandsService} from 'src/app/service/brands/brands.service';
+import {of, Observable} from 'rxjs';
+import {map, expand, take, last} from 'rxjs/operators';
 import Swal from 'sweetalert2';
-import { Router, ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Router, ActivatedRoute} from '@angular/router';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
@@ -30,10 +31,10 @@ export class EditComponent implements OnInit {
   warranties: any;
   manage_type: any;
   dataAttributes: string = '';
-  statusCheckVaribles:  boolean = true;
-  statusRequestvaribles:  boolean = true;
+  statusCheckVaribles: boolean = true;
+  statusRequestvaribles: boolean = true;
   combinedArray$: Observable<any[]>;
-  statusVersionDefault : boolean = false;
+  statusVersionDefault: boolean = false;
   // valuesAtribute: { id: number, text: string }[] = [];
   simpleItems: {
     name: string;
@@ -52,7 +53,7 @@ export class EditComponent implements OnInit {
 
   originalArray: any[] = [];
   dataoldApi: any[] = [];
-  varibles : any[] = [];
+  varibles: any[] = [];
   dataValueVariable: any[];
   statusFormType = false;
   itemBoxTypeQuality: number = 1;
@@ -69,7 +70,7 @@ export class EditComponent implements OnInit {
     category_id: new FormControl(0),
     status: new FormControl(1),
     image: new FormControl(''),
-    status_attributes : new FormControl(this.statusCheckVaribles == true ? 0 : 1),
+    status_attributes: new FormControl(this.statusCheckVaribles == true ? 0 : 1),
     attributes: new FormControl(this.simpleItems),
     variations: new FormControl(this.originalArray),
   });
@@ -85,7 +86,8 @@ export class EditComponent implements OnInit {
     private modalService: NgbModal,
     private fb: FormBuilder,
     private route: ActivatedRoute
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     if (this.countCreate == 0) {
@@ -98,8 +100,8 @@ export class EditComponent implements OnInit {
       this.indexOld = 0;
     }
     this.manage_type = [
-      { id: 0, name: 'Thường' },
-      { id: 1, name: 'Theo Lô/HSD' },
+      {id: 0, name: 'Thường'},
+      {id: 1, name: 'Theo Lô/HSD'},
     ];
     // this.ItemUnitsService.GetData().subscribe((data: any) => {
     //   this.item_units = data.payload.data;
@@ -109,19 +111,19 @@ export class EditComponent implements OnInit {
     // });
     this.isLoading = true;
     this.ItemUnitsService.GetData().subscribe((data: any) => {
-      this.item_units = data.payload.data;
+      this.item_units = data.payload;
     });
 
     this.CategoriesService.GetData().subscribe((data: any) => {
-      this.categories = data.payload.data;
+      this.categories = data.payload;
     });
 
     this.BrandsService.GetData().subscribe((data: any) => {
-      this.brands = data.payload.data;
+      this.brands = data.payload;
     });
 
     this.WarrantiesService.GetData().subscribe((data: any) => {
-      this.warranties = data.payload.data;
+      this.warranties = data.payload;
     });
 
     this.route.paramMap.subscribe((queryParams) => {
@@ -137,12 +139,12 @@ export class EditComponent implements OnInit {
             this.itemBoxTypeQualityArray = Array(this.itemBoxTypeQuality).fill(
               null
             );
-            // customerData.variations 
+            // customerData.variations
             this.varibles = customerData.variations;
             this.dataoldApi = JSON.parse(JSON.stringify(customerData.attributes));
             this.simpleItems = JSON.parse(JSON.stringify(customerData.attributes));
-            this.renderValue(this.simpleItems,customerData.variations);
-            if(customerData.variations.length == 1 && customerData.variations[0].variation_name == customerData.name){
+            this.renderValue(this.simpleItems, customerData.variations);
+            if (customerData.variations.length == 1 && customerData.variations[0].variation_name == customerData.name) {
               this.statusRequestvaribles = false;
             }
             // this.statusRequestvaribles = customerData.variations.length == 1 ? false : true;
@@ -159,11 +161,11 @@ export class EditComponent implements OnInit {
     });
   }
 
-  
+
   createItemFormGroup(item: any): FormGroup {
-    let formGroup =  this.fb.group({
-      id : [item.id],
-      product_id : [item.product_id],
+    let formGroup = this.fb.group({
+      id: [item.id],
+      product_id: [item.product_id],
       sku: [item.sku],
       barcode: [item.barcode],
       variation_name: [item.variation_name],
@@ -175,15 +177,16 @@ export class EditComponent implements OnInit {
     });
 
     formGroup.get('sku')!.disable();
-    
-    console.log(this.statusRequestvaribles );
-    
-    if(this.statusRequestvaribles == false){
+
+    console.log(this.statusRequestvaribles);
+
+    if (this.statusRequestvaribles == false) {
       formGroup.get('display_name')!.disable();
     }
 
     return formGroup;
   }
+
   addAttributesForm() {
     this.itemBoxTypeQuality++;
     this.itemBoxTypeQualityArray = Array(this.itemBoxTypeQuality).fill(null);
@@ -195,7 +198,7 @@ export class EditComponent implements OnInit {
     this.CheckStatusform();
   }
 
-  renderVersion(DataResult: any = [],dataOld: any = [],status :boolean) {
+  renderVersion(DataResult: any = [], dataOld: any = [], status: boolean) {
     console.log(dataOld);
     this.combinedArray$;
     if (DataResult.length > 0 || dataOld.length > 0) {
@@ -225,9 +228,9 @@ export class EditComponent implements OnInit {
       //         status: 1,
       //       })
       //     }
-          
+
       //   }
-        
+
       //   )
       // ).pipe(
       //   expand((acc, index) => {
@@ -252,7 +255,7 @@ export class EditComponent implements OnInit {
       //               status: 1,
       //             })
 
-                 
+
       //           }else {
       //             return  ({
       //               id: item.id,
@@ -266,112 +269,111 @@ export class EditComponent implements OnInit {
       //               status: 1,
       //             })
       //           }
-               
+
       //         })
       //       )
       //     );
       //   }),
       //   take(this.simpleItems.length)
       // );
-      if(status){
-          this.combinedArray$ = of(
-        dataOld[0].attribute_values.map((item: any) => ({
-          id: item.id ,
-          sku: null,
-          barcode: null,
-          variation_name: item.value,
-          display_name: item.value,
-          image: null,
-          price_import: 0,
-          price_export: 0,
-          status: 1,
-        })
-        
-        )
-      ).pipe(
-        expand((acc, index) => {
-          if (index >= this.simpleItems.length - 1) {
-            return of([]);
-          }
-          let values = this.simpleItems[index + 1].attribute_values.map(
-            (item) => item.value
-          );
-          return of(
-            acc.flatMap((item: any) =>
-              values.map((value) =>
-              ({
-                sku: null,
-                barcode: null,
-                variation_name: `${item.variation_name}-${value}`,
-                display_name: `${item.variation_name}-${value}`,
-                image: null,
-                price_import: 0,
-                price_export: 0,
-                status: 1,
-              })
-             )
-            )
-          );
-        }),
-        take(this.simpleItems.length)
-      );
+      if (status) {
+        this.combinedArray$ = of(
+          dataOld[0].attribute_values.map((item: any) => ({
+              id: item.id,
+              sku: null,
+              barcode: null,
+              variation_name: item.value,
+              display_name: item.value,
+              image: null,
+              price_import: 0,
+              price_export: 0,
+              status: 1,
+            })
+          )
+        ).pipe(
+          expand((acc, index) => {
+            if (index >= this.simpleItems.length - 1) {
+              return of([]);
+            }
+            let values = this.simpleItems[index + 1].attribute_values.map(
+              (item) => item.value
+            );
+            return of(
+              acc.flatMap((item: any) =>
+                values.map((value) =>
+                  ({
+                    sku: null,
+                    barcode: null,
+                    variation_name: `${item.variation_name}-${value}`,
+                    display_name: `${item.variation_name}-${value}`,
+                    image: null,
+                    price_import: 0,
+                    price_export: 0,
+                    status: 1,
+                  })
+                )
+              )
+            );
+          }),
+          take(this.simpleItems.length)
+        );
 
-      this.form = this.fb.group({
-        rows: this.fb.array([]),
-      });
-      this.rows = this.form.get('rows') as FormArray;
-  
-      this.combinedArray$.subscribe((combinedArray) => {
-        // console.log(combinedArray); // Should print 4 arrays
-  
-        this.originalArray = combinedArray;
-        this.productsForm.get('variations')!.setValue(combinedArray);
-        console.log(combinedArray);
-  
-        // Clear the FormArray
-        while (this.rows.length !== 0) {
-          this.rows.removeAt(0);
-        }
-  
-        combinedArray.forEach((item: any) => {
-          this.rows.push(this.createItemFormGroup(item));
-        });
-  
-        this.rows.valueChanges.subscribe((value) => {
-          this.originalArray = value; // Should now also print 4 arrays
-          this.productsForm.value.variations = value;
-        });
-      });
-      }else {
         this.form = this.fb.group({
           rows: this.fb.array([]),
         });
         this.rows = this.form.get('rows') as FormArray;
-    
-        // this.combinedArray$.subscribe((combinedArray) => {
+
+        this.combinedArray$.subscribe((combinedArray) => {
           // console.log(combinedArray); // Should print 4 arrays
-    
-          this.originalArray = DataResult;
-          this.productsForm.get('variations')!.setValue(DataResult);
-          console.log(this.originalArray);
-    
+
+          this.originalArray = combinedArray;
+          this.productsForm.get('variations')!.setValue(combinedArray);
+          console.log(combinedArray);
+
           // Clear the FormArray
           while (this.rows.length !== 0) {
             this.rows.removeAt(0);
           }
-    
-          DataResult.forEach((item: any) => {
+
+          combinedArray.forEach((item: any) => {
             this.rows.push(this.createItemFormGroup(item));
           });
-    
+
           this.rows.valueChanges.subscribe((value) => {
             this.originalArray = value; // Should now also print 4 arrays
             this.productsForm.value.variations = value;
-            console.log(value);
-            
           });
+        });
+      } else {
+        this.form = this.fb.group({
+          rows: this.fb.array([]),
+        });
+        this.rows = this.form.get('rows') as FormArray;
+
+        // this.combinedArray$.subscribe((combinedArray) => {
+        // console.log(combinedArray); // Should print 4 arrays
+
+        this.originalArray = DataResult;
+        this.productsForm.get('variations')!.setValue(DataResult);
+        console.log(this.originalArray);
+
+        // Clear the FormArray
+        while (this.rows.length !== 0) {
+          this.rows.removeAt(0);
+        }
+
+        DataResult.forEach((item: any) => {
+          this.rows.push(this.createItemFormGroup(item));
+        });
+
+        this.rows.valueChanges.subscribe((value) => {
+          this.originalArray = value; // Should now also print 4 arrays
+          this.productsForm.value.variations = value;
+          console.log(value);
+
+        });
       }
-      
+
     } else {
       console.log('b');
       this.combinedArray$ = of(
@@ -415,23 +417,23 @@ export class EditComponent implements OnInit {
         rows: this.fb.array([]),
       });
       this.rows = this.form.get('rows') as FormArray;
-  
+
       this.combinedArray$.subscribe((combinedArray) => {
         // console.log(combinedArray); // Should print 4 arrays
-  
+
         this.originalArray = combinedArray;
         this.productsForm.get('variations')!.setValue(combinedArray);
         console.log(this.originalArray);
-  
+
         // Clear the FormArray
         while (this.rows.length !== 0) {
           this.rows.removeAt(0);
         }
-  
+
         combinedArray.forEach((item: any) => {
           this.rows.push(this.createItemFormGroup(item));
         });
-  
+
         this.rows.valueChanges.subscribe((value) => {
           this.originalArray = value; // Should now also print 4 arrays
           this.productsForm.value.variations = value;
@@ -439,10 +441,9 @@ export class EditComponent implements OnInit {
       });
     }
 
-    
-
 
   }
+
   removeAttributesForm(index: number) {
     if (this.itemBoxTypeQuality > 1) {
       this.itemBoxTypeQuality--;
@@ -452,6 +453,7 @@ export class EditComponent implements OnInit {
       console.log(this.simpleItems);
     }
   }
+
   addItem(index: number) {
     if (
       this.simpleItems[index].newItemText.trim() !== '' &&
@@ -553,9 +555,9 @@ export class EditComponent implements OnInit {
     }
   }
 
-  renderValue(dataItem: any[] = [],variations : any[] = [],status : boolean = false) {
-   
-    
+  renderValue(dataItem: any[] = [], variations: any[] = [], status: boolean = false) {
+
+
     if (dataItem.length > 0) {
       this.dataValueVariable = dataItem.map((value, index) => {
         return {
@@ -579,45 +581,51 @@ export class EditComponent implements OnInit {
         };
       });
     }
-    this.renderVersion(variations,dataItem,status);
+    this.renderVersion(variations, dataItem, status);
   }
+
   openBasicModal(content: TemplateRef<any>) {
     this.modalService
       .open(content, {})
       .result.then((result) => {
-        console.log(this.simpleItems);
-        console.log(this.dataoldApi);
-        if(result){
-          this.statusCheckVaribles = JSON.stringify(this.simpleItems) === JSON.stringify(this.dataoldApi);
-          console.log(this.statusCheckVaribles);
-          if (this.dataoldApi.length >= 1) {
-            if(this.statusCheckVaribles){
-              this.renderValue(this.dataoldApi,this.varibles);
-            }else {
-              this.renderValue(this.simpleItems,this.varibles,true);
-            }
+      console.log(this.simpleItems);
+      console.log(this.dataoldApi);
+      if (result) {
+        this.statusCheckVaribles = JSON.stringify(this.simpleItems) === JSON.stringify(this.dataoldApi);
+        console.log(this.statusCheckVaribles);
+        if (this.dataoldApi.length >= 1) {
+          if (this.statusCheckVaribles) {
+            this.renderValue(this.dataoldApi, this.varibles);
           } else {
-            this.renderValue();
+            this.renderValue(this.simpleItems, this.varibles, true);
           }
+        } else {
+          this.renderValue();
         }
-       
+      }
 
-        // this.dataAttributes = "Modal closed" + result
-        // console.log('Modal closed with:', result);
-        // console.log('Weight value:', this.weightValue);
-        // console.log('abc:',this.simpleItems);
 
-        this.CheckStatusform();
-      })
-      .catch((res) => {});
+      // this.dataAttributes = "Modal closed" + result
+      // console.log('Modal closed with:', result);
+      // console.log('Weight value:', this.weightValue);
+      // console.log('abc:',this.simpleItems);
+
+      this.CheckStatusform();
+    })
+      .catch((res) => {
+      });
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.productsForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       console.log(this.simpleItems);
       let statusCormfirm = this.statusCheckVaribles;
-      const status_attributes = statusCormfirm == true ? 0 : 1; 
-      if(!statusCormfirm){
+      const status_attributes = statusCormfirm == true ? 0 : 1;
+      if (!statusCormfirm) {
         this.combinedArray$.pipe(last()).subscribe((combinedArray) => {
           this.originalArray = combinedArray;
           this.productsForm.get('variations')!.setValue(combinedArray);
@@ -625,7 +633,7 @@ export class EditComponent implements OnInit {
             ...this.productsForm.value,
             name: this.productsForm.value.name || '',
             status: Number(this.productsForm.value.status),
-          status_attributes : status_attributes,
+            status_attributes: status_attributes,
             attributes:
               this.productsForm.value.attributes?.length === 0
                 ? null
@@ -634,10 +642,10 @@ export class EditComponent implements OnInit {
             updated_at: null,
             id: this.id,
           };
-          
+
           console.log(this.simpleItems);
           console.log(dataToSend);
-          
+
           this.ProductsService.update(dataToSend).subscribe(
             (response: any) => {
               if (response.status == true) {
@@ -658,13 +666,16 @@ export class EditComponent implements OnInit {
                 });
                 this.router.navigate(['../products/list']);
               } else {
-                console.log(response);
+                if (submitBtn) {
+                  submitBtn.removeAttribute('disabled');
+                }
+                // console.log(response);
                 const errorMessages = [];
                 for (const key in response.meta.errors) {
                   errorMessages.push(...response.meta.errors[key]);
                 }
                 const message = errorMessages.join(' ');
-  
+
                 Swal.fire({
                   toast: true,
                   position: 'top-end',
@@ -682,17 +693,20 @@ export class EditComponent implements OnInit {
               }
             },
             (error) => {
+              if (submitBtn) {
+                submitBtn.removeAttribute('disabled');
+              }
               console.log(error);
               Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
             }
           );
         });
-      }else {
+      } else {
         const dataToSend = {
           ...this.productsForm.value,
           name: this.productsForm.value.name || '',
           status: Number(this.productsForm.value.status),
-        status_attributes : status_attributes,
+          status_attributes: status_attributes,
           attributes:
             this.productsForm.value.attributes?.length === 0
               ? null
@@ -701,9 +715,9 @@ export class EditComponent implements OnInit {
           updated_at: null,
           id: this.id,
         };
-        
+
         console.log(dataToSend);
-        
+
         this.ProductsService.update(dataToSend).subscribe(
           (response: any) => {
             if (response.status == true) {
@@ -753,7 +767,7 @@ export class EditComponent implements OnInit {
           }
         );
       }
-     
+
     } else {
       alert('Không để trống');
     }

@@ -35,9 +35,9 @@ export abstract class CRUDServiceService<T> {
   }
   GetDataPanigate(page: any) {
     if(page > 1){
-      return this.http.post<T[]>(`${this.apiUrl}?page=${page}`, this.dataService.handleData());
+      return this.http.post<T[]>(`${this.apiUrl}?page=${page}`, this.dataService.handleData(), this.header);
     }else{
-      return this.http.post<T[]>(`${this.apiUrl}?page=1`, this.dataService.handleData());
+      return this.http.post<T[]>(`${this.apiUrl}?page=1`, this.dataService.handleData(), this.header);
     }
   }
 

@@ -62,6 +62,8 @@ export class ReportdateComponent implements OnInit {
   }
 
   searchDate(){
+    console.log(this.end_time ,this.start_time);
+    
     if(this.end_time <= this.start_time){
       Swal.fire({
         toast: true,

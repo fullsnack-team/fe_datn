@@ -16,6 +16,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { SortablejsModule } from 'ngx-sortablejs';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CustomFormsModule } from 'ng2-validation'
 
 import { ListTenantComponent } from './views/pages/auth/login/by-enterprise/list-tenant/list-tenant.component';
 import {PaginatorModule} from "primeng/paginator";
@@ -50,7 +51,8 @@ import {NgxMaskModule} from "ngx-mask";
         NgSelectModule,
         PaginatorModule,
         ReactiveFormsModule,
-        NgxMaskModule
+        NgxMaskModule,
+        CustomFormsModule
     ],
   providers: [
     AuthGuard,

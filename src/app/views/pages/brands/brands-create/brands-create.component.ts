@@ -1,9 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import Swal from "sweetalert2";
-import { Router } from "@angular/router";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import {Router} from "@angular/router";
+import {FormGroup, FormControl, Validators} from "@angular/forms";
 
-import { BrandsService } from "src/app/service/brands/brands.service";
+import {BrandsService} from "src/app/service/brands/brands.service";
+
 @Component({
   selector: "app-brands-create",
   templateUrl: "./brands-create.component.html",
@@ -13,12 +14,19 @@ export class BrandsCreateComponent implements OnInit {
   brandForm = new FormGroup({
     name: new FormControl("", [Validators.required]),
   });
-  constructor(private _brandService: BrandsService, private _router: Router) {}
 
-  ngOnInit(): void {}
+  constructor(private _brandService: BrandsService, private _router: Router) {
+  }
+
+  ngOnInit(): void {
+  }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.brandForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       // console.log(this.brandForm.value);
       const dataToSend = {
         name: String(this.brandForm.value.name) || "",
@@ -44,7 +52,10 @@ export class BrandsCreateComponent implements OnInit {
             });
             this._router.navigate(['../brands/list']);
           } else {
-            console.log(response);
+            // console.log(response);
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             const errorMessages = [];
             for (const key in response.meta.errors) {
               errorMessages.push(...response.meta.errors[key]);
@@ -69,6 +80,9 @@ export class BrandsCreateComponent implements OnInit {
         },
         (error) => {
           // console.log(error);
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           if (error.error.status == false) {
             Swal.fire({
               toast: true,
@@ -88,7 +102,7 @@ export class BrandsCreateComponent implements OnInit {
         }
       );
     } else {
-      console.log("Error create brand!");
+      // console.log("Error create brand!");
     }
   }
 }

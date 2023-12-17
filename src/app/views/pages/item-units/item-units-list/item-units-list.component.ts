@@ -1,4 +1,10 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { Observable, of } from 'rxjs';
 import Swal from 'sweetalert2';
 import { DataTable } from 'simple-datatables';
@@ -8,16 +14,13 @@ import { ItemUnitsService } from 'src/app/service/item_units/item-units.service'
 @Component({
   selector: 'app-item-units-list',
   templateUrl: './item-units-list.component.html',
-  styleUrls: ['./item-units-list.component.scss']
+  styleUrls: ['./item-units-list.component.scss'],
 })
-export class ItemUnitsListComponent implements OnInit {
+export class ItemUnitsListComponent implements OnInit, AfterViewInit {
   listUnits: Observable<ItemUnits[]>;
   isLoading = false;
-
-  constructor(
-    private _unitsService: ItemUnitsService
-    ) {
-      this.listUnits = new Observable();
+  constructor(private _unitsService: ItemUnitsService) {
+    this.listUnits = new Observable();
   }
 
   ngOnInit(): void {
@@ -26,15 +29,16 @@ export class ItemUnitsListComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.listUnits.subscribe(() => {
-      setTimeout(() => {
-        const db = new DataTable('#dataTableExample');
-        setTimeout(() => {
-          const db = new DataTable('#dataTableExample');
-          db.on('datatable.init', () => {
-            this.addDeleteEventHandlers();
-        });
-        }, 0)
-      }, 0);
+      // setTimeout(() => {
+      //   // const db = new DataTable('#dataTableExample');
+      //   setTimeout(() => {
+      //     // const db = new DataTable('#dataTableExample');
+      //     //   db.on('datatable.init', () => {
+      //     //     this.addDeleteEventHandlers();
+      //     // });
+
+      //   }, 0);
+      // }, 0);
     });
   }
 
@@ -66,16 +70,16 @@ export class ItemUnitsListComponent implements OnInit {
           (response) => {
             Swal.fire({
               toast: true,
-              position: "top-end",
+              position: 'top-end',
               showConfirmButton: false,
               timer: 1000,
-              title: "Đã xóa!",
-              text: "Đơn vị đã được xóa.",
-              icon: "success",
+              title: 'Đã xóa!',
+              text: 'Đơn vị đã được xóa.',
+              icon: 'success',
               timerProgressBar: true,
               didOpen: (toast) => {
-                toast.addEventListener("mouseenter", Swal.stopTimer);
-                toast.addEventListener("mouseleave", Swal.resumeTimer);
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
               },
             });
             // Navigate to the list after successful deletion
@@ -84,8 +88,8 @@ export class ItemUnitsListComponent implements OnInit {
             }, 1000);
           },
           (error) => {
-            if(error.success == false){
-              Swal.fire('Lỗi!',`${error.meta.name}`, 'error');
+            if (error.success == false) {
+              Swal.fire('Lỗi!', `${error.meta.name}`, 'error');
             }
           }
         );
@@ -93,31 +97,34 @@ export class ItemUnitsListComponent implements OnInit {
     });
   }
 
-  refreshData(): void{
+  refreshData(): void {
     this.isLoading = true;
+    
     this._unitsService.GetData().subscribe({
       next: (res: any) => {
         // console.log(res.status);
-        if(res.status == true){
-          this.listUnits = of(res.payload.data) ;
+        if (res.status == true) {
+          this.listUnits = of(res.payload);
           // console.log(this.listBrands);
           this.isLoading = false;
-          this.listUnits.subscribe(
-            (res)=> {
-              setTimeout(() => {
-                const db = new DataTable('#dataTableExample');
-                db.on('datatable.init', () => {
-                  this.addDeleteEventHandlers();
+          this.listUnits.subscribe((res) => {
+            setTimeout(() => {
+              const db = new DataTable('#dataTableExample');
+              db.on('datatable.init', () => {
+                this.addDeleteEventHandlers();
               });
-              }, 0)
-            })
 
+              db.on('datatable.page', () => {
+                this.addDeleteEventHandlers();
+              });
+            }, 0);
+          });
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra. Vui lòng liên hệ QTV.', 'error');
-      }
-    })
+      },
+    });
   }
 }

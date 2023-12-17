@@ -10,7 +10,7 @@ export interface Locations {
   ward_code?: number | null;
   address_detail?: string | null;
   status: number;
-  is_main: number;
+  is_main: any;
   created_by: number;
   inventory: any;
   // created_at ?: Date | null;

@@ -34,7 +34,7 @@
             <label for="exampleInputUsername1" class="form-label">Giao dịch với<span
                 class="text-danger">(*)</span></label>
             <input id="typeahead-template" type="text" class="form-control" [(ngModel)]="resultModel" [ngbTypeahead]="search"
-              [resultTemplate]="rt" [inputFormatter]="formatter" formControlName="partner" />
+              [resultTemplate]="rt" [inputFormatter]="formatter" formControlName="partner"/>
               <!-- <p class="text-muted mt-2">Model: {{resultModel | json}}</p> -->
             <!-- <div *ngIf="
                 recoveryForm.controls.name.invalid &&
@@ -73,7 +73,7 @@
               formControlName="note" rows="5"></textarea>
           </div>
 
-          <button type="submit" [disabled]="recoveryForm.invalid" class="btn btn-primary me-2">
+          <button type="submit" id="submitBtn" [disabled]="recoveryForm.invalid" class="btn btn-primary me-2">
             Tạo mới
           </button>
           <button class="btn btn-secondary" routerLink="/debts/recovery/list">

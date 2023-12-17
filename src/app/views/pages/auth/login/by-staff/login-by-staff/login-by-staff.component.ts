@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import Swal from "sweetalert2";
@@ -38,10 +38,17 @@ export class LoginByStaffComponent implements OnInit {
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.loginForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const domain_name = this.loginForm.value.domain_name;
       this.router.navigate([`auth/login/by-staff/${domain_name}`]);
     } else {
+      if (submitBtn) {
+        submitBtn.removeAttribute('disabled');
+      }
       alert('Không để trống');
     }
   }

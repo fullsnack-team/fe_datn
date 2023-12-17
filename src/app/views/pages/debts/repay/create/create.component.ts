@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Router, ParamMap } from '@angular/router';
+import {Router, ParamMap} from '@angular/router';
 import {
   debounceTime,
   switchMap,
@@ -10,9 +10,10 @@ import {
   catchError,
 } from 'rxjs/operators';
 
-import { Observable, Subject } from 'rxjs';
-import { CustomersService } from 'src/app/service/customers/customers.service';
-import { DebtsService } from 'src/app/service/debts/debts.service';
+import {Observable, Subject} from 'rxjs';
+import {CustomersService} from 'src/app/service/customers/customers.service';
+import {DebtsService} from 'src/app/service/debts/debts.service';
+import { LocalStorageService } from 'src/app/service/localStorage/localStorage.service';
 
 @Component({
   selector: 'app-create',
@@ -31,19 +32,25 @@ export class RepayCreateComponent implements OnInit {
     note: new FormControl(''),
   });
   listCustomer: any[] = [];
+  location_id: number;
   flag = false;
+
   constructor(
     private _customerService: CustomersService,
     private _debtService: DebtsService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private _localStorage: LocalStorageService,
+  ) {
+  }
 
   ngOnInit(): void {
     this._customerService.getCustomer().subscribe((res: any) => {
       this.listCustomer = res.payload;
-      console.log(this.listCustomer);
+      // console.log(this.listCustomer);
     });
+    this.location_id = this._localStorage.get('inventory').location_id;
   }
+
   searchTerm: any[] = [];
 
   search = (text$: Observable<string>) =>
@@ -53,19 +60,23 @@ export class RepayCreateComponent implements OnInit {
         term === ''
           ? []
           : this.listCustomer
-              .filter(
-                (v) => v.name_tel.toLowerCase().indexOf(term.toLowerCase()) > -1
-              )
-              .slice(0, 10)
+            .filter(
+              (v) => v.name_tel.toLowerCase().indexOf(term.toLowerCase()) > -1
+            )
+            .slice(0, 10)
       )
     );
   formatter = (x: { name_tel: string }) => x.name_tel;
 
   onSubmit(): void {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.repayForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const dataSend = {
         partner_id: Number(this.resultModel.id),
-        partner_type: Number(this.resultModel.customer_type),
+        partner_type: Number(this.resultModel.type),
         debit_at: String(this.repayForm.value.debit_at),
         due_at: String(this.repayForm.value.due_at),
         type: Number(1),
@@ -74,8 +85,9 @@ export class RepayCreateComponent implements OnInit {
         amount_paid: 0,
         note: String(this.repayForm.value.note),
         status: Number(1),
+        location_id: Number(this.location_id)
       };
-      console.log(dataSend);
+      // console.log(dataSend);
       this._debtService.createDebts(dataSend).subscribe(
         (response: any) => {
           if (response.status == true) {
@@ -96,19 +108,30 @@ export class RepayCreateComponent implements OnInit {
             });
             this.router.navigate(['debts/repay/list']);
           } else {
-            console.log(response);
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
+            // console.log(response);
             const errorMessages = [];
-            for (const key in response.meta.errors) {
-              const messages = response.meta.errors[key];
-              for (const message of messages) {
-                errorMessages.push(`${key}: ${message}`);
+            if (response.meta && typeof response.meta === 'object') {
+              for (const key in response.meta.errors) {
+                // errorMessages.push(`${response.meta}`);
+                const messages = response.meta.errors[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
               }
+            } else {
+              errorMessages.push(`${response.meta}`);
             }
             this.showNextMessage(errorMessages);
           }
         },
         (error: any) => {
-          console.log(error);
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
+          // console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
       );
@@ -116,6 +139,7 @@ export class RepayCreateComponent implements OnInit {
       alert('Không để trống');
     }
   }
+
   showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
       const message = errorMessages.shift();

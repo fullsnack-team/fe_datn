@@ -1,22 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Router, ParamMap } from '@angular/router';
+import {Router, ParamMap} from '@angular/router';
 import {
   debounceTime,
   switchMap,
   distinctUntilChanged,
   map,
 } from 'rxjs/operators';
-import { Observable, Subject, of } from 'rxjs';
-import { ChangeDetectionStrategy } from '@angular/core';
+import {Observable, Subject, of} from 'rxjs';
+import {ChangeDetectionStrategy} from '@angular/core';
 
-import { SuppliersService } from 'src/app/service/suppliers/suppliers.service';
-import { LocationsService } from 'src/app/service/locations/locations.service';
-import { Product } from 'src/app/interface/product/product';
-import { SearchProductService } from 'src/app/service/searchProduct/search-product.service';
-import { StorageImportService } from 'src/app/service/storage/storage-import.service';
-import { StorageImport } from 'src/app/interface/storage/storage-import';
+import {SuppliersService} from 'src/app/service/suppliers/suppliers.service';
+import {LocationsService} from 'src/app/service/locations/locations.service';
+import {Product} from 'src/app/interface/product/product';
+import {SearchProductService} from 'src/app/service/searchProduct/search-product.service';
+import {StorageImportService} from 'src/app/service/storage/storage-import.service';
+import {StorageImport} from 'src/app/interface/storage/storage-import';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-create',
@@ -45,6 +46,7 @@ export class CreateComponent implements OnInit {
   inputSerach = new FormGroup({
     input: new FormControl(''),
   });
+
   constructor(
     private _supplier: SuppliersService,
     private _location: LocationsService,
@@ -54,11 +56,11 @@ export class CreateComponent implements OnInit {
   ) {
     this._supplier.GetData().subscribe((res: any) => {
       this.listSupplier = res.payload;
-      console.log(this.listSupplier);
+      // console.log(this.listSupplier);
     });
     this._product.GetData().subscribe((res: any) => {
       this.listProduct = res.payload;
-      console.log(this.listProduct);
+      // console.log(this.listProduct);
     });
 
     this._location.GetData().subscribe((res: any) => {
@@ -66,13 +68,16 @@ export class CreateComponent implements OnInit {
       // console.log(this.listLocation);
     });
   }
+
   Edit(val: any) {
     this.editRowID = val;
   }
+
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
   }
+
   search = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
@@ -80,15 +85,17 @@ export class CreateComponent implements OnInit {
         term === ''
           ? []
           : this.listProduct
-              .filter(
-                (v) =>
-                  v.product_name_variation.toLowerCase().indexOf(term.toLowerCase()) >
-                  -1
-              )
-              .slice(0, 10)
+            .filter(
+              (v) =>
+                v.product_name_variation
+                  .toLowerCase()
+                  .indexOf(term.toLowerCase()) > -1
+            )
+            .slice(0, 10)
       )
     );
-  formatter = (x: { product_name_variation: string }) => x.product_name_variation;
+  formatter = (x: { product_name_variation: string }) =>
+    x.product_name_variation;
 
   searchProduct() {
     if (this.input != '' && this.input.id != undefined) {
@@ -114,13 +121,14 @@ export class CreateComponent implements OnInit {
         this.inputSerach.reset();
       }
 
-      console.log(this.products);
+      // console.log(this.products);
     }
   }
 
   calculateTotal(index1: number, index2: number): number {
     return index1 * index2;
   }
+
   calculateTotalPrice(): number {
     let total = 0;
     for (let i = 0; i < this.products.length; i++) {
@@ -128,9 +136,11 @@ export class CreateComponent implements OnInit {
     }
     return total;
   }
+
   removeProduct(index: number): void {
     this.products.splice(index, 1);
   }
+
   resultTotal(e: any) {
     this.updateQuantity(
       this.products,
@@ -142,8 +152,9 @@ export class CreateComponent implements OnInit {
       return total + current.result;
     }, 0);
   }
+
   updateQuantity(array: any, id: number, newQuantity: any, name: string) {
-    console.log(name);
+    // console.log(name);
 
     const typeUpdate = name === 'quantity' ? 'quantity' : 'price';
     const resultType = name === 'quantity' ? 'price' : 'quantity';
@@ -151,7 +162,7 @@ export class CreateComponent implements OnInit {
       if (array[i].id === id) {
         array[i][typeUpdate] = newQuantity;
         array[i].result = newQuantity * array[i][resultType];
-        console.log(array[i]);
+        // console.log(array[i]);
 
         break;
       }
@@ -160,7 +171,12 @@ export class CreateComponent implements OnInit {
 
   onSubmit() {
     // If confirmed, delete the category
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.storageImportForm.valid && this.products.length > 0) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
+      let flag = true;
       const datasend = {
         reason: this.storageImportForm.value.reason,
         inventory_id: this.storageImportForm.value.inventory_id,
@@ -174,49 +190,73 @@ export class CreateComponent implements OnInit {
           JSON.stringify(this.products)
         ),
       };
-      console.log(datasend);
-      this._storage.createData(datasend).subscribe(
-        (response: any) => {
-          if (response.status == true) {
-            this.storageImportForm.reset();
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 3000,
-              title: 'Thành công!',
-              text: 'Thêm đơn nhập thành công',
-              icon: 'success',
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-              },
-            });
-            this.router.navigate([
-              `../storage/import/detail/${response.payload}`,
-            ]);
-          } else {
-            console.log(response);
-            const errorMessages = [];
-            for (const key in response.meta.errors) {
-              const messages = response.meta.errors[key];
-              for (const message of messages) {
-                errorMessages.push(`${key}: ${message}`);
-              }
-            }
-            this.showNextMessage(errorMessages);
-          }
-        },
-        (error) => {
-          console.log(error);
-          Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
+      this.products.forEach((value) => {
+        // console.log(value);
+        if (value.price == 0 || value.quantity == 0) {
+          flag = false;
+          this.showNextMessage(['Giá nhập hoặc số lượng phải lớn hơn 0'])
         }
-      );
+
+      });
+      // console.log(flag);
+      if (flag == true) {
+        this._storage.createData(datasend).subscribe(
+          (response: any) => {
+            if (response.status == true) {
+              this.storageImportForm.reset();
+              Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                title: 'Thành công!',
+                text: 'Thêm đơn nhập thành công',
+                icon: 'success',
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer);
+                  toast.addEventListener('mouseleave', Swal.resumeTimer);
+                },
+              });
+              this.router.navigate([
+                `../storage/import/detail/${response.payload}`,
+              ]);
+            } else {
+              if (submitBtn) {
+                submitBtn.removeAttribute('disabled');
+              }
+              // console.log(response);
+              const errorMessages = [];
+              for (const key in response.meta.errors) {
+                const messages = response.meta.errors[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
+              }
+              this.showNextMessage(errorMessages);
+            }
+          },
+          (error) => {
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
+            // console.log(error);
+            Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
+          }
+        );
+      }
     } else {
-      alert('Sản phẩm không được để trống');
+      this.showNextMessage(['Sản phẩm không được để trống!'])
     }
   }
+
+  onKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Ngăn chặn hành động mặc định của nút Enter
+      // Bạn có thể thêm xử lý khác ở đây nếu cần
+    }
+  }
+
   showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
       const message = errorMessages.shift();

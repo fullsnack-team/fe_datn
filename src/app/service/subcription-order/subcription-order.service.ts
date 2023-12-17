@@ -29,7 +29,6 @@ export class SubcriptionOrderService {
 
   create(data: any) {
     const token = this.authService.getToken();
-    console.log(token);
     const header = {
       headers: new HttpHeaders()
         .set('Authorization', `${token}`)

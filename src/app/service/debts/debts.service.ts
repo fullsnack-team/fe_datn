@@ -24,20 +24,23 @@ export class DebtsService extends CRUDServiceService<Debts> {
  }
 
  createDebts(data : any){
-  return this.http.post(`${this.apiUrl}/store`, this.handleData(data));
+  console.log(this.handleData(data));
+  
+  return this.http.post(`${this.apiUrl}/store`, this.handleData(data), this.header);
  }
 
  getAllRecovery(data: any){
-  return this.http.post(`${this.apiUrl}`, this.handleData(data));
+  return this.http.post(`${this.apiUrl}`, this.handleData(data), this.header);
  }
 
  getAllRepay(data: any){
-  return this.http.post(`${this.apiUrl}`, this.handleData(data));
+  return this.http.post(`${this.apiUrl}`, this.handleData(data), this.header);
  }
  handleData(data: any = {}) {
   return {
     domain_name: this.domain_name,
     ...data,
+    location_id : this.settingService.location.id
   };
 }
 }

@@ -24,7 +24,7 @@
                 <label for="exampleFormControlTextarea1" class="form-label">Mô tả</label>
                 <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Nhập mô tả"  formControlName="description" rows="5"></textarea>
               </div>
-            <button type="submit" [disabled]="groupsCustomersForm.invalid" class="btn btn-primary me-2">Tạo mới</button>
+            <button type="submit" id="submitBtn" [disabled]="groupsCustomersForm.invalid" class="btn btn-primary me-2">Tạo mới</button>
             <button class="btn btn-secondary" routerLink="/group_customers/list">Trở về</button>
           </form>
         </div>

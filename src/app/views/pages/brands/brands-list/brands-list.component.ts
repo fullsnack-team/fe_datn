@@ -106,8 +106,8 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         // console.log(res.status);
         if(res.status == true){
-          this.listBrands = of(res.payload.data) ;
-          console.log(res.payload.data);
+          this.listBrands = of(res.payload) ;
+          // console.log(res.payload.data);
           this.isLoading = false;
           // console.log(this.listBrands);
           this.listBrands.subscribe(
@@ -117,13 +117,17 @@ export class BrandsListComponent implements OnInit, AfterViewInit {
                 db.on('datatable.init', () => {
                   this.addDeleteEventHandlers();
               });
+
+              db.on('datatable.page', () => {
+                this.addDeleteEventHandlers();
+              });
               }, 0)
             })
 
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra.', 'error');
       }
     })

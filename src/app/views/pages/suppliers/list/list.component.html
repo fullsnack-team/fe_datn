@@ -10,7 +10,12 @@
         <div class="card-body">
         <h6 class="card-title">Quản lí nhà cung cấp</h6>
         <button routerLink="/suppliers/create"  type="button" class="btn btn-primary">Thêm mới</button>
-        <div class="table-responsive">
+        <div *ngIf="isLoading" class="d-flex justify-content-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <div *ngIf="!isLoading" class="table-responsive">
             <table id="dataTableExample" class="table">
             <thead>
                 <tr>

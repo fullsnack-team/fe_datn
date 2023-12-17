@@ -68,8 +68,7 @@
               autocomplete="off" [readonly]="true" />
           </div>
 
-          <br />
-          <h6 class="card-title">Danh sách sản phẩm</h6>
+
           <div class="row">
             <!-- Col -->
             <div class="mb-3">
@@ -81,6 +80,8 @@
             </div>
             <!-- Col -->
           </div>
+          <br />
+          <h6 class="card-title">Danh sách sản phẩm</h6>
           <div class="mb-3">
             <div class="card">
               <div class="card-body">
@@ -163,7 +164,7 @@
               </div>
             </div>
           </div>
-          <button *ngIf="status === 1" type="submit" [disabled]="storageConfirmForm.invalid"
+          <button id="submitBtn" *ngIf="status === 1" type="submit" [disabled]="storageConfirmForm.invalid"
             class="btn btn-primary me-2">
             Xác nhận
           </button>

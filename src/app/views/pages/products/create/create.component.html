@@ -20,7 +20,7 @@
           <h6 class="card-title">Thêm mới Sản phẩm</h6>
           <div class="d-flex justify-content-between my-2">
             <button class="btn btn-secondary" routerLink="/products/list">Trở về</button>
-            <button type="submit" [disabled]="productsForm.invalid" class="btn btn-primary me-2">Tạo mới</button>
+            <button type="submit" id="submitBtn" [disabled]="productsForm.invalid" class="btn btn-primary me-2">Tạo mới</button>
           </div>
           <div class="mb-3">
             <label for="nameProducts" class="form-label">Tên sản phẩm</label>
@@ -190,9 +190,9 @@
                     <table class="table table-striped">
                       <thead>
                         <tr>
-                          <div *ngIf="statusVersionDefault">
+                          <!-- <div *ngIf="statusVersionDefault">
                             <th>Hình ảnh</th>
-                          </div>
+                          </div> -->
                           <th>Tên phiên bản</th>
                           <div *ngIf="statusVersionDefault">
                             <th>Tên hiển thị</th>
@@ -200,23 +200,25 @@
                           <th>Giá nhập</th>
                           <th>Giá bán</th>
                           <th>SKU</th>
-                          <th>Barcode/UPC</th>
+                          <th>Action</th>
+                          <!-- <th>Barcode/UPC</th> -->
                         </tr>
                       </thead>
 
 
 
                         <tbody  *ngIf="originalArray && originalArray.length > 0">
-                          <tr formArrayName="rows"  *ngFor="let item of rows.controls; let i = index" >
+                          <tr formArrayName="rows" class="rowPropeties{{ i }}"  *ngFor="let item of rows.controls; let i = index" >
                             <ng-container   [formGroupName]="i">
-                              <td *ngIf="statusVersionDefault">{{ rows.at(i).get('image')?.value }}</td>
+                              <!-- <td *ngIf="statusVersionDefault">{{ rows.at(i).get('image')?.value }}</td> -->
                               <td>{{ rows.at(i).get('variation_name')?.value }}</td>
                             <td *ngIf="statusVersionDefault">
                               <input type="text" id="display_name"  formControlName="display_name"  class="form-control"></td>
                             <td> <input type="number" id="price_import"  formControlName="price_import"  class="form-control"></td>
                             <td><input type="number" id="price_export"  formControlName="price_export"  class="form-control"></td>
                             <td> <input type="text" id="sku"  formControlName="sku" placeholder="Nhập SKU" class="form-control"></td>
-                            <td><input type="text" id="barcode" formControlName="barcode" placeholder="Nhập BARCODE/UPC"  class="form-control"></td>
+                            <td><button class="btn btn-danger" (click)="deleteRecordAttr(i)">Xóa</button></td>
+                            <!-- <td><input type="text" id="barcode" formControlName="barcode" placeholder="Nhập BARCODE/UPC"  class="form-control"></td> -->
                           </ng-container>
                           </tr>
 
@@ -256,12 +258,12 @@
         <i class="feather icon-x position-absolute top-0  start-95 fs-4 text-danger" (click)="removeAttributesForm(indexItem)"></i>
       <div class="col-12 d-flex align-items-center">
         <label class="form-label" for="weight" style="width: 20%;">Thuộc tính</label>
-        <input type="text" id="weight"  (change)="CheckStatusform()" [(ngModel)]="simpleItems[indexItem].name"  class="form-control" placeholder="Nhập thuộc tính">
+        <input type="text" id="weight"  [(ngModel)]="simpleItems[indexItem].name"  class="form-control" placeholder="Nhập thuộc tính">
       </div>
       <div class="col-12 d-flex mt-4">
         <label class="form-label" style="width: 20%;">Giá trị</label>
         <div class="w-100">
-          <input type="text" class="form-control"  [(ngModel)]="simpleItems[indexItem].newItemText" (keyup.enter)="addItem(indexItem)" placeholder="Nhập giá trị và ấn enter">
+          <input type="text" class="form-control"  [(ngModel)]="simpleItems[indexItem].newItemText" (keyup.enter)="addItem(indexItem)"  placeholder="Nhập giá trị và ấn enter">
         <ul class="list-group mt-2" [sortablejs]="simpleItems[indexItem].attribute_values">
             <li class="list-group-item d-flex mt-1  align-items-center justify-content-between p-1" *ngFor="let item of simpleItems[indexItem].attribute_values let i = index">
               <div>
@@ -286,8 +288,8 @@
   </button>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close(false)">Close</button>
-    <button type="button" class="btn btn-primary"  [disabled]="!statusFormType" (click)="modal.close(true)">Save changes</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.close(false)">Thoát</button>
+    <button type="button" class="btn btn-primary"  [disabled]="!statusFormType" (click)="modal.close(true)">Lưu</button>
   </div>
 </ng-template>
 <!-- Close result -->

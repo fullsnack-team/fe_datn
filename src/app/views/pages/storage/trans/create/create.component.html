@@ -124,7 +124,7 @@
                           <td *ngIf="i === editRowID">
                             <input type="number" data-id="{{value.id}}" name="quantity" formControlName="quantity"
                               [ngModel]="products[i].quantity" (input)="resultTotal($event)" class="form-control"
-                              id="exampleInputText1" placeholder="Nhập số lượng" min="0"/>
+                              id="exampleInputText1" placeholder="Nhập số lượng" min="0" (keydown)="onKeyDown($event)"/>
                           </td>
                           <td *ngIf="i !== editRowID" (click)="Edit(i)">
                             {{ value.quantity }}
@@ -150,7 +150,7 @@
               </div>
             </div>
           </div>
-          <button type="submit" [disabled]="storageTransForm.invalid" class="btn btn-primary me-2">
+          <button type="submit" id="submitBtn" [disabled]="storageTransForm.invalid" class="btn btn-primary me-2">
             Tạo mới
           </button>
           <button class="btn btn-secondary" routerLink="/storage/trans/list">

@@ -11,6 +11,8 @@ import Swal from 'sweetalert2';
 })
 export class ListComponent implements OnInit {
 
+  isLoading = false;
+
   Customers: Observable<Suppliers[]>;
 
   constructor(private SuppliersService: SuppliersService) {
@@ -84,9 +86,10 @@ export class ListComponent implements OnInit {
   }
 
   refreshCategories(): void {
+    this.isLoading = true;
    this.SuppliersService.GetData().subscribe(
       (response : any) => {
-        console.log(response);
+        // console.log(response);
         if(response.status == true){
           this.Customers = of(response.payload);
           this.Customers.subscribe((categories) => {
@@ -95,7 +98,12 @@ export class ListComponent implements OnInit {
                 dataTable.on('datatable.init', () => {
                     this.addDeleteEventHandlers();
                 });
+
+                dataTable.on('datatable.page', () => {
+                  this.addDeleteEventHandlers();
+                });
             }, 0);
+            this.isLoading = false;
         });
         }
         // Navigate to the list after successful deletion

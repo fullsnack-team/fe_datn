@@ -1,16 +1,23 @@
-import {Component, OnInit, ViewChild, ElementRef, Inject, Renderer2} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import {Router} from '@angular/router';
-import {LocalStorageService} from "../../../service/localStorage/localStorage.service";
-import {LocationsService} from "../../../service/locations/locations.service";
-import {Locations} from "../../../interface/locations/locations";
-import {SettingService} from "../../../service/setting/setting.service";
-import {AuthService} from "../../../service/auth/auth.service";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  Inject,
+  Renderer2,
+} from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Router } from '@angular/router';
+import { LocalStorageService } from '../../../service/localStorage/localStorage.service';
+import { LocationsService } from '../../../service/locations/locations.service';
+import { Locations } from '../../../interface/locations/locations';
+import { SettingService } from '../../../service/setting/setting.service';
+import { AuthService } from '../../../service/auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
   public user: any;
@@ -25,7 +32,7 @@ export class NavbarComponent implements OnInit {
     private localStorageService: LocalStorageService,
     private locationService: LocationsService,
     private settingService: SettingService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {
     this.isSuperAdmin = this.authService.role === 'super-admin';
   }
@@ -34,13 +41,20 @@ export class NavbarComponent implements OnInit {
     this.user = this.localStorageService.get('user');
     this.activeLocation = this.localStorageService.get('location');
     if (this.isSuperAdmin) {
-      this.locationService.GetData().subscribe(
-        (response: any) => {
-          if (response.status) {
-            this.locations = response.payload;
-          }
+      this.locationService.GetData().subscribe((response: any) => {
+        if (response.status) {
+          this.locations = response.payload;
+          const is_main = this.locations.find(value => value.is_main == true);
+          // console.log(is_main);
+          const tatCaObject = {...is_main};
+          tatCaObject.id = tatCaObject.id || 0
+          tatCaObject.name = "Tất cả"
+          // Add 'tất cả' object to the beginning of the locations array
+          this.locations = [tatCaObject, ...response.payload];
+          console.log(this.locations);
+
         }
-      )
+      });
     }
   }
 
@@ -66,10 +80,7 @@ export class NavbarComponent implements OnInit {
   }
 
   setActiveLocation(location: Locations) {
-    const {
-      inventory,
-      ...activeLocation
-    } = location;
+    const { inventory, ...activeLocation } = location;
     this.localStorageService.set('location', activeLocation);
     this.localStorageService.set('inventory', inventory);
     this.activeLocation = location;
@@ -77,5 +88,4 @@ export class NavbarComponent implements OnInit {
       window.location.reload();
     }, 200);
   }
-
 }

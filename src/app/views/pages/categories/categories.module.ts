@@ -8,6 +8,8 @@ import { AngularCropperjsModule } from 'angular-cropperjs';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { SortablejsModule } from 'ngx-sortablejs';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { CreateComponent } from './create/create.component';
 import { CategoriesListComponent } from './categories-list/categories-list.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -57,7 +59,8 @@ const routes: Routes = [
       ghostClass: 'bg-light',
     }),
     SweetAlert2Module.forRoot(),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbPaginationModule
   ]
 })
 export class CategoriesModule { }

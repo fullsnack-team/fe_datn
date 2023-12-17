@@ -35,7 +35,7 @@
             <div class="mb-3">
                 <label for="exampleInputUsername1" class="form-label">Số điện thoại<span class="text-danger">(*)</span></label>
                 <input type="text" class="form-control" id="exampleInputUsername1" formControlName="tel"
-                    autocomplete="off" placeholder="Nhập số điện thoại">
+                    autocomplete="off" placeholder="Nhập số điện thoại" minlength="10">
                 <div *ngIf="customersForm.controls.tel.invalid && customersForm.controls.tel.touched"
                     class="alert alert-danger mt-2">
                     Không để trống Số điện thoại
@@ -58,7 +58,7 @@
 
             <div class="mb-3">
                 <label for="exampleInputUsername1" class="form-label">Nhóm nhà cung cấp</label>
-                <ng-select [searchable]="true" formControlName="group_supplier_id" placeholder="Chọn Nhóm nhà cung cấp">
+                <ng-select [searchable]="true" formControlName="group_customer_id" placeholder="Chọn Nhóm nhà cung cấp">
                     <ng-option *ngFor="let item of GroupsCustomers" [value]="item.id">{{item.name}}</ng-option>
                 </ng-select>
             </div>
@@ -100,7 +100,7 @@
                     formControlName="note" rows="5"></textarea>
             </div>
 
-            <button type="submit" [disabled]="customersForm.invalid" class="btn btn-primary me-2">Tạo
+            <button type="submit" id="submitBtn" [disabled]="customersForm.invalid" class="btn btn-primary me-2">Tạo
                 mới</button>
             <button class="btn btn-secondary" routerLink="/suppliers/list">Trở về</button>
         </form>

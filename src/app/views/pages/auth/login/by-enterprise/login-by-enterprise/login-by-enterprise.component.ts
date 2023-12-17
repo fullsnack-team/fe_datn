@@ -44,7 +44,11 @@ export class LoginByEnterpriseComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
     this.errorMessages = [];
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.loginForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const dataToSend = {
         email: this.loginForm.value.email || "",
         password: this.loginForm.value.password
@@ -56,6 +60,9 @@ export class LoginByEnterpriseComponent implements OnInit, AfterViewInit {
             this.localStorageService.set('tenant_token', response.payload);
             this.router.navigate(['auth/login/by-enterprise/tenants']);
           } else {
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             this.errorMessages = response.meta;
             if (this.errorMessages.domain_name) {
               Swal.fire({
@@ -77,6 +84,9 @@ export class LoginByEnterpriseComponent implements OnInit, AfterViewInit {
         }
         ,
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           if (error.error.status == false) {
             Swal.fire({
               toast: true,

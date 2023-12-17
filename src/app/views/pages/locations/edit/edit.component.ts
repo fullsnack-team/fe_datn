@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 import Swal from 'sweetalert2';
-import { ActivatedRoute, Router } from '@angular/router';
-import { debounceTime, switchMap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import {debounceTime, switchMap} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import { CustomValidators } from 'ng2-validation';
 
-import { LocationsService } from 'src/app/service/locations/locations.service';
-import { AresService } from 'src/app/service/ares/ares.service';
-import { environment } from 'src/environments/environment';
-import {SettingService} from "../../../../service/setting/setting.service";
+import {LocationsService} from 'src/app/service/locations/locations.service';
+import {AresService} from 'src/app/service/ares/ares.service';
+import {environment} from 'src/environments/environment';
+import {SettingService} from '../../../../service/setting/setting.service';
 
 @Component({
   selector: 'app-edit',
@@ -32,13 +33,13 @@ export class EditComponent implements OnInit {
 
   locationsForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    email: new FormControl(''),
+    email: new FormControl('', [CustomValidators.email]),
     imageUpdate: new FormControl(''),
     description: new FormControl(''),
-    tel: new FormControl('', [Validators.required]),
-    province_code: new FormControl(''),
-    district_code: new FormControl(''),
-    ward_code: new FormControl(''),
+    tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
+    province_id: new FormControl(''),
+    district_id: new FormControl(''),
+    commune_id: new FormControl(''),
     address_detail: new FormControl('', [Validators.required]),
     status: new FormControl('', [Validators.required]),
     is_main: new FormControl('', [Validators.required]),
@@ -49,25 +50,25 @@ export class EditComponent implements OnInit {
     private AresService: AresService,
     private router: Router,
     private route: ActivatedRoute,
-    private settingService: SettingService,
+    private settingService: SettingService
   ) {
     this.domain_name = this.settingService.tenant?.name;
   }
 
   ngOnInit(): void {
     this.status = [
-      { id: 0, name: 'Đóng cửa' },
-      { id: 1, name: 'Hoạt động' },
+      {id: 0, name: 'Đóng cửa'},
+      {id: 1, name: 'Hoạt động'},
     ];
     this.is_main = [
-      { id: 0, name: 'Chi nhánh mặc định' },
-      { id: 1, name: 'Chi nhánh phụ' },
+      {id: 1, name: 'Chi nhánh mặc định'},
+      {id: 0, name: 'Chi nhánh phụ'},
     ];
     this.AresService.getProvinces().subscribe((data: any) => {
       this.provinces =
         data.status != 'error'
           ? data.results
-          : [{ id: 0, name: `${data.message}` }];
+          : [{id: 0, name: `${data.message}`}];
     });
 
     this.provinceChangeSubject
@@ -81,10 +82,10 @@ export class EditComponent implements OnInit {
         this.districts =
           data.status != 'error'
             ? data.results
-            : [{ id: 0, name: `${data.message}` }];
+            : [{id: 0, name: `${data.message}`}];
       });
 
-      this.districtChangeSubject
+    this.districtChangeSubject
       .pipe(
         debounceTime(300),
         switchMap((district_code) => this.AresService.getWards(district_code))
@@ -93,7 +94,7 @@ export class EditComponent implements OnInit {
         this.wards =
           data.status != 'error'
             ? data.results
-            : { id: 0, name: `${data.message}`, status: false };
+            : {id: 0, name: `${data.message}`, status: false};
         this.isWardDataLoaded = data.status != 'error' ? true : false;
         if (this.wards && this.wards.status != false) {
           this.locationsForm
@@ -101,8 +102,8 @@ export class EditComponent implements OnInit {
             ?.setValidators(Validators.required);
           this.locationsForm?.get('ward_code')?.updateValueAndValidity();
         } else {
-          console.log(this.wards);
-          this.locationsForm.value.ward_code = '';
+          // console.log(this.wards);
+          this.locationsForm.value.commune_id = '';
         }
       });
 
@@ -114,7 +115,7 @@ export class EditComponent implements OnInit {
         this._locaService.GetOneRecord(id).subscribe(
           (data) => {
             const locationData = data.payload;
-            console.log(locationData);
+            // console.log(locationData);
             locationData.is_main = locationData.is_main == true ? 1 : 0;
             locationData.status = locationData.status == true ? 1 : 0;
             // locationData.image = ' ';
@@ -128,20 +129,20 @@ export class EditComponent implements OnInit {
           }
         );
       } else {
-        this.router.navigate(["../../locations"]);
+        this.router.navigate(['../../locations']);
       }
     });
   }
 
   onProvinceChange(): void {
     this.provinceChangeSubject.next(
-      Number(this.locationsForm.value.province_code)
+      Number(this.locationsForm.value.province_id)
     );
   }
 
   onDistrictChange(): void {
     this.districtChangeSubject.next(
-      Number(this.locationsForm.value.district_code)
+      Number(this.locationsForm.value.district_id)
     );
   }
 
@@ -181,7 +182,7 @@ export class EditComponent implements OnInit {
       }
       // Lưu trữ tệp hình ảnh và tiếp tục xử lý nếu tệp hợp lệ
       this.img = img;
-      console.log('Tệp hình ảnh hợp lệ.');
+      // console.log('Tệp hình ảnh hợp lệ.');
     } else {
       Swal.fire({
         icon: 'error',
@@ -196,17 +197,21 @@ export class EditComponent implements OnInit {
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.locationsForm.value.imageUpdate) {
       // Nếu giá trị tồn tại (không phải null hoặc undefined)
       // Thực hiện các hành động cần thiết ở đây
-      console.log('Giá trị tồn tại:', this.locationsForm.value.imageUpdate);
+      // console.log('Giá trị tồn tại:', this.locationsForm.value.imageUpdate);
     } else {
       // Nếu giá trị không tồn tại (null hoặc undefined)
-      console.log('Giá trị không tồn tại hoặc là null/undefined.');
+      // console.log('Giá trị không tồn tại hoặc là null/undefined.');
     }
 
     if (this.locationsForm.valid) {
-      console.log(this.locationsForm.value);
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
+      // console.log(this.locationsForm.value);
       const formData = new FormData();
 
       const locationsData = this.locationsForm.value;
@@ -222,9 +227,9 @@ export class EditComponent implements OnInit {
       formData.append('is_main', String(locationsData.is_main));
       formData.append('address_detail', String(locationsData.address_detail));
       formData.append('created_by', '1');
-      formData.append('province_code', String(locationsData.province_code));
-      formData.append('district_code', String(locationsData.district_code));
-      formData.append('ward_code', String(locationsData.ward_code));
+      formData.append('province_code', String(locationsData.province_id));
+      formData.append('district_code', String(locationsData.district_id));
+      formData.append('ward_code', String(locationsData.commune_id));
       formData.append('description', String(locationsData.description));
       // console.log(this.img);
 
@@ -234,19 +239,30 @@ export class EditComponent implements OnInit {
             this.locationsForm.reset();
             this.showSuccessMessage('setting/locations');
           } else {
-            console.log(response);
+            // console.log(response);
             const errorMessages = [];
-            for (const key in response.meta) {
-              const messages = response.meta[key];
-              for (const message of messages) {
-                errorMessages.push(`${message}`);
+            if (response.meta && typeof response.meta === 'object') {
+              for (const key in response.meta) {
+                // errorMessages.push(`${response.meta}`);
+                const messages = response.meta[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
               }
+            } else {
+              if (submitBtn) {
+                submitBtn.removeAttribute('disabled');
+              }
+              errorMessages.push(`${response.meta}`);
             }
             this.showNextMessage(errorMessages);
           }
         },
         (error) => {
-          console.log(error);
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
+          // console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
       );
@@ -278,7 +294,7 @@ export class EditComponent implements OnInit {
     }
   }
 
-  showSuccessMessage(router: string){
+  showSuccessMessage(router: string) {
     Swal.fire({
       toast: true,
       position: 'top-end',

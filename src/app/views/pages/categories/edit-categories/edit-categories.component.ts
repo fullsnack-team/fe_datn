@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { CategoriesService } from 'src/app/service/categories/categories.service';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {CategoriesService} from 'src/app/service/categories/categories.service';
 import Swal from 'sweetalert2';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import {Router, ActivatedRoute, ParamMap} from '@angular/router';
+
 @Component({
   selector: 'app-edit-categories',
   templateUrl: './edit-categories.component.html',
@@ -13,11 +14,13 @@ export class EditCategoriesComponent implements OnInit {
   categoryForm = new FormGroup({
     name: new FormControl('', Validators.required),
   });
+
   constructor(
     private categories: CategoriesService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((queryParams) => {
@@ -42,7 +45,11 @@ export class EditCategoriesComponent implements OnInit {
   //   return this.categoryForm.value.name !== this.originalData.name;
   // }
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.categoryForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const dataToSend = {
         ...this.categoryForm.value,
         updated_at: new Date().toISOString(),
@@ -68,7 +75,10 @@ export class EditCategoriesComponent implements OnInit {
             });
             this.router.navigate(['/categories/list']);
           } else {
-            console.log(response);
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
+            // console.log(response);
             const errorMessages = [];
             for (const key in response.meta.errors) {
               errorMessages.push(...response.meta.errors[key]);
@@ -93,6 +103,9 @@ export class EditCategoriesComponent implements OnInit {
 
         },
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
       );

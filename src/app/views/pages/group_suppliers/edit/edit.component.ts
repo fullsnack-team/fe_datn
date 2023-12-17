@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { GroupSuppliersService } from 'src/app/service/group_suppliers/group-suppliers.service';
+import {Router, ActivatedRoute, ParamMap} from '@angular/router';
+import {GroupSuppliersService} from 'src/app/service/group_suppliers/group-suppliers.service';
+
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
@@ -14,11 +15,13 @@ export class EditComponent implements OnInit {
     name: new FormControl('', Validators.required),
     description: new FormControl(''),
   });
+
   constructor(
     private GroupSuppliersService: GroupSuppliersService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((queryParams) => {
@@ -41,7 +44,11 @@ export class EditComponent implements OnInit {
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.groupsCustomersForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const dataToSend = {
         ...this.groupsCustomersForm.value,
         updated_at: new Date().toISOString(),
@@ -67,7 +74,10 @@ export class EditComponent implements OnInit {
             });
             this.router.navigate(['/group_suppliers/list']);
           } else {
-            console.log(response);
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
+            // console.log(response);
             const errorMessages = [];
             for (const key in response.meta.errors) {
               errorMessages.push(...response.meta.errors[key]);
@@ -91,6 +101,9 @@ export class EditComponent implements OnInit {
           }
         },
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           Swal.fire({
             toast: true,
             position: 'top-end',

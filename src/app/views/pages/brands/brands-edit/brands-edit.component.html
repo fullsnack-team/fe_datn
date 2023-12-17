@@ -29,7 +29,7 @@
               <!-- <p class="text-danger mt-1" *ngIf="brandForm.controls.name.touched && brandForm.controls.name.maxlength">Không
                 để trống tên thương hiệu</p> -->
           </div>
-          <button type="submit" [disabled]="brandForm.invalid" class="btn btn-primary me-2">Cập nhật</button>
+          <button type="submit" id="submitBtn" [disabled]="brandForm.invalid" class="btn btn-primary me-2">Cập nhật</button>
           <button class="btn btn-secondary" routerLink="/brands/list">Trở về</button>
         </form>
       </div>

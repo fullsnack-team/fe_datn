@@ -41,8 +41,12 @@ export class LoginByDomainNameComponent implements OnInit {
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     this.errorMessages = [];
     if (this.loginForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const dataToSend = {
         domain_name: this.params.domain_name,
         email: this.loginForm.value.email || "",
@@ -91,6 +95,9 @@ export class LoginByDomainNameComponent implements OnInit {
             }, 1500);
 
           } else {
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             this.errorMessages = response.meta;
             if (this.errorMessages.domain_name) {
               Swal.fire({
@@ -111,6 +118,9 @@ export class LoginByDomainNameComponent implements OnInit {
           }
         },
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           if (error.error.status == false) {
             Swal.fire({
               toast: true,

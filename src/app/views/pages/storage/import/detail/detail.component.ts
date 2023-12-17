@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup} from '@angular/forms';
+import {FormsModule} from '@angular/forms';
+import {ReactiveFormsModule} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
 import Swal from 'sweetalert2';
 
-import { StorageImportService } from 'src/app/service/storage/storage-import.service';
+import {StorageImportService} from 'src/app/service/storage/storage-import.service';
 
 interface data {
   inventory_transaction_id: string;
@@ -50,12 +50,12 @@ export class DetailComponent implements OnInit {
         this.isLoading = true;
         this._storage.getOne(id).subscribe(
           (data) => {
-            console.log(data);
-            
+            // console.log(data);
+
             const storageData = data.payload[0];
             this.status = storageData.status;
             this.listStorage = data.payload[0].inventory_transaction_details;
-            console.log(storageData);
+            // console.log(storageData);
 
             // Chuyển đổi giá trị gender sang kiểu number
             // locationData.gender = String(locationData.gender);
@@ -75,9 +75,11 @@ export class DetailComponent implements OnInit {
       }
     });
   }
+
   calculateTotal(index1: number, index2: number): number {
     return index1 * index2;
   }
+
   calculateTotalPrice(): number {
     let total = 0;
     for (let i = 0; i < this.listStorage.length; i++) {
@@ -97,7 +99,11 @@ export class DetailComponent implements OnInit {
       confirmButtonText: 'Có, tiến hành!',
     }).then((result) => {
       if (result.isConfirmed) {
+        const submitBtn = document.querySelector('#submitBtn');
         if (this.storageConfirmForm.valid) {
+          if (submitBtn) {
+            submitBtn.setAttribute('disabled', 'disabled');
+          }
           // const dataSend = {
           //   inventory_transaction_id: String(this.id),
           // }
@@ -106,7 +112,7 @@ export class DetailComponent implements OnInit {
             id: this.id,
             tranType: 0
           }
-          console.log(dataSend);
+          // console.log(dataSend);
 
           this._storage.update(dataSend).subscribe(
             (response: any) => {
@@ -114,19 +120,43 @@ export class DetailComponent implements OnInit {
                 this.storageConfirmForm.reset();
                 this.showSuccessMessage('storage/import');
               } else {
+                if (submitBtn) {
+                  submitBtn.removeAttribute('disabled');
+                }
                 console.log(response);
                 const errorMessages = [];
-                for (const key in response.meta.errors) {
-                  const messages = response.meta.errors[key];
-                  for (const message of messages) {
-                    errorMessages.push(`${message}`);
+                if (response.meta && typeof response.meta === 'object') {
+                  for (const key in response.meta) {
+                    // errorMessages.push(`${response.meta}`);
+                    const messages = response.meta[key];
+                    for (const message of messages) {
+                      errorMessages.push(`${key}: ${message}`);
+                    }
                   }
+                } else {
+                  errorMessages.push(`${response.meta}`);
                 }
                 this.showNextMessage(errorMessages);
               }
             },
             (error) => {
-              console.log(error);
+              const errorMessages = [];
+            if (error.meta && typeof error.meta === 'object') {
+              for (const key in error.meta) {
+                // errorMessages.push(`${response.meta}`);
+                const messages = error.meta[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
+              }
+            } else {
+              errorMessages.push(`${error.meta}`);
+            }
+            this.showNextMessage(errorMessages);
+              if (submitBtn) {
+                submitBtn.removeAttribute('disabled');
+              }
+              // console.log(error);
               Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
             }
           );
@@ -136,8 +166,9 @@ export class DetailComponent implements OnInit {
       }
     });
   }
+
   cancel() {
-    console.log('Đã nhấn nút');
+    // console.log('Đã nhấn nút');
     Swal.fire({
       title: 'Bạn có chắc chắn muốn hủy đơn nhập kho?',
       text: 'Bạn sẽ không thể hoàn tác lại hành động này!',
@@ -148,25 +179,30 @@ export class DetailComponent implements OnInit {
       confirmButtonText: 'Có, tiến hành!',
     }).then((result) => {
       if (result.isConfirmed) {
-        this._storage.cancel(this.id).subscribe((res) => {
+        this._storage.cancel(this.id, null).subscribe((res) => {
           if (res.status == true) {
             this.storageConfirmForm.reset();
             this.showSuccessMessage('storage/import');
           } else {
-            console.log(res);
             const errorMessages = [];
-            for (const key in res.meta.errors) {
-              const messages = res.meta.errors[key];
-              for (const message of messages) {
-                errorMessages.push(`${message}`);
-              }
-            }
-            this.showNextMessage(errorMessages);
+                if (res.meta && typeof res.meta === 'object') {
+                  for (const key in res.meta) {
+                    // errorMessages.push(`${response.meta}`);
+                    const messages = res.meta[key];
+                    for (const message of messages) {
+                      errorMessages.push(`${key}: ${message}`);
+                    }
+                  }
+                } else {
+                  errorMessages.push(`${res.meta}`);
+                }
+                this.showNextMessage(errorMessages);
           }
         });
       }
     });
   }
+
   showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
       const message = errorMessages.shift();

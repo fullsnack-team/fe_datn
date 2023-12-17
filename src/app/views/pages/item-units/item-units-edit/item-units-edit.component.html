@@ -27,7 +27,7 @@
             <p class="text-danger mt-1" *ngIf="unitsForm.controls.name.invalid && unitsForm.controls.name.touched">Không
               để trống tên đơn vị tính</p>
           </div>
-          <button type="submit" [disabled]="unitsForm.invalid" class="btn btn-primary me-2">Cập nhật</button>
+          <button type="submit" id="submitBtn" [disabled]="unitsForm.invalid" class="btn btn-primary me-2">Cập nhật</button>
           <button class="btn btn-secondary" routerLink="/item-units/list">Trở về</button>
         </form>
       </div>

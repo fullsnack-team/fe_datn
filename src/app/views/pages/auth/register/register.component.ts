@@ -45,8 +45,12 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     this.errorMessages = [];
     if (this.form.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const dataToSend = {
         name: this.form.value.name || "",
         email: this.form.value.email || "",
@@ -76,6 +80,9 @@ export class RegisterComponent implements OnInit {
               this.router.navigate(['auth/login/by-enterprise/tenants']);
             }, 500);
           } else {
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             let msg: string = '';
             if (typeof response.meta == 'string') {
               msg = response.meta;
@@ -102,6 +109,9 @@ export class RegisterComponent implements OnInit {
           }
         },
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           if (error.error.status == false) {
             Swal.fire({
               toast: true,

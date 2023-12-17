@@ -15,12 +15,12 @@ export class ReportService extends CRUDServiceService<any> {
   }
 
   general() {
-    
+
     return this.http.post(
       `${this.apiUrl}/general`,
       {
         domain_name: this.SettingService.tenant.name
-      })
+      },this.header)
     }
 
     income(option: string,start_date : string = '',end_date : string = '') {
@@ -32,7 +32,7 @@ export class ReportService extends CRUDServiceService<any> {
           option : option,
           start_date,
           end_date
-        })
+        },this.header)
       }
 
       products(option: string,start_date : string = '',end_date : string = ''){
@@ -44,7 +44,7 @@ export class ReportService extends CRUDServiceService<any> {
             option : option,
             start_date,
             end_date
-          })
+          },this.header)
       }
 
 
@@ -57,7 +57,7 @@ export class ReportService extends CRUDServiceService<any> {
             option : option,
             start_date,
             end_date
-          })
+          },this.header)
       }
 
       payment(option: string,start_date : string = '',end_date : string = ''){
@@ -76,8 +76,8 @@ export class ReportService extends CRUDServiceService<any> {
             option : option,
             start_date,
             end_date
-          })
+          },this.header)
       }
 
-  
+
 }

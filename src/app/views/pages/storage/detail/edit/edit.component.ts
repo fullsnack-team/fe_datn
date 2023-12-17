@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 import Swal from 'sweetalert2';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subject, debounceTime, map, of } from 'rxjs';
-import { StorageImportService } from 'src/app/service/storage/storage-import.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Observable, Subject, debounceTime, map, of} from 'rxjs';
+import {StorageImportService} from 'src/app/service/storage/storage-import.service';
 
 @Component({
   selector: 'app-edit',
@@ -26,11 +26,13 @@ export class EditComponent implements OnInit {
   adjust: any;
   variation: any;
   result: number;
+
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
     private _storage: StorageImportService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.reason = [
@@ -66,7 +68,7 @@ export class EditComponent implements OnInit {
         this.isLoading = true;
         this._storage.getAllInventory(id).subscribe(
           (data: any) => {
-            console.log(data);
+            // console.log(data);
             this.variation = data.payload;
             this.detailForm.patchValue(data.payload);
             this.isLoading = false;
@@ -83,7 +85,7 @@ export class EditComponent implements OnInit {
 
   calculator(adjust: number, quantity: number) {
     const reason = Number(this.detailForm.value.reason);
-    console.log(adjust + ' _ ' + quantity);
+    // console.log(adjust + ' _ ' + quantity);
     if (adjust == undefined && quantity == undefined) {
       return this.result = 0;
     }
@@ -95,19 +97,19 @@ export class EditComponent implements OnInit {
       //hoàn trả
       //Số tồn mới = Số tồn cũ + Số điều chỉnh
       return this.result = adjust + quantity;
-    }else if (reason == 3) {
+    } else if (reason == 3) {
       //đếm lại
       //Số tồn mới = Số điều chỉnh
       return this.result = adjust
-    }else if (reason == 4) {
+    } else if (reason == 4) {
       //hỏng hóc
       //Số tồn mới = Số tồn cũ - Số điều chỉnh
       return this.result = quantity - adjust;
-    }else if (reason == 5) {
+    } else if (reason == 5) {
       //bị trộm
       //Số tồn mới = Số tồn cũ - Số điều chỉnh
       return this.result = quantity - adjust;
-    }else if (reason == 6) {
+    } else if (reason == 6) {
       //thất lạc
       //Số tồn mới = Số tồn cũ - Số điều chỉnh
       return this.result = quantity - adjust;
@@ -117,26 +119,25 @@ export class EditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if(this.detailForm.valid){
+    const submitBtn = document.querySelector('#submitBtn');
+    if (this.detailForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       let quantity_old = Number(this.detailForm.value.quantity)
       const reason = Number(this.detailForm.value.reason);
       let quantity_edit = 0;
       if (reason === 1) {
         quantity_edit = (this.adjust);
-      }
-      else if (reason === 2) {
+      } else if (reason === 2) {
         quantity_edit = (this.adjust);
-      }
-      else if (reason === 3) {
-        quantity_edit =  this.adjust - quantity_old;
-      }
-      else if (reason === 4) {
+      } else if (reason === 3) {
+        quantity_edit = this.adjust - quantity_old;
+      } else if (reason === 4) {
         quantity_edit = -(this.adjust);
-      }
-      else if (reason === 5) {
+      } else if (reason === 5) {
         quantity_edit = -(this.adjust);
-      }
-      else if (reason === 6) {
+      } else if (reason === 6) {
         quantity_edit = -(this.adjust);
       }
 
@@ -145,42 +146,61 @@ export class EditComponent implements OnInit {
         quantity: quantity_edit,
         batch_id: this.variation.batch_id
       }
-      console.log(dataSend);
+      // console.log(dataSend);
       const inventory_id = this.variation.inventory_id;
-      this._storage.updateQuantity(dataSend, inventory_id).subscribe(
-        (response: any) => {
-          if (response.status == true) {
-            Swal.fire({
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 3000,
-              title: 'Thành công!',
-              text: 'Cập nhật thành công',
-              icon: 'success',
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-              },
-            });
-            this._router.navigate(['/storage/detail/list']);
-          } else {
-            console.log(response);
-            const errorMessages = [];
-            for (const key in response.meta.errors) {
-              const messages = response.meta.errors[key];
-              for (const message of messages) {
-                errorMessages.push(`${message}`);
+      // console.log(inventory_id);
+
+      if (inventory_id != '' || inventory_id != undefined) {
+        this._storage.updateQuantity(dataSend, inventory_id).subscribe(
+          (response: any) => {
+            if (response.status == true) {
+              Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                title: 'Thành công!',
+                text: 'Cập nhật thành công',
+                icon: 'success',
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer);
+                  toast.addEventListener('mouseleave', Swal.resumeTimer);
+                },
+              });
+              this._router.navigate(['/storage/detail/list']);
+            } else {
+              if (submitBtn) {
+                submitBtn.removeAttribute('disabled');
               }
+              // console.log(response);
+              const errorMessages = [];
+              if (response.meta && typeof response.meta === 'object') {
+                for (const key in response.meta.errors) {
+                  // errorMessages.push(`${response.meta}`);
+                  const messages = response.meta.errors[key];
+                  for (const message of messages) {
+                    errorMessages.push(`${key}: ${message}`);
+                  }
+                }
+              } else {
+                errorMessages.push(`${response.meta}`);
+              }
+              this.showNextMessage(errorMessages);
             }
-            this.showNextMessage(errorMessages);
           }
+        )
+      } else {
+        if (submitBtn) {
+          submitBtn.removeAttribute('disabled');
         }
-      )
+        this.showNextMessage(['Có lỗi xảy ra với kho'])
+      }
+
 
     }
   }
+
   showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
       const message = errorMessages.shift();

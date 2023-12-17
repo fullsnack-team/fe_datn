@@ -4,14 +4,14 @@
       <li class="breadcrumb-item active" aria-current="page">Cập nhật danh mục</li>
     </ol>
   </nav>
-  
+
   <div class="row">
     <div class="col-md-12 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
-  
+
           <h6 class="card-title">Cập nhật danh mục</h6>
-  
+
           <form class="forms-sample" [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label for="exampleInputUsername1" class="form-label">Tên Danh mục</label>
@@ -21,7 +21,7 @@
               </div>
             </div>
             <!-- || !isFormChanged() -->
-            <button type="submit" [disabled]="categoryForm.invalid " class="btn btn-primary me-2">Cập nhật</button>
+            <button type="submit" id="submitBtn" [disabled]="categoryForm.invalid " class="btn btn-primary me-2">Cập nhật</button>
             <button class="btn btn-secondary" routerLink="/categories/list">Trở về</button>
           </form>
         </div>

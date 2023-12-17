@@ -16,6 +16,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CustomersService } from 'src/app/service/customers/customers.service';
 import { DebtsService } from 'src/app/service/debts/debts.service';
 import { PaymentService } from 'src/app/service/payment/payment.service';
+import { LocalStorageService } from 'src/app/service/localStorage/localStorage.service';
 
 @Component({
   selector: 'app-edit',
@@ -54,13 +55,14 @@ export class EditRecoveryComponent implements OnInit {
     note: '',
   };
   totalPayment: any;
+  location_id: number;
 
   constructor(
     private _debtService: DebtsService,
     private _paymentService: PaymentService,
     private router: Router,
     private route: ActivatedRoute,
-    private modalService: NgbModal
+    private modalService: NgbModal,
   ) {}
 
   ngOnInit(): void {
@@ -81,12 +83,12 @@ export class EditRecoveryComponent implements OnInit {
             this.oldPayment = data.payload.payments;
 
             if (data.payload.payments != '') {
-              console.log(this.oldPayment);
+              // console.log(this.oldPayment);
               this.totalPayment = 0;
               this.oldPayment.forEach((payment) => {
                 this.totalPayment += payment.amount_in;
               });
-              console.log('Tổng tiền thanh toán là: ' + this.totalPayment);
+              // console.log('Tổng tiền thanh toán là: ' + this.totalPayment);
             } else {
               this.totalPayment = 0;
             }
@@ -110,6 +112,7 @@ export class EditRecoveryComponent implements OnInit {
       }
     });
   }
+
   status(number: number): string {
     let result = '';
 
@@ -133,6 +136,7 @@ export class EditRecoveryComponent implements OnInit {
 
     return result;
   }
+
   paymentMethod(id: number) {
     let result = '';
 
@@ -154,70 +158,84 @@ export class EditRecoveryComponent implements OnInit {
     this.modalService
       .open(content, {})
       .result.then((result) => {
-        console.log(result);
+        // console.log(result);
+        if (result == 'by: save button') {
+          const dataSend = {
+            id: this.id,
+            amount: this.dataAdd.amount_in,
+            amount_in: this.dataAdd.amount_in,
+            amount_refund: 0,
+            payment_method: this.dataAdd.payment_method,
+            payment_at:
+              this.dataAdd.payment_at != ''
+                ? this.dataAdd.payment_at
+                : new Date(),
+            reference_code: this.dataAdd.reference_code,
+            note: this.dataAdd.note,
+          };
+          // console.log(dataSend);
+          const cartInReturn = this.debt.amount_debt - this.debt.amount_paid;
 
-        const dataSend = {
-          id: this.id,
-          amount: this.dataAdd.amount_in,
-          amount_in: this.dataAdd.amount_in,
-          amount_refund: 0,
-          payment_method: this.dataAdd.payment_method,
-          payment_at:
-            this.dataAdd.payment_at != ''
-              ? this.dataAdd.payment_at
-              : new Date(),
-          reference_code: this.dataAdd.reference_code,
-          note: this.dataAdd.note,
-        };
-        console.log(dataSend);
-        const cartInReturn = this.debt.amount_debt - this.debt.amount_paid;
+          if (dataSend.amount > 0 && dataSend.amount <= cartInReturn) {
+            this._paymentService
+              .createDebtPayment(dataSend)
+              .subscribe((response: any) => {
+                if (response.status) {
+                  Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    title: 'Thành công!',
+                    text: 'Thêm thanh toán thành công',
+                    icon: 'success',
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                      toast.addEventListener('mouseenter', Swal.stopTimer);
+                      toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                  });
 
-        if (dataSend.amount > 0 && dataSend.amount <= cartInReturn) {
-          this._paymentService
-            .createDebtPayment(dataSend)
-            .subscribe((response: any) => {
-              if (response.status) {
-                Swal.fire({
-                  toast: true,
-                  position: 'top-end',
-                  showConfirmButton: false,
-                  timer: 3000,
-                  title: 'Thành công!',
-                  text: 'Thêm thanh toán thành công',
-                  icon: 'success',
-                  timerProgressBar: true,
-                  didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                  },
-                });
-
-                this.dataAdd = {
-                  payment_at: '',
-                  payment_method: 0,
-                  amount_in: 0,
-                  reference_code: '',
-                  note: '',
-                };
-                window.location.reload();
-              } else {
-                console.log(response);
-                const errorMessages = [];
-                for (const key in response.meta.errors) {
-                  const messages = response.meta.errors[key];
-                  for (const message of messages) {
-                    errorMessages.push(`${key}: ${message}`);
+                  this.dataAdd = {
+                    payment_at: '',
+                    payment_method: 0,
+                    amount_in: 0,
+                    reference_code: '',
+                    note: '',
+                  };
+                  window.location.reload();
+                } else {
+                  // console.log(response);
+                  const errorMessages = [];
+                  if (response.meta && typeof response.meta === 'object') {
+                    for (const key in response.meta.errors) {
+                      // errorMessages.push(`${response.meta}`);
+                      const messages = response.meta.errors[key];
+                      for (const message of messages) {
+                        errorMessages.push(`${key}: ${message}`);
+                      }
+                    }
+                  } else {
+                    errorMessages.push(`${response.meta}`);
                   }
+                  this.showNextMessage(errorMessages);
                 }
-                this.showNextMessage(errorMessages);
-              }
-            });
-        } else {
-          if(dataSend.amount > cartInReturn){
-            this.showNextMessage(['Số tiền nhập không được lớn hơn số tiền phải trả'])
-          }
-          if(dataSend.amount < 0){
-            this.showNextMessage(['Số tiền nhập không được nhỏ hơn hoặc bằng 0'])
+              });
+          } else {
+            if (dataSend.amount > cartInReturn) {
+              this.dataAdd.amount_in =
+                this.debt.amount_debt - this.totalPayment;
+              this.showNextMessage([
+                'Số tiền nhập không được lớn hơn số tiền phải trả',
+              ]);
+            }
+            if (dataSend.amount < 0) {
+              this.dataAdd.amount_in =
+                this.debt.amount_debt - this.totalPayment;
+              this.showNextMessage([
+                'Số tiền nhập không được nhỏ hơn hoặc bằng 0',
+              ]);
+            }
           }
         }
 
@@ -225,8 +243,13 @@ export class EditRecoveryComponent implements OnInit {
       })
       .catch((res) => {});
   }
+
   onSubmit(): void {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.recoveryFormEdit.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       // Kiểm tra xem form có hợp lệ không trước khi log dữ liệu
       const dataSend = {
         ...this.debt,
@@ -238,7 +261,7 @@ export class EditRecoveryComponent implements OnInit {
         note: String(this.recoveryFormEdit.value.note),
         type: 0,
       };
-      console.log(dataSend);
+      // console.log(dataSend);
       this._debtService.update(dataSend).subscribe((response: any) => {
         if (response.status == true) {
           // this.recoveryFormEdit.reset();
@@ -258,13 +281,21 @@ export class EditRecoveryComponent implements OnInit {
           });
           // location.reload();
         } else {
-          console.log(response);
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
+          // console.log(response);
           const errorMessages = [];
-          for (const key in response.meta.errors) {
-            const messages = response.meta.errors[key];
-            for (const message of messages) {
-              errorMessages.push(`${key}: ${message}`);
+          if (response.meta && typeof response.meta === 'object') {
+            for (const key in response.meta.errors) {
+              // errorMessages.push(`${response.meta}`);
+              const messages = response.meta.errors[key];
+              for (const message of messages) {
+                errorMessages.push(`${key}: ${message}`);
+              }
             }
+          } else {
+            errorMessages.push(`${response.meta}`);
           }
           this.showNextMessage(errorMessages);
         }
@@ -272,9 +303,13 @@ export class EditRecoveryComponent implements OnInit {
       // Log dữ liệu từ form
       // Bạn có thể xử lý dữ liệu ở đây, gửi nó đến server hoặc thực hiện các hành động khác
     } else {
-      console.log('Form không hợp lệ!'); // Log nếu form không hợp lệ
+      if (submitBtn) {
+        submitBtn.removeAttribute('disabled');
+      }
+      // console.log('Form không hợp lệ!'); // Log nếu form không hợp lệ
     }
   }
+
   showNextMessage(errorMessages: any) {
     if (errorMessages.length > 0) {
       const message = errorMessages.shift();

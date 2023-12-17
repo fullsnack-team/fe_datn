@@ -1,40 +1,49 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { DataTable } from 'simple-datatables';
-import { Observable,of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import Swal from 'sweetalert2';
 import { StorageImport } from 'src/app/interface/storage/storage-import';
 import { StorageImportService } from 'src/app/service/storage/storage-import.service';
+import { LocationsService } from 'src/app/service/locations/locations.service';
+import { LocalStorageService } from 'src/app/service/localStorage/localStorage.service';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+  styleUrls: ['./list.component.scss'],
 })
-export class ListComponent implements OnInit, AfterViewInit {
+export class ListComponent implements OnInit{
   isLoading = false;
   listStorageTrans: Observable<any>;
 
-  constructor(private _storageService: StorageImportService) {
+  inventory: any[] = [];
+  codeInventory: number;
+
+  constructor(
+    private _storageService: StorageImportService,
+    private _locationService: LocationsService,
+    private _localStorage: LocalStorageService,
+  ) {
     this.listStorageTrans = new Observable();
   }
 
   ngOnInit(): void {
-    this.refreshData();
+    this.refreshData(null);
   }
 
-  ngAfterViewInit(): void {
-    this.listStorageTrans.subscribe(() => {
-      setTimeout(() => {
-        const db = new DataTable('#dataTableExample');
-        setTimeout(() => {
-          const db = new DataTable('#dataTableExample');
-          db.on('datatable.init', () => {
-            this.addDeleteEventHandlers();
-        });
-        }, 0)
-      }, 0);
-    });
-  }
+  // ngAfterViewInit(): void {
+  //   this.listStorageTrans.subscribe(() => {
+  //     setTimeout(() => {
+  //       const db = new DataTable('#dataTableExample');
+  //       setTimeout(() => {
+  //         const db = new DataTable('#dataTableExample');
+  //         db.on('datatable.init', () => {
+  //           this.addDeleteEventHandlers();
+  //         });
+  //       }, 0);
+  //     }, 0);
+  //   });
+  // }
 
   addDeleteEventHandlers(): void {
     const deleteButtons = document.getElementsByClassName('btn-danger');
@@ -62,16 +71,16 @@ export class ListComponent implements OnInit, AfterViewInit {
           (response) => {
             Swal.fire({
               toast: true,
-              position: "top-end",
+              position: 'top-end',
               showConfirmButton: false,
               timer: 1000,
-              title: "Đã xóa!",
-              text: "Đơn vị đã được xóa.",
-              icon: "success",
+              title: 'Đã xóa!',
+              text: 'Đơn vị đã được xóa.',
+              icon: 'success',
               timerProgressBar: true,
               didOpen: (toast) => {
-                toast.addEventListener("mouseenter", Swal.stopTimer);
-                toast.addEventListener("mouseleave", Swal.resumeTimer);
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
               },
             });
             // Navigate to the list after successful deletion
@@ -80,8 +89,8 @@ export class ListComponent implements OnInit, AfterViewInit {
             }, 1000);
           },
           (error) => {
-            if(error.success == false){
-              Swal.fire('Lỗi!',`${error.meta.name}`, 'error');
+            if (error.success == false) {
+              Swal.fire('Lỗi!', `${error.meta.name}`, 'error');
             }
           }
         );
@@ -89,45 +98,52 @@ export class ListComponent implements OnInit, AfterViewInit {
     });
   }
 
-  refreshData(): void{
+  refreshData(id: any): void {
     this.isLoading = true;
-    this._storageService.getAllTrans().subscribe({
+    let inventory = this._localStorage.get('location');
+    let dataSend = null;
+    if (inventory.name != "Tất cả") {
+      dataSend = {
+        inventory_id: inventory.id,
+        trans_type: 2,
+      };
+    } else {
+      dataSend = {
+        trans_type: 2,
+      };
+    }
+    this._storageService.getAllTrans(dataSend).subscribe({
       next: (res: any) => {
         // console.log(res.status);
-        if(res.status == true){
-          this.listStorageTrans = of(res.payload) ;
+        if (res.status == true) {
+          this.listStorageTrans = of(res.payload);
           this.isLoading = false;
-          console.log(res.payload);
-          this.listStorageTrans.subscribe(
-            (res)=> {
-              setTimeout(() => {
-                const db = new DataTable('#dataTableExample');
-                db.on('datatable.init', () => {
-                  this.addDeleteEventHandlers();
+          // console.log(res.payload);
+          this.listStorageTrans.subscribe((res) => {
+            setTimeout(() => {
+              const db = new DataTable('#dataTableExample');
+              db.on('datatable.init', () => {
+                this.addDeleteEventHandlers();
               });
-
-              }, 0)
-            })
-
+            }, 0);
+          });
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra. Vui lòng liên hệ QTV.', 'error');
-      }
-    })
+      },
+    });
   }
 
-  status(key: number): any{
+  status(key: number): any {
     // const result = [];
-    if(key == 0){
-       return ['Hủy đơn', 'bg-danger'];
-    }else if(key == 1){
+    if (key == 0) {
+      return ['Hủy đơn', 'bg-danger'];
+    } else if (key == 1) {
       return ['Chờ xác nhận', 'bg-primary'];
-    }else if(key == 2){
-      return ['Hoàn thành', 'bg-success']
+    } else if (key == 2) {
+      return ['Hoàn thành', 'bg-success'];
     }
-
   }
-
 }

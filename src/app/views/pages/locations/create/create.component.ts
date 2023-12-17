@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -6,14 +6,16 @@ import {
   Validators,
 } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
-import { debounceTime, switchMap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {Router} from '@angular/router';
+import {debounceTime, switchMap} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import { CustomValidators } from 'ng2-validation';
 
-import { LocationsService } from 'src/app/service/locations/locations.service';
-import { AresService } from 'src/app/service/ares/ares.service';
-import { environment } from 'src/environments/environment';
-import {SettingService} from "../../../../service/setting/setting.service";
+import {LocationsService} from 'src/app/service/locations/locations.service';
+import {AresService} from 'src/app/service/ares/ares.service';
+import {environment} from 'src/environments/environment';
+import {SettingService} from '../../../../service/setting/setting.service';
+
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -30,14 +32,14 @@ export class CreateComponent implements OnInit {
   wards: any = [];
   isWardDataLoaded: boolean = false;
   img: File | '';
+  email: string;
 
   locationsForm = new FormGroup({
-    name: new FormControl('', Validators.required),
+    name: new FormControl('', [Validators.required, Validators.maxLength(255)]),
     image: new FormControl(''),
     description: new FormControl(''),
-    tel: new FormControl('', Validators.required),
-    email: new FormControl(''),
-
+    tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
+    email: new FormControl('', [CustomValidators.email]),
     province_code: new FormControl(''),
     district_code: new FormControl(''),
     ward_code: new FormControl(''),
@@ -46,10 +48,11 @@ export class CreateComponent implements OnInit {
     is_main: new FormControl('', Validators.required),
   });
 
+
   codeProvince: any;
   codeDistrict: any;
   codeWard: any;
-  province: any[]= [];
+  province: any[] = [];
   district: any[] = [];
   ward: any[] = [];
 
@@ -58,26 +61,26 @@ export class CreateComponent implements OnInit {
     private _locaService: LocationsService,
     private AresService: AresService,
     private router: Router,
-    private settingService: SettingService,
+    private settingService: SettingService
   ) {
     this.domain_name = this.settingService.tenant?.name;
   }
 
   ngOnInit(): void {
     this.status = [
-      { id: 0, name: 'Đóng cửa' },
-      { id: 1, name: 'Hoạt động' },
+      {id: 0, name: 'Đóng cửa'},
+      {id: 1, name: 'Hoạt động'},
     ];
     this.is_main = [
-      { id: 0, name: 'Chi nhánh mặc định' },
-      { id: 1, name: 'Chi nhánh phụ' },
+      {id: 1, name: 'Chi nhánh mặc định'},
+      {id: 0, name: 'Chi nhánh phụ'},
     ];
     this.AresService.getProvinces().subscribe((data: any) => {
       this.provinces =
         data.status != 'error'
           ? data.results
-          : [{ id: 0, name: `${data.message}` }];
-          this.province = data.results
+          : [{id: 0, name: `${data.message}`}];
+      this.province = data.results;
     });
 
     this.provinceChangeSubject
@@ -91,8 +94,8 @@ export class CreateComponent implements OnInit {
         this.districts =
           data.status != 'error'
             ? data.results
-            : [{ id: 0, name: `${data.message}` }];
-            this.district = data.results
+            : [{id: 0, name: `${data.message}`}];
+        this.district = data.results;
       });
 
     this.districtChangeSubject
@@ -104,8 +107,8 @@ export class CreateComponent implements OnInit {
         this.wards =
           data.status != 'error'
             ? data.results
-            : { id: 0, name: `${data.message}`, status: false };
-            this.ward = data.results;
+            : {id: 0, name: `${data.message}`, status: false};
+        this.ward = data.results;
         this.isWardDataLoaded = data.status != 'error' ? true : false;
       });
   }
@@ -159,7 +162,7 @@ export class CreateComponent implements OnInit {
 
       // Lưu trữ tệp hình ảnh và tiếp tục xử lý nếu tệp hợp lệ
       this.img = img;
-      console.log('Tệp hình ảnh hợp lệ.');
+      // console.log('Tệp hình ảnh hợp lệ.');
     } else {
       Swal.fire({
         icon: 'error',
@@ -174,33 +177,58 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.locationsForm.valid) {
-      const nameDistrict = this.district.find(item => item.id == this.codeDistrict)?.name ??'';
-      const nameWard = this.ward.find(item => item.id == this.codeWard)?.name ?? '';
-      const nameProvince = this.province.find(item => item.id == this.codeProvince)?.name;
-      // console.log(this.district);
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
+      const nameDistrict =
+        this.district.find((item) => item.id == this.codeDistrict)?.name ?? '';
+      const nameWard =
+        this.ward.find((item) => item.id == this.codeWard)?.name ?? '';
+      const nameProvince = this.province.find(
+        (item) => item.id == this.codeProvince
+      )?.name ?? '';
+      // console.log(nameProvince);
 
       const formData = new FormData();
 
       const locationsData = this.locationsForm.value;
-      console.log(locationsData);
+      // console.log(locationsData);
 
       formData.append('domain_name', String(this.domain_name));
       if (this.locationsForm.value.image) {
-      formData.append('image', this.img);
+        formData.append('image', this.img);
       }
       formData.append('name', String(locationsData.name));
       formData.append('email', String(locationsData.email));
       formData.append('tel', String(locationsData.tel));
       formData.append('status', String(locationsData.status));
       formData.append('is_main', String(locationsData.is_main));
-      formData.append('address_detail', String(locationsData.address_detail + ', ' + nameWard + ', ' + nameDistrict + ', ' +  nameProvince ));
+      formData.append(
+        'address_detail',
+        String(
+          locationsData.address_detail +
+          ', ' +
+          nameWard +
+          ', ' +
+          nameDistrict +
+          ', ' +
+          nameProvince
+        )
+      );
       formData.append('created_by', '1');
-      formData.append('province_code', String(locationsData.province_code ?? ''));
-      formData.append('district_code', String(locationsData.district_code ?? ''));
+      formData.append(
+        'province_code',
+        String(locationsData.province_code ?? '')
+      );
+      formData.append(
+        'district_code',
+        String(locationsData.district_code ?? '')
+      );
       formData.append('ward_code', String(locationsData.ward_code));
       formData.append('description', String(locationsData.description));
-      console.log(formData.get('address_detail'));
+      // console.log(formData.get('address_detail'));
 
       this._locaService.createFormData(formData).subscribe(
         (response: any) => {
@@ -222,19 +250,30 @@ export class CreateComponent implements OnInit {
             });
             this.router.navigate(['../setting/locations']);
           } else {
-            console.log(response);
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
+            // console.log(response);
             const errorMessages = [];
-            for (const key in response.meta) {
-              const messages = response.meta[key];
-              for (const message of messages) {
-                errorMessages.push(`${message}`);
+            if (response.meta && typeof response.meta === 'object') {
+              for (const key in response.meta) {
+                // errorMessages.push(`${response.meta}`);
+                const messages = response.meta[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
               }
+            } else {
+              errorMessages.push(`${response.meta}`);
             }
             this.showNextMessage(errorMessages);
           }
         },
         (error: any) => {
-          console.log(error);
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
+          // console.log(error);
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
       );

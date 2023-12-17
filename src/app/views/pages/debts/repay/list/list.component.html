@@ -50,9 +50,18 @@
     <div class="card">
       <div class="card-body">
         <h6 class="card-title">Quản lí công nợ (Phải trả)</h6>
-        <button routerLink="/debts/repay/create" type="button" class="btn btn-primary">
-          Thêm khoản phải trả
-        </button>
+        <div class="row">
+          <div class="col-md-6">
+            <button routerLink="/debts/repay/create" type="button" class="btn btn-primary">
+              Thêm khoản phải trả
+            </button>
+          </div>
+          <div class="col-md-6">
+            <!-- <ng-select *ngIf="!isLoading" [items]="inventory" (change)="onInventory()" bindLabel="name" bindValue="id"
+              placeholder="Tìm kiếm kho hoặc chọn" [(ngModel)]="codeInventory">
+            </ng-select> -->
+          </div>
+        </div>
         <div class="table-responsive">
           <div *ngIf="isLoading" class="d-flex justify-content-center">
             <div class="spinner-border" role="status">
@@ -64,6 +73,7 @@
               <tr>
                 <th>ID</th>
                 <th>GIAO DỊCH VỚI</th>
+                <th>KHO</th>
                 <th>TỔNG PHẢI TRẢ</th>
                 <th>THANH TOÁN</th>
                 <th>CÒN LẠI</th>
@@ -76,6 +86,7 @@
               <tr *ngFor="let value of listRepay | async">
                 <td>{{ value.id }}</td>
                 <td>{{ value.partner_name }}</td>
+                <td>{{ value.location_name }}</td>
                 <td>
                   {{ value.amount_debt | currency:'VNĐ ':'symbol':'1.0-0' }}
                 </td>
@@ -117,5 +128,3 @@
     </div>
   </div>
 </div>
-
-

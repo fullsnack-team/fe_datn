@@ -7,7 +7,7 @@
               <div class="navbar-content">
                 <ul class=" d-flex justify-content-between align-items-center w-100 m-0" style="list-style: none;">
                   <li class="nav-item">
-                    <a href="/ListOrders" class="btn btn-light" routerLink="">Quay lại</a>
+                    <a class="btn btn-light" routerLink="/ListOrders">Quay lại</a>
                   </li>
                   <li class="nav-item">
                     <h1 class="fs-4" style="transform: translateX(-30%);">Chi tiết đơn hàng</h1>
@@ -20,9 +20,13 @@
               </div>
             </div>
           </nav>
-  
+          <div *ngIf="isLoading" class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
             <!-- <form *ngIf="!isLoading" class="forms-sample"  (ngSubmit)="onSubmit()"> -->
-                <div class="row">
+                <div class="row" *ngIf="!isLoading">
                     <div class="col">
                         <div class="timeline-steps aos-init aos-animate" data-aos="fade-up">
                             <div class="timeline-step">
@@ -51,7 +55,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mt-5">
+                <div class="row mt-5" *ngIf="!isLoading">
                     <div class="col-md-12 grid-margin stretch-card">
                       <div class="card">
                         <div class="card-body">

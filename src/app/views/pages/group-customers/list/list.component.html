@@ -1,53 +1,58 @@
 <nav class="page-breadcrumb">
-    <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a routerLink=".">Bảo hành</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Danh mục bảo hành</li>
-    </ol>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink=".">Khách hàng</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Danh mục nhóm khách hàng</li>
+  </ol>
 </nav>
 <div class="row">
-    <div class="col-md-12 stretch-card">
+  <div class="col-md-12 stretch-card">
     <div class="card">
-        <div class="card-body">
+      <div class="card-body">
         <h6 class="card-title">Quản lí nhóm khách hàng</h6>
-        <button routerLink="/group_customers/create"  type="button" class="btn btn-primary">Thêm mới</button>
-        <div class="table-responsive">
-            <table id="dataTableExample" class="table">
+        <button routerLink="/group_customers/create" type="button" class="btn btn-primary">Thêm mới</button>
+        <div *ngIf="isLoading" class="d-flex justify-content-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <div *ngIf="!isLoading" class="table-responsive">
+          <table id="dataTableExample" class="table">
             <thead>
-                <tr>
+              <tr>
                 <th>ID</th>
                 <th>TÊN NHÓM KHÁCH HÀNG</th>
                 <th>MÔ TẢ</th>
                 <th>THỜI GIAN TẠO</th>
                 <th>THỜI GIAN CẬP NHẬT</th>
                 <th>HÀNH ĐỘNG</th>
-                </tr>
+              </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of groupCustomers | async">
+              <tr *ngFor="let item of groupCustomers | async">
                 <td>{{ item.id }}</td>
                 <td>{{ item.name }}</td>
                 <td>{{ item.description == null ? 'chưa có mô tả' : item.description }}</td>
                 <td>{{ item.created_at == null ? 'Chưa có thời gian tạo' : item.created_at | date:'dd-MM-yyyy'}}</td>
-                <td>{{ item.updated_at  == null ? 'Chưa có thời gian tạo' : item.updated_at | date:'dd-MM-yyyy' }}</td>
+                <td>{{ item.updated_at == null ? 'Chưa có thời gian tạo' : item.updated_at | date:'dd-MM-yyyy' }}</td>
                 <td>
-                    <a [routerLink]="['../edit', item.id]" class="btn btn-success mx-2">Sửa</a>
-                   <button  data-id="{{item.id}}" class="btn btn-danger">Xóa</button>  
+                  <a [routerLink]="['../edit', item.id]" class="btn btn-success mx-2">Sửa</a>
+                  <button data-id="{{item.id}}" class="btn btn-danger">Xóa</button>
                 </td>
-                </tr>
+              </tr>
             </tbody>
             <tfoot>
-                <tr>
+              <tr>
                 <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
-                </tr>
+              </tr>
             </tfoot>
-            </table>
+          </table>
         </div>
-        </div>
+      </div>
     </div>
-    </div>
+  </div>
 </div>

@@ -117,6 +117,7 @@ export class DashboardComponent implements OnInit {
     this.chart.destroy();
     this.focusclick =  status;
     this.ReportService.income(optionDate).subscribe((response: any) => {
+      console.log(response.payload);
       this.chart = new Chart('canvas', {
         type: 'bar',
         data: {
@@ -138,7 +139,7 @@ export class DashboardComponent implements OnInit {
         },
       });
     });
-    console.log(this.dataChartRevenue);
+
     
   }
 

@@ -12,7 +12,7 @@ import {SettingService} from "../setting/setting.service";
 })
 export class PrintService extends CRUDServiceService<Print> {
   private readonly domain_name: String;
-  
+
   constructor(
     http: HttpClient,
     dataService: HandleDataService,
@@ -26,13 +26,13 @@ export class PrintService extends CRUDServiceService<Print> {
   createData(data: any): Observable<any> {
     return this.http.post(
       `${this.apiUrl}/store`,
-      this.dataService.handleData(data)
+      this.dataService.handleData(data),this.header
     );
   }
   returnForm(id: number){
     return this.http.post<any>(
       `${this.apiUrl}/return`,
-      this.dataService.handleData(id)
+      this.dataService.handleData(id),this.header
     );
   }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { DataTable } from 'simple-datatables';
 import { CategoriesService } from 'src/app/service/categories/categories.service';
 import { Categories } from 'src/app/interface/categories/categories';
-import { Observable,of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 })
 export class CategoriesListComponent implements OnInit, AfterViewInit {
   ListsCategories: Observable<Categories[]>;
+  isLoading = false;
 
   constructor(private categoriesService: CategoriesService) {
     this.ListsCategories = new Observable();
@@ -58,15 +59,12 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
         // If confirmed, delete the category
         this.categoriesService.delete(id).subscribe(
           (response) => {
-
             Swal.fire('Đã xóa!', 'Danh mục của bạn đã được xóa.', 'success');
             // Navigate to the list after successful deletion
-            this.refreshCategories();
+            location.reload();
           },
           (error) => {
-            if(error.success == false){
-              Swal.fire('Lỗi!',`${error.meta.name}`, 'error');
-            }
+            Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
           }
         );
       }
@@ -74,29 +72,33 @@ export class CategoriesListComponent implements OnInit, AfterViewInit {
   }
 
   refreshCategories(): void {
-   this.categoriesService.GetData().subscribe(
-      (response : any) => {
-        if(response.status == true){
-          this.ListsCategories =of(response.payload.data);
+    this.isLoading = true;
+    this.categoriesService.GetData().subscribe(
+      (response: any) => {
+        if (response.status == true) {
+          this.ListsCategories = of(response.payload);
+          this.isLoading = false;
           // console.log(this.ListsCategories);
           this.ListsCategories.subscribe((categories) => {
             setTimeout(() => {
-                const dataTable = new DataTable('#dataTableExample');
-                // Here, use the 'categories' data to populate your DataTable
-                // ...
-                dataTable.on('datatable.init', () => {
-                    this.addDeleteEventHandlers();
-                });
+              const dataTable = new DataTable('#dataTableExample');
+              // Here, use the 'categories' data to populate your DataTable
+              // ...
+              dataTable.on('datatable.init', () => {
+                this.addDeleteEventHandlers();
+              });
+
+              dataTable.on('datatable.page', () => {
+                this.addDeleteEventHandlers();
+              });
             }, 0);
-        });
+          });
         }
         // Navigate to the list after successful deletion
       },
       (error) => {
-        console.log(error);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
       }
     );
-
   }
 }

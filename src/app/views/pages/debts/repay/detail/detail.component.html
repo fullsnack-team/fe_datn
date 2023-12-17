@@ -76,7 +76,7 @@
                       <label for="amount_debt" class="form-label">Tổng phải thu: <span
                           class="text-danger">(*)</span></label>
                       <input formControlName="amount_debt" type="text" id="amount_debt"
-                        class="form-control mb-4 mb-md-0" mask="separator.2" thousandSeparator="," />
+                        class="form-control mb-4 mb-md-0" mask="separator.2" thousandSeparator="," readonly/>
                     </div>
                   </div>
                   <!-- <div class="row mb-3">
@@ -106,11 +106,11 @@
                   <div class="row mb-3">
                     <div class="col-md-6">
                       <label for="debit_at" class="form-label">Ngày ghi nợ: <span class="text-danger">(*)</span></label>
-                      <input formControlName="debit_at" type="date" id="debit_at" class="form-control mb-4 mb-md-0" />
+                      <input formControlName="debit_at" type="date" id="debit_at" class="form-control mb-4 mb-md-0" readonly/>
                     </div>
                     <div class="col-md-6">
                       <label for="due_at" class="form-label">Hạn trả: <span class="text-danger">(*)</span></label>
-                      <input formControlName="due_at" type="date" id="due_at" class="form-control mb-4 mb-md-0" />
+                      <input formControlName="due_at" type="date" id="due_at" class="form-control mb-4 mb-md-0" readonly/>
                     </div>
                   </div>
                   <div class="row mb-3">
@@ -125,7 +125,7 @@
             </div>
           </div>
 
-          <button type="submit" [disabled]="repayForm.invalid" class="btn btn-primary me-2">
+          <button type="submit" id="submitBtn" [disabled]="repayForm.invalid" class="btn btn-primary me-2">
             Cập nhật
           </button>
           <button class="btn btn-secondary" routerLink="/debts/repay/list">

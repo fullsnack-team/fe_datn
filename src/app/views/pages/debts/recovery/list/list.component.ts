@@ -6,52 +6,87 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Debts } from 'src/app/interface/debts/debts';
 import { DebtsService } from 'src/app/service/debts/debts.service';
-
-
+import { LocationsService } from 'src/app/service/locations/locations.service';
+import { LocalStorageService } from 'src/app/service/localStorage/localStorage.service';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+  styleUrls: ['./list.component.scss'],
 })
-export class ListRecoveryComponent implements OnInit{
+export class ListRecoveryComponent implements OnInit {
   listRecovery: Observable<any>;
   isLoading = false;
   basicModalCloseResult: string = '';
   totalRevenue: number;
   uncollectedMoney: number;
 
+  inventory: any[] = [];
+  codeInventory: number;
+
   constructor(
     private _recoService: DebtsService,
-    private modalService: NgbModal
-
+    private modalService: NgbModal,
+    private _locationService: LocationsService,
+    private _localStorage: LocalStorageService,
   ) {
     this.listRecovery = new Observable();
-   }
+  }
 
   ngOnInit(): void {
-    this.refreshData();
+    this.refreshData(null);
+    this._locationService.GetData().subscribe({
+      next: (res: any) => {
+        if (res.status == true) {
+          this.inventory = res.payload;
+          // console.log(this.inventory);
+        }
+      },
+    });
+  }
+  onInventory() {
+    if (this.codeInventory) {
+      // console.log(this.codeInventory);
+      this.refreshData(this.codeInventory);
+    } else {
+      this.refreshData(null);
+    }
   }
 
   openBasicModal(content: TemplateRef<any>) {
-    this.modalService.open(content, {}).result.then((result) => {
-      console.log(result);
+    this.modalService
+      .open(content, {})
+      .result.then((result) => {
+        // console.log(result);
 
-      this.basicModalCloseResult = "Modal closed" + result
-    }).catch((res) => {});
+        this.basicModalCloseResult = 'Modal closed' + result;
+      })
+      .catch((res) => {});
   }
 
-  refreshData(): void{
+  refreshData(id: any): void {
     this.isLoading = true;
-    this._recoService.getAllRecovery({type: 0}).subscribe({
+    let inventory = this._localStorage.get('location');
+    let dataSend = null;
+    if (inventory.name != "Tất cả") {
+      dataSend = {
+        location_id: inventory.id,
+        type: 0,
+      };
+    } else {
+      dataSend = {
+        type: 0,
+      };
+    }
+    this._recoService.getAllRecovery(dataSend).subscribe({
       next: (res: any) => {
         // console.log(res.data);
-        if(res.status == true){
-          this.listRecovery = of(res.payload.data) ;
-          const payment: any[] = res.payload.data
-          console.log(res.payload.data);
+        if (res.status == true) {
+          this.listRecovery = of(res.payload);
+          const payment: any[] = res.payload;
+          // console.log(res.payload.data);
           this.totalRevenue = 0;
-          if(res.payload.data){
+          if (res.payload) {
             payment.forEach((payment) => {
               this.totalRevenue += payment.amount_debt;
             });
@@ -61,37 +96,34 @@ export class ListRecoveryComponent implements OnInit{
           }
           this.isLoading = false;
           // console.log(this.listBrands);
-          this.listRecovery.subscribe(
-            (res)=> {
-              setTimeout(() => {
-                const db = new DataTable('#dataTableExample');
-                db.on('datatable.init', () => {
-                  // this.addDeleteEventHandlers();
+          this.listRecovery.subscribe((res) => {
+            setTimeout(() => {
+              const db = new DataTable('#dataTableExample');
+              db.on('datatable.init', () => {
+                // db.destroy();
+                // this.addDeleteEventHandlers();
               });
-              }, 0)
-            })
-
+            }, 0);
+          });
         }
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
         Swal.fire('Lỗi!', 'Có lỗi xảy ra.', 'error');
-      }
-    })
+      },
+    });
   }
 
-  status(key: number): any{
+  status(key: number): any {
     // const result = [];
-    if(key == 0){
-       return ['Quá hạn', 'bg-danger'];
-    }else if(key == 1){
+    if (key == 0) {
+      return ['Quá hạn', 'bg-danger'];
+    } else if (key == 1) {
       return ['Chưa thanh toán', 'bg-warning'];
-    }else if(key == 2){
-      return ['Thanh toán 1 phần', 'bg-primary']
-    }else if(key == 3){
-      return ['Đã thanh toán', 'bg-success']
+    } else if (key == 2) {
+      return ['Thanh toán 1 phần', 'bg-primary'];
+    } else if (key == 3) {
+      return ['Đã thanh toán', 'bg-success'];
     }
-
   }
-
 }

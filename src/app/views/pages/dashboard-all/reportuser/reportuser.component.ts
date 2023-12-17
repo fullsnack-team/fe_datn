@@ -30,15 +30,38 @@ export class ReportuserComponent implements OnInit {
     this.start_time = this.formatDate(oneMonthAgo);
     this.end_time = this.formatDate(currentDate);
     this.ReportService.customer('thirtyDays').subscribe((response: any) => {
-      console.log(response.payload.data);
-      
-      this.customer = response.payload.data;
-      this.result.quanlityResult = response.payload.data.reduce((index : number, item: any) => {
-        return index + item.total_product;
-      },0)
-      this.result.quanlitySell = response.payload.data.reduce((index : number, item: any) => {
-        return index + item.total_price;
-      },0)
+      console.log(response);
+      if(response){
+        this.customer = response.payload;
+        this.result.quanlityResult = response.payload.reduce((index : number, item: any) => {
+          return index + item.total_product;
+        },0)
+        this.result.quanlitySell = response.payload.reduce((index : number, item: any) => {
+          return index + item.total_price;
+        },0)
+      }else {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          title: 'Thất bại!',
+          text: `${response.meta}`,
+          icon: 'error',
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener(
+              'mouseenter',
+              Swal.stopTimer
+            );
+            toast.addEventListener(
+              'mouseleave',
+              Swal.resumeTimer
+            );
+          },
+        });
+      }
+   
     
     });
   }
@@ -98,13 +121,37 @@ export class ReportuserComponent implements OnInit {
     // this.chart.destroy();
     console.log(this.start_time,this.end_time);
     this.ReportService.customer('fromTo',this.start_time,this.end_time).subscribe((response: any) => {
-      this.customer = response.payload.data;
-      this.result.quanlityResult = response.payload.data.reduce((index : number, item: any) => {
-        return index + item.total_product;
-      },0)
-      this.result.quanlitySell = response.payload.data.reduce((index : number, item: any) => {
-        return index + item.total_price;
-      },0)
+      if(response){
+        this.customer = response.payload;
+        this.result.quanlityResult = response.payload.reduce((index : number, item: any) => {
+          return index + item.total_product;
+        },0)
+        this.result.quanlitySell = response.payload.reduce((index : number, item: any) => {
+          return index + item.total_price;
+        },0)
+      }else {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          title: 'Thất bại!',
+          text: `${response.meta}`,
+          icon: 'error',
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener(
+              'mouseenter',
+              Swal.stopTimer
+            );
+            toast.addEventListener(
+              'mouseleave',
+              Swal.resumeTimer
+            );
+          },
+        });
+      }
+      
     });
   }
   

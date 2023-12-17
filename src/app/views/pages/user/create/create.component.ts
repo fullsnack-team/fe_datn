@@ -9,6 +9,7 @@ import {LocationsService} from "../../../../service/locations/locations.service"
 import {UserService} from "../../../../service/user/user.service";
 import {LocalStorageService} from "../../../../service/localStorage/localStorage.service";
 import {AuthService} from "../../../../service/auth/auth.service";
+import { CustomValidators } from 'ng2-validation';
 
 @Component({
   selector: 'app-create',
@@ -25,8 +26,8 @@ export class CreateComponent implements OnInit {
 
   userForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required]),
-    tel: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, CustomValidators.email]),
+    tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
     password: new FormControl('', [Validators.required]),
     location_id: new FormControl('', [Validators.required]),
     role_id: new FormControl('', [Validators.required]),
@@ -72,9 +73,13 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     this.errorMessages = [];
 
     if (this.userForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
 
       const data = this.userForm.value;
 
@@ -86,6 +91,7 @@ export class CreateComponent implements OnInit {
         password: String(data.password),
         location_id: String(data.location_id),
         role_id: String(data.role_id),
+        status: 1
       }
 
       this.userService.create(formData).subscribe(
@@ -104,8 +110,11 @@ export class CreateComponent implements OnInit {
                 toast.addEventListener('mouseleave', Swal.resumeTimer);
               },
             });
-            this.router.navigate([`../`]);
+            this.router.navigate([`../users/list`]);
           } else {
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             this.errorMessages = response.meta;
             if (this.errorMessages.domain_name) {
               Swal.fire({
@@ -126,10 +135,48 @@ export class CreateComponent implements OnInit {
           }
         },
         (error) => {
-          console.log(error);
-          Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
+          // console.log(error);
+          const errorMessages = [];
+          if (error.error.meta && typeof error.error.meta === 'object') {
+            for (const key in error.error.meta.errors) {
+              // errorMessages.push(`${response.meta}`);
+              const messages = error.error.meta.errors[key];
+              for (const message of messages) {
+                errorMessages.push(`${key}: ${message}`);
+              }
+            }
+          } else {
+            errorMessages.push(`${error.error.meta}`);
+          }
+          this.showNextMessage(errorMessages);
         }
       );
+    }
+  }
+
+  showNextMessage(errorMessages: any) {
+    if (errorMessages.length > 0) {
+      const message = errorMessages.shift();
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        title: 'Thất bại!',
+        text: message,
+        icon: 'error',
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+        didClose: () => {
+          this.showNextMessage(errorMessages);
+        },
+      });
     }
   }
 

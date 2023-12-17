@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 export class ListComponent implements OnInit {
 
   Warranties: Observable<Warranties[]>;
-  
+
   constructor(private warrantiesService: WarrantiesService) {
     this.Warranties = new Observable();
   }
@@ -87,7 +87,7 @@ export class ListComponent implements OnInit {
    this.warrantiesService.GetData().subscribe(
       (response : any) => {
         if(response.status == true){
-          this.Warranties =of(response.payload.data);
+          this.Warranties =of(response.payload);
           this.Warranties.subscribe((categories) => {
             setTimeout(() => {
                 const dataTable = new DataTable('#dataTableExample');
@@ -95,6 +95,10 @@ export class ListComponent implements OnInit {
                 // ...
                 dataTable.on('datatable.init', () => {
                     this.addDeleteEventHandlers();
+                });
+
+                dataTable.on('datatable.page', () => {
+                  this.addDeleteEventHandlers();
                 });
             }, 0);
         });
@@ -105,7 +109,7 @@ export class ListComponent implements OnInit {
         Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
       }
     );
-    
+
   }
 
 }

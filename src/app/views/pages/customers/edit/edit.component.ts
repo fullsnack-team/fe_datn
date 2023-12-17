@@ -7,6 +7,7 @@ import { GroupCustomersService } from 'src/app/service/group_customers/group-cus
 import { AresService } from 'src/app/service/ares/ares.service';
 import { Subject } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
+import { CustomValidators } from 'ng2-validation';
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
@@ -26,14 +27,14 @@ export class EditComponent implements OnInit {
   private districtChangeSubject = new Subject<number>();
   customersForm = new FormGroup({
     name: new FormControl('', Validators.required),
-    type: new FormControl(0),
+    type_customer: new FormControl(''),
     dob: new FormControl(''),
     group_customer_id: new FormControl(''),
     province_code: new FormControl(''),
     district_code: new FormControl(''),
     ward_code: new FormControl(''),
-    email: new FormControl(''),
-    tel: new FormControl('', Validators.required),
+    email: new FormControl('', [CustomValidators.email]),
+    tel: new FormControl('', [Validators.required, Validators.pattern(/^(03|05|07|08|09)+([0-9]{8})$/)]),
     status: new FormControl(1),
     address_detail: new FormControl(''),
     note: new FormControl(''),
@@ -53,13 +54,15 @@ export class EditComponent implements OnInit {
       { id: 1, name: 'Doanh nghiệp' },
     ];
 
-    
+
     this.status = [
       { id: 0, name: 'Kích hoạt' },
       { id: 1, name: 'Không kích hoạt' },
     ];
     this.GroupCustomersService.GetData().subscribe((data: any) => {
       this.GroupsCustomers = data.payload;
+      // console.log(data.payload);
+
     });
 
     this.AresService.getProvinces().subscribe((data: any) => {
@@ -100,7 +103,7 @@ export class EditComponent implements OnInit {
             ?.setValidators(Validators.required);
           this.customersForm?.get('ward_code')?.updateValueAndValidity();
         } else {
-          console.log(this.wards);
+          // console.log(this.wards);
           this.customersForm.value.ward_code = '';
         }
       });
@@ -115,7 +118,16 @@ export class EditComponent implements OnInit {
             const customerData = data.payload;
             // Chuyển đổi giá trị gender sang kiểu number
             customerData.gender = String(customerData.gender);
-            this.customersForm.patchValue(customerData);
+            if(customerData.status == false){
+              customerData.status = 0;
+            }else{
+              customerData.status = 1;
+            }
+            // console.log(customerData);
+            customerData.type_customer = customerData.type;
+            this.customersForm.patchValue(
+              customerData
+              );
             this.onProvinceChange();
             this.onDistrictChange();
             this.isLoading = false; // Stop loading
@@ -130,10 +142,10 @@ export class EditComponent implements OnInit {
     });
 
 
-    
+
   }
 
-  
+
   onProvinceChange(): void {
     this.provinceChangeSubject.next(
       Number(this.customersForm.value.province_code)
@@ -146,25 +158,31 @@ export class EditComponent implements OnInit {
     );
   }
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.customersForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const dataToSend = {
         ...this.customersForm.value,
         name: String(this.customersForm.value.name),
-        type: Number(this.customersForm.value.type) || null,
-        dob: String(this.customersForm.value.dob) || null,
+        type: Number(this.customersForm.value.type_customer),
+        dob: this.customersForm.value.dob,
         group_customer_id: Number(this.customersForm.value.group_customer_id) || null,
         province_code: Number(this.customersForm.value.province_code) || null,
         gender: Number(this.customersForm.value.gender),
         district_code: Number(this.customersForm.value.district_code) || null,
-        email: String(this.customersForm.value.email) || null,
-        tel: String(this.customersForm.value.tel),
+        email: this.customersForm.value.email,
+        tel: this.customersForm.value.tel,
         status: Number(this.customersForm.value.status),
         address_detail: String(this.customersForm.value.address_detail) || null,
-        note: String(this.customersForm.value.note) || null,
+        note: this.customersForm.value.note,
         ward_code: Number(this.customersForm.value.ward_code) || null,
         updated_at: new Date().toISOString(),
         id: this.id,
       };
+      // console.log(dataToSend);
+
 
       this.CustomersService.update(dataToSend).subscribe(
         (response) => {
@@ -186,13 +204,21 @@ export class EditComponent implements OnInit {
             });
             this.router.navigate(['../customers/list']);
           } else {
-            console.log(response);
+            // console.log(response);
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             const errorMessages = [];
-            for (const key in response.meta.errors) {
-              const messages = response.meta.errors[key];
-              for (const message of messages) {
-                errorMessages.push(`${key}: ${message}`);
+            if (response.meta && typeof response.meta === 'object') {
+              for (const key in response.meta.errors) {
+                // errorMessages.push(`${response.meta}`);
+                const messages = response.meta.errors[key];
+                for (const message of messages) {
+                  errorMessages.push(`${key}: ${message}`);
+                }
               }
+            } else {
+              errorMessages.push(`${response.meta}`);
             }
             this.showNextMessage(errorMessages);
 
@@ -213,6 +239,9 @@ export class EditComponent implements OnInit {
           }
         },
         (error) => {
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           Swal.fire('Lỗi!', 'Có lỗi xảy ra khi gửi dữ liệu.', 'error');
         }
       );

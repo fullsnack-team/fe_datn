@@ -1,9 +1,9 @@
-import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import {Component, OnInit} from "@angular/core";
+import {FormGroup, FormControl, Validators} from "@angular/forms";
 import Swal from "sweetalert2";
-import { Router, ActivatedRoute, ParamMap } from "@angular/router";
+import {Router, ActivatedRoute, ParamMap} from "@angular/router";
 
-import { BrandsService } from "src/app/service/brands/brands.service";
+import {BrandsService} from "src/app/service/brands/brands.service";
 
 @Component({
   selector: "app-brands-edit",
@@ -17,11 +17,13 @@ export class BrandsEditComponent implements OnInit {
     name: new FormControl("", [Validators.required, Validators.maxLength(255)]),
   });
   isLoading = false;
+
   constructor(
     private _brandService: BrandsService,
     private _route: ActivatedRoute,
     private _router: Router
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this._route.paramMap.subscribe((queryParams) => {
@@ -52,7 +54,11 @@ export class BrandsEditComponent implements OnInit {
   }
 
   onSubmit() {
+    const submitBtn = document.querySelector('#submitBtn');
     if (this.brandForm.valid) {
+      if (submitBtn) {
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
       const dataToSend = {
         ...this.brandForm.value,
         update_date: new Date().toISOString(),
@@ -78,7 +84,10 @@ export class BrandsEditComponent implements OnInit {
             });
             this._router.navigate(['/brands/list']);
           } else {
-            console.log(response);
+            // console.log(response);
+            if (submitBtn) {
+              submitBtn.removeAttribute('disabled');
+            }
             const errorMessages = [];
             for (const key in response.meta.errors) {
               errorMessages.push(...response.meta.errors[key]);
@@ -103,7 +112,9 @@ export class BrandsEditComponent implements OnInit {
         },
         (error) => {
           // console.log((error));
-
+          if (submitBtn) {
+            submitBtn.removeAttribute('disabled');
+          }
           if (error.error.status == false) {
             Swal.fire({
               toast: true,

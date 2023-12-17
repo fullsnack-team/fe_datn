@@ -32,13 +32,13 @@ export class ReportproductComponent implements OnInit {
     this.start_time = this.formatDate(oneMonthAgo);
     this.end_time = this.formatDate(currentDate);
     this.ReportService.products('thirtyDays').subscribe((response: any) => {
-      console.log(response.payload.data);
+      console.log(response);
       
-      this.products = response.payload.data;
-      this.result.quanlityResult = response.payload.data.reduce((index : number, item: any) => {
+      this.products = response.payload;
+      this.result.quanlityResult = response.payload.reduce((index : number, item: any) => {
         return index + item.total_quantity;
       },0)
-      this.result.quanlitySell = response.payload.data.reduce((index : number, item: any) => {
+      this.result.quanlitySell = response.payload.reduce((index : number, item: any) => {
         return index + item.total_price_sell;
       },0)
     
@@ -100,11 +100,11 @@ export class ReportproductComponent implements OnInit {
     // this.chart.destroy();
     console.log(this.start_time,this.end_time);
     this.ReportService.products('fromTo',this.start_time,this.end_time).subscribe((response: any) => {
-      this.products = response.payload.data;
-      this.result.quanlityResult = response.payload.data.reduce((index : number, item: any) => {
+      this.products = response.payload;
+      this.result.quanlityResult = response.payload.reduce((index : number, item: any) => {
         return index + item.total_quantity;
       },0)
-      this.result.quanlitySell = response.payload.data.reduce((index : number, item: any) => {
+      this.result.quanlitySell = response.payload.reduce((index : number, item: any) => {
         return index + item.total_price_sell;
       },0)
     });

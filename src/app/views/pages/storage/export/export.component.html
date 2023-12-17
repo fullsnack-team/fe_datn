@@ -46,8 +46,9 @@
                 </td>
                 <td>{{ value.created_at }}</td>
                 <td>{{ value.updated_at }}</td>
-                <td *ngIf="value.status != 2">
-                  <button  data-id="{{value.inventory_transaction_id}}" class="btn btn-success">Xác nhận</button>
+                <td >
+                  <button data-id="{{value.inventory_transaction_id}}" class="btn btn-success mx-2" *ngIf="value.status == 1">Xác nhận</button>
+                  <button data-id="{{value.inventory_transaction_id}}" class="btn btn-danger" *ngIf="value.status == 1">Hủy đơn</button>
                 </td>
               </tr>
             </tbody>

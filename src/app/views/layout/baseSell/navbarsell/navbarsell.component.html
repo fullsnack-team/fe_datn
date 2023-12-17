@@ -1,14 +1,10 @@
 <nav class="navbar top-navbar h-0">
     <div class="container">
       <div class="navbar-content p-0">
-        <form class="search-form">
-          <div class="input-group">
-            <div class="input-group-text">
-              <i class="feather icon-search p-2"></i>
-            </div>
-            <input type="text" class="form-control mt-0" id="navbarForm" placeholder="Nhập tên Sản phẩm, mã SKU,...">
+          <div class="input-group d-flex align-items-center">
+       
+            <h3  class="text-white ">Chi nhánh : {{ nameLocation }}</h3>
           </div>
-        </form>
         <ul class=" d-flex align-items-center w-100 m-0" style="list-style: none;">
 
           <li class="nav-item ms-1"  *ngFor="let item of tabOder,index as i">

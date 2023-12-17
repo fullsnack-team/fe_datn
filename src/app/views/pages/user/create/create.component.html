@@ -39,7 +39,7 @@
                   <div>
                     <label>Địa chỉ email</label>
                     <input
-                      type="text"
+                      type="email"
                       placeholder="Email"
                       class="form-control"
                       formControlName="email"
@@ -94,7 +94,7 @@
                   <div>
                     <label>Mật khẩu</label>
                     <input
-                      type="text"
+                      type="password"
                       placeholder="Mật khẩu"
                       class="form-control"
                       formControlName="password"
@@ -181,7 +181,7 @@
     <div class="col-12">
       <div class="footer-custom">
         <div class="d-flex align-items-center justify-content-end px-1">
-          <button [disabled]="userForm.invalid" type="submit" class="btn btn-primary"> Thêm</button>
+          <button id="submitBtn" [disabled]="userForm.invalid" type="submit" class="btn btn-primary"> Thêm</button>
         </div>
       </div>
     </div>
